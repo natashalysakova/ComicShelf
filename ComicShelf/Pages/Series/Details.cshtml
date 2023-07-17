@@ -1,0 +1,37 @@
+﻿@page
+@model ComicShelf.Pages.SeriesNs.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Series</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Series.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Series.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Series.OriginalName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Series.OriginalName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Series.Ongoing)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Series.Ongoing)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Series?.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

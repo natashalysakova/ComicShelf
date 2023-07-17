@@ -1,0 +1,76 @@
+﻿@page
+@model ComicShelf.Pages.SeriesNs.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Series[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Series[0].OriginalName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Series[0].Ongoing)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.Series[0].Publishers)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Series[0].Type)
+            </th>
+            <th>
+                @Html.DisplayName("My info")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Series)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OriginalName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ongoing)
+                </td>
+                <td>
+                    @(string.Join(", ", item.Publishers.Select(x=> $"{x.Country.Flag} {x.Name}")))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @{
+                        var total = item.Ongoing ? "?" : item.TotalIssues.ToString();
+                        var expr = $"{item.HasIssues}/{total}";
+                    }
+                    @Html.Raw(expr)
+                    @if (item.Completed)
+                    {
+                        @Html.Raw("✔️")
+                    }
+                </td>
+
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+@*                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a>*@
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

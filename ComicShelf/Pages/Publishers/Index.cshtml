@@ -1,0 +1,52 @@
+﻿@page
+@model ComicShelf.Pages.Publishers.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Publisher[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.Publisher[0].Country)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.Publisher[0].Series)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Publisher)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(x=> item.Country.Flag)
+                    @Html.DisplayFor(x=> item.Country.Name)
+                </td>
+                <td>
+                    @foreach (var item2 in item.Series)
+                    {
+                        <a asp-page="/Series/Details" asp-route-id="@item2.Id">@item2.Name</a>
+                    }
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
