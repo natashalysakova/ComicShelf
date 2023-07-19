@@ -57,6 +57,15 @@ namespace ComicShelf.Pages.SeriesNs
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            //if (NewPublisher != null)
+            //{
+            //    var newPublisher = _context.Publishers.Add(new Publisher { Name = NewPublisher, Country = _context.UnknownCountry });
+            //    _context.SaveChanges();
+            //    Series.PublishersIds.Add(newPublisher.Entity.Id.ToString());
+            //    ModelState.Clear();
+            //    TryValidateModel(ModelState);
+            //}
+
             if (!ModelState.IsValid)
             {
                 return Page();

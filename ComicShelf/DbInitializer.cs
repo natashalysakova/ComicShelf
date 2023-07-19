@@ -17,6 +17,7 @@ internal class DbInitializer
 
         var countries = new Country[]
         {
+            new Country(){ Name = "Unknown", Flag= "none"},
             new Country(){ Name = "Ukraine", Flag = GetFlag("Ukraine")},
             new Country(){ Name = "United States", Flag = GetFlag("United States")},
             new Country(){Name = "Japan", Flag = GetFlag("Japan") }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComicShelf.Models
 {
@@ -24,6 +25,8 @@ namespace ComicShelf.Models
 
         //public virtual DbSet<PublisherSeries> PublisherSeries { get; set; }
 
+        [NotMapped]
+        public Country UnknownCountry { get => Countries.Single(x => x.Name == "Unknown"); }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
