@@ -15,30 +15,29 @@ internal class DbInitializer
             return;
         }
 
-        var countries = new Country[]
-        {
-            new Country(){ Name = "Unknown", Flag= "none"},
-            new Country(){ Name = "Ukraine", Flag = GetFlag("Ukraine")},
-            new Country(){ Name = "United States", Flag = GetFlag("United States")},
-            new Country(){Name = "Japan", Flag = GetFlag("Japan") }
-        };
 
+        CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+        var regions = cultures.Select(x => new RegionInfo(x.Name));
+        var results = regions.Select(x => x.EnglishName).Distinct().Order().ToList();
+
+        var countries = results.Select(x => new Country() { Flag = GetFlag(x), Name = x });
         foreach (var country in countries)
         {
             context.Countries.Add(country);
         }
-
         context.SaveChanges();
 
+        var ukraine = context.Countries.Single(x => x.Name == "Ukraine");
+        var us = context.Countries.Single(x => x.Name == "United States");
         var publisers = new Publisher[]
         {
-            new Publisher(){ Name = "NashaIdea", Country = countries[0] },
-            new Publisher(){ Name = "Mal'opus", Country =countries[0] },
-            new Publisher(){ Name = "Mimir Media", Country = countries[0] },
-            new Publisher(){ Name = "Vovkulaka", Country = countries[0] },
-            new Publisher(){ Name = "Marvel", Country = countries[1] },
-            new Publisher(){ Name = "DC Comics", Country = countries[1] },
-            new Publisher(){ Name = "Dark Horse", Country = countries[1] }
+            new Publisher(){ Name = "NashaIdea", Country = ukraine },
+            new Publisher(){ Name = "Mal'opus", Country =ukraine },
+            new Publisher(){ Name = "Mimir Media", Country = ukraine },
+            new Publisher(){ Name = "Vovkulaka", Country = ukraine },
+            new Publisher(){ Name = "Marvel", Country = us },
+            new Publisher(){ Name = "DC Comics", Country = us },
+            new Publisher(){ Name = "Dark Horse", Country = us }
         };
 
         foreach(var publisher in publisers)

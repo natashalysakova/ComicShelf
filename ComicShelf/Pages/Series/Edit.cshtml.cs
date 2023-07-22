@@ -7,17 +7,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ComicShelf.Models;
+using ComicShelf.Services;
 
 namespace ComicShelf.Pages.SeriesNs
 {
     public class EditModel : PageModel
     {
-        private readonly ComicShelfContext _context;
+        private readonly SearchService _searchController;
+        private readonly PublishersService _publishersController;
+        private readonly SeriesService _seriesService;
 
-        public EditModel(ComicShelfContext context)
+        public EditModel(SearchService searchController, PublishersService publishersController, SeriesService seriesController)
         {
-            _context = context;
-            AvailablePublishers = _context.Publishers.OrderBy(x => x.Name).Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+            _searchController = searchController;
+            _seriesService = seriesController;
+
+            AvailablePublishers = publishersController.GetAll().OrderBy(x => x.Name).Select(x => new SelectListItem(x.Name, x.Id.ToString()));
             var enums = Enum.GetNames(typeof(Models.Enums.Type));
             var values = Enum.GetValues(typeof(Models.Enums.Type));
             for (var i = 0; i < values.Length; i++)
@@ -34,12 +39,12 @@ namespace ComicShelf.Pages.SeriesNs
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Series == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var series =  await _context.Series.Include(x=>x.Publishers).FirstOrDefaultAsync(m => m.Id == id);
+            var series = _seriesService.GetWithPublishers(id);
             if (series == null)
             {
                 return NotFound();
@@ -71,19 +76,13 @@ namespace ComicShelf.Pages.SeriesNs
                 return Page();
             }
             
-            var original = _context.Series.Include(x=>x.Publishers).Single(x => x.Id == Series.Id);
-
-            Series.Update(_context, original);
-
-            _context.Attach(original).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                _seriesService.Update(Series);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SeriesExists(Series.Id))
+                if (!_seriesService.Exists(Series.Id))
                 {
                     return NotFound();
                 }
@@ -96,9 +95,9 @@ namespace ComicShelf.Pages.SeriesNs
             return RedirectToPage("./Index");
         }
 
-        private bool SeriesExists(int id)
+        public IActionResult OnGetSearch(string term)
         {
-          return (_context.Series?.Any(e => e.Id == id)).GetValueOrDefault();
+            return new JsonResult(_searchController.FindPublishersByTerm(term));
         }
     }
 }

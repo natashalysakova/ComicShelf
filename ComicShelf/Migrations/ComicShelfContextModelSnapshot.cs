@@ -49,6 +49,9 @@ namespace ComicShelf.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Roles")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Author", (string)null);

@@ -6,26 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ComicShelf.Models;
+using ComicShelf.Services;
+using System.Globalization;
+using System.Diagnostics.Metrics;
+using System.Drawing;
 
 namespace ComicShelf.Pages.Countries
 {
     public class IndexModel : PageModel
     {
-        private readonly ComicShelfContext _context;
+        private readonly CountryService _service;
 
-        public IndexModel(ComicShelfContext context)
+        public IndexModel(CountryService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        public IList<Country> Country { get;set; } = default!;
+        public List<Country> Countries { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public void OnGet()
         {
-            if (_context.Countries != null)
-            {
-                Country = await _context.Countries.OrderBy(x=>x.Name).ToListAsync();
-            }
+            Countries = _service.GetAll().Include(x => x.Publishers).Where(x => x.Publishers.Any()).ToList();
         }
     }
 }

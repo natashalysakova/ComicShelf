@@ -7,39 +7,48 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ComicShelf.Models;
+using ComicShelf.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace ComicShelf.Pages.Publishers
 {
     public class EditModel : PageModel
     {
-        private readonly ComicShelfContext _context;
+        private readonly PublishersService _publisherService;
+        private readonly CountryService _countryService;
 
-        public EditModel(ComicShelfContext context)
+        public EditModel(PublishersService service, CountryService countryService)
         {
-            _context = context;
-            CountriesList = _context.Countries.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+            _publisherService = service;
+            _countryService = countryService;
+            CountriesList = _countryService.GetCountriesForView();
 
         }
 
         [BindProperty]
-        public PublisherModel Publisher { get; set; } = default!;
+        public Publisher Publisher { get; set; } = default!;
 
         public IEnumerable<SelectListItem> CountriesList { get; set; }
 
+        [BindProperty]
+        [Required]
+        public string SelectedCountry { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+
+        public IActionResult OnGetAsync(int? id)
         {
-            if (id == null || _context.Publishers == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var publisher =  await _context.Publishers.Include(x=>x.Country).FirstOrDefaultAsync(m => m.Id == id);
+            var publisher = _publisherService.GetWithCountry(id);
             if (publisher == null)
             {
                 return NotFound();
             }
-            Publisher = new PublisherModel(publisher);
+            Publisher = publisher;
+            SelectedCountry = publisher.Country.Id.ToString();
             return Page();
         }
 
@@ -52,15 +61,19 @@ namespace ComicShelf.Pages.Publishers
                 return Page();
             }
 
-            _context.Attach(Publisher.ToModel(_context)).State = EntityState.Modified;
+            var country = _countryService.Get(int.Parse(SelectedCountry));
+            if (country != null)
+            {
+                Publisher.Country = country;
+            }
 
             try
             {
-                await _context.SaveChangesAsync();
+                _publisherService.Update(Publisher);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PublisherExists(Publisher.Id))
+                if (!_publisherService.Exists(Publisher.Id))
                 {
                     return NotFound();
                 }
@@ -73,9 +86,5 @@ namespace ComicShelf.Pages.Publishers
             return RedirectToPage("./Index");
         }
 
-        private bool PublisherExists(int id)
-        {
-          return (_context.Publishers?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }

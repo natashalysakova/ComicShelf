@@ -7,34 +7,59 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ComicShelf.Models;
+using ComicShelf.Services;
+using ComicShelf.Models.Enums;
 
 namespace ComicShelf.Pages.Authors
 {
     public class EditModel : PageModel
     {
-        private readonly ComicShelf.Models.ComicShelfContext _context;
+        private readonly AuthorsService _service;
 
-        public EditModel(ComicShelf.Models.ComicShelfContext context)
+        public EditModel(AuthorsService service)
         {
-            _context = context;
+            _service = service;
+
+            var values = Enum.GetValues(typeof(Roles));
+            PossibleRoles = new List<SelectListItem>();
+            foreach (var val in values)
+            {
+                PossibleRoles.Add(new SelectListItem()
+                {
+                    Text = Enum.GetName(typeof(Roles), val),
+                    Value = val.ToString()
+                });
+            }
         }
 
         [BindProperty]
         public Author Author { get; set; } = default!;
+        [BindProperty]
+        public IList<Roles> SelectedRoles { get; set; }
+        public IList<SelectListItem> PossibleRoles { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Authors == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var author =  await _context.Authors.FirstOrDefaultAsync(m => m.Id == id);
+            var author = _service.Get(id);
             if (author == null)
             {
                 return NotFound();
             }
             Author = author;
+            SelectedRoles = new List<Roles>();
+            var roles = Author.Roles.ToString().Split(',');
+
+            foreach(var val in roles)
+            {
+                SelectedRoles.Add((Roles)Enum.Parse(typeof(Roles), val));
+            }
+
             return Page();
         }
 
@@ -47,15 +72,15 @@ namespace ComicShelf.Pages.Authors
                 return Page();
             }
 
-            _context.Attach(Author).State = EntityState.Modified;
+            Author.Roles = SelectedRoles.Aggregate(Roles.None, (current, next) => current | next);
 
             try
             {
-                await _context.SaveChangesAsync();
+                _service.Update(Author);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AuthorExists(Author.Id))
+                if (!_service.Exists(Author.Id))
                 {
                     return NotFound();
                 }
@@ -66,11 +91,6 @@ namespace ComicShelf.Pages.Authors
             }
 
             return RedirectToPage("./Index");
-        }
-
-        private bool AuthorExists(int id)
-        {
-          return (_context.Authors?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

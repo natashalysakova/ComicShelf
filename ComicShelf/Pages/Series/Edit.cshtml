@@ -14,39 +14,41 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Series.Id" />
-            <div class="form-group">
+            <div class="form-floating mb-3">
+                <input asp-for="Series.Name" class="form-control" placeholder="Name"/>
                 <label asp-for="Series.Name" class="control-label"></label>
-                <input asp-for="Series.Name" class="form-control" />
                 <span asp-validation-for="Series.Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-floating mb-3">
+                <input asp-for="Series.OriginalName" class="form-control" placeholder="Original title"/>
                 <label asp-for="Series.OriginalName" class="control-label"></label>
-                <input asp-for="Series.OriginalName" class="form-control" />
                 <span asp-validation-for="Series.OriginalName" class="text-danger"></span>
             </div>
-@*            <div class="form-group">
-                <label asp-for="NewPublisher" class="control-label"></label>
-                <input asp-for="NewPublisher" class="form-control" />
-                <span asp-validation-for="NewPublisher" class="text-danger"></span>
-                <select asp-for="Series.PublishersIds" class="form-select" asp-items="@Model.AvailablePublishers" multiple></select>
-                <span asp-validation-for="Series.PublishersIds" class="text-danger"></span>
-            </div>*@
-            <div class="form-group">
+            <div class="form-floating mb-3">
+                <input asp-for="Series.Publishers" class="form-control" type="text" placeholder="Input your keyword" />
+                <label asp-for="Series.Publishers" class="control-label"></label>
+                <div class="form-text">
+                    Each publisher must be separated by coma (,)
+                </div>
+                <span asp-validation-for="Series.Publishers" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
                 <label asp-for="Series.Type" class="control-label"></label>
                 <select asp-for="Series.Type" class="form-select" asp-items="@Model.Types"></select>
                 <span asp-validation-for="Series.Type" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
+            <div class="mb-3 form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Series.Ongoing" onchange="ongoingChanged()" /> @Html.DisplayNameFor(model => model.Series.Ongoing)
                 </label>
             </div>
-            <div class="form-group" id="totalIssues">
+            <div class="mb-3" id="totalIssues">
                 <label asp-for="Series.TotalIssues" class="control-label"></label>
                 <input asp-for="Series.TotalIssues" class="form-control" type="number" />
                 <span asp-validation-for="Series.TotalIssues" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -64,4 +66,6 @@
             ongoingChanged();
         });
     </script>
+    <script src="~/js/Series.js"></script>
+
 }

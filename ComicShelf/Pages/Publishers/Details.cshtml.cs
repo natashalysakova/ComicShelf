@@ -6,28 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ComicShelf.Models;
+using ComicShelf.Services;
 
 namespace ComicShelf.Pages.Publishers
 {
     public class DetailsModel : PageModel
     {
-        private readonly ComicShelfContext _context;
+        private readonly PublishersService _publisherService;
 
-        public DetailsModel(ComicShelfContext context)
+        public DetailsModel(PublishersService service)
         {
-            _context = context;
+            _publisherService = service;
         }
 
       public Publisher Publisher { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Publishers == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var publisher = await _context.Publishers.Include(x=>x.Country).FirstOrDefaultAsync(m => m.Id == id);
+            var publisher = _publisherService.GetWithCountry(id);
             if (publisher == null)
             {
                 return NotFound();

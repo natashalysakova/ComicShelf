@@ -6,26 +6,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ComicShelf.Models;
+using ComicShelf.Services;
 
 namespace ComicShelf.Pages.Authors
 {
     public class IndexModel : PageModel
     {
-        private readonly ComicShelf.Models.ComicShelfContext _context;
+        private readonly AuthorsService _service;
 
-        public IndexModel(ComicShelf.Models.ComicShelfContext context)
+        public IndexModel(AuthorsService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        public IList<Author> Author { get;set; } = default!;
+        public IList<Author> Author { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (_context.Authors != null)
-            {
-                Author = await _context.Authors.ToListAsync();
-            }
+            Author = _service.GetAll().OrderBy(x => x.Name).ToList(); ;
         }
     }
 }

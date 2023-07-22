@@ -1,6 +1,9 @@
+using ComicShelf;
 using ComicShelf.Models;
+using ComicShelf.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 internal class Program
 {
@@ -11,6 +14,10 @@ internal class Program
         // Add services to the container.
         builder.Services.AddRazorPages();
         builder.Services.AddDbContext<ComicShelfContext>();
+        builder.Services.RegisterMyServices();
+        builder.Services.AddControllersWithViews(options => {
+            options.Filters.Add<ViewBagActionFilter>();
+        });
 
         var app = builder.Build();
 
@@ -56,5 +63,23 @@ internal class Program
         app.MapRazorPages();
 
         app.Run();
+    }
+}
+
+public static class Extentions
+{
+    public static IServiceCollection RegisterMyServices(this IServiceCollection services)
+    {
+        var type = typeof(IService);
+        var types = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(s => s.GetTypes())
+            .Where(p => type.IsAssignableFrom(p) && !p.IsAbstract);
+
+        foreach (var item in types)
+        {
+            services.AddScoped(item);
+        }
+
+        return services;
     }
 }

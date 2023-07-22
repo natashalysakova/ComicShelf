@@ -6,16 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ComicShelf.Models;
+using ComicShelf.Services;
 
 namespace ComicShelf.Pages.Publishers
 {
     public class DeleteModel : PageModel
     {
-        private readonly ComicShelfContext _context;
+        private readonly PublishersService _publisherService;
 
-        public DeleteModel(ComicShelfContext context)
+        public DeleteModel(ComicShelfContext context, PublishersService service)
         {
-            _context = context;
+            _publisherService = service;
         }
 
         [BindProperty]
@@ -23,12 +24,12 @@ namespace ComicShelf.Pages.Publishers
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Publishers == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var publisher = await _context.Publishers.FirstOrDefaultAsync(m => m.Id == id);
+            var publisher = _publisherService.Get(id);
 
             if (publisher == null)
             {
@@ -43,17 +44,16 @@ namespace ComicShelf.Pages.Publishers
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Publishers == null)
+            if (id == null)
             {
                 return NotFound();
             }
-            var publisher = await _context.Publishers.FindAsync(id);
+            var publisher = _publisherService.Get(id);
 
             if (publisher != null)
             {
                 Publisher = publisher;
-                _context.Publishers.Remove(Publisher);
-                await _context.SaveChangesAsync();
+                _publisherService.Remove(publisher);
             }
 
             return RedirectToPage("./Index");

@@ -5,33 +5,23 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ComicShelf.Pages.Publishers
 {
-    public class PublisherModel
-    {
-        public required string Name { get; set; }
-        public required string CountryId { get; set; }
-        public int Id { get; set; }
+    //public class PublisherModel
+    //{
+    //    public required string Name { get; set; }
+    //    public required string CountryId { get; set; }
+    //    public int Id { get; set; }
 
-        [SetsRequiredMembers]
-        public PublisherModel(Publisher publisher)
-        {
-            Name = publisher.Name;
-            CountryId = publisher.Country.Id.ToString();
-            Id = publisher.Id;
-        }
+    //    [SetsRequiredMembers]
+    //    public PublisherModel(Publisher publisher)
+    //    {
+    //        Name = publisher.Name;
+    //        CountryId = publisher.Country.Id.ToString();
+    //        Id = publisher.Id;
+    //    }
 
-        public PublisherModel()
-        {
+    //    public PublisherModel()
+    //    {
                 
-        }
-
-        public Publisher ToModel(ComicShelfContext context)
-        {
-            return new Publisher
-            {
-                Name = Name,
-                Country = context.Countries.Single(x => x.Id == int.Parse(CountryId)),
-                Id = Id
-            };
-        }
-    }
+    //    }
+    //}
 }

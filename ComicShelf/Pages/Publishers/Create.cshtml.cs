@@ -6,18 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ComicShelf.Models;
+using ComicShelf.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace ComicShelf.Pages.Publishers
 {
     public partial class CreateModel : PageModel
     {
-        private readonly ComicShelfContext _context;
+        private readonly PublishersService _publisherService;
+        private readonly CountryService _countryService;
 
-        public CreateModel(ComicShelfContext context)
+
+        public CreateModel(PublishersService publishersService, CountryService countryService)
         {
-            _context = context;
-            CountriesList = _context.Countries.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+            _publisherService = publishersService;
+            _countryService = countryService;
+
+
+            CountriesList = _countryService.GetCountriesForView(); 
         }
+
+        
 
         public IActionResult OnGet()
         {
@@ -26,7 +35,11 @@ namespace ComicShelf.Pages.Publishers
         }
 
         [BindProperty]
-        public PublisherModel Publisher { get; set; }
+        public Publisher Publisher { get; set; }
+
+        [BindProperty]
+        [Required]
+        public string SelectedCountry { get; set; }
         public IEnumerable<SelectListItem> CountriesList { get; set; }
 
 
@@ -35,14 +48,18 @@ namespace ComicShelf.Pages.Publishers
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || _context.Publishers == null || Publisher == null)
+            var country = _countryService.Get(int.Parse(SelectedCountry));
+            if (country != null)
+            {
+                Publisher.Country = country;
+            }
+
+            if (!ModelState.IsValid || Publisher == null)
             {
                 return Page();
             }
 
-            _context.Publishers.Add(Publisher.ToModel(_context)) ;
-
-            await _context.SaveChangesAsync();
+            _publisherService.Add(Publisher);
 
             return RedirectToPage("./Index");
         }

@@ -13,47 +13,41 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-floating mb-3">
+                <input asp-for="Series.Name" class="form-control" placeholder="Name" />
                 <label asp-for="Series.Name" class="control-label"></label>
-                <input asp-for="Series.Name" class="form-control" />
                 <span asp-validation-for="Series.Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-floating mb-3">
+                <input asp-for="Series.OriginalName" class="form-control" placeholder="Original Name" />
                 <label asp-for="Series.OriginalName" class="control-label"></label>
-                <input asp-for="Series.OriginalName" class="form-control" />
                 <span asp-validation-for="Series.OriginalName" class="text-danger"></span>
             </div>
-@*            <div class="form-group">
-                <label asp-for="NewPublisher" class="control-label"></label>
-                <input asp-for="NewPublisher" class="form-control" placeholder="New publisher" />
-                <span asp-validation-for="NewPublisher" class="text-danger"></span>
-                <span>or select existing</span>
-                <select asp-for="Series.PublishersIds" class="form-select" asp-items="@Model.AvailablePublishers" multiple data-"></select>
-                <span asp-validation-for="Series.PublishersIds" class="text-danger"></span>
-            </div>*@
-            <div class="form-group">
-                <label asp-for="Series.Publishers" class="control-label"></label>
+            <div class="form-floating mb-3">
                 <input asp-for="Series.Publishers" class="form-control" type="text" placeholder="Input your keyword" />
+                <label asp-for="Series.Publishers" class="control-label"></label>
+                <div class="form-text">
+                    Each publisher must be separated by coma (,)
+                </div>
+
                 <span asp-validation-for="Series.Publishers" class="text-danger"></span>
             </div>
-
-            <div class="form-group">
-                <label asp-for="Series.Type" class="control-label"></label>
+            <div class="form-floating mb-3">
                 <select asp-for="Series.Type" class="form-select" asp-items="@Model.Types"></select>
+                <label asp-for="Series.Type" class="control-label"></label>
                 <span asp-validation-for="Series.Type" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Series.Ongoing" onchange="ongoingChanged()" /> @Html.DisplayNameFor(model => model.Series.Ongoing)
-                </label>
+            <div class="mb-3 form-check">
+                <input class="form-check-input" asp-for="Series.Ongoing" onchange="ongoingChanged()" />
+                <label class="form-check-label">@Html.DisplayNameFor(model => model.Series.Ongoing)</label>
             </div>
-            <div class="form-group" id="totalIssues">
+            <div class="form-floating mb-3" id="totalIssues">
+                <input asp-for="Series.TotalIssues" class="form-control" type="number" placeholder="0" />
                 <label asp-for="Series.TotalIssues" class="control-label"></label>
-                <input asp-for="Series.TotalIssues" class="form-control" type="number"/>
                 <span asp-validation-for="Series.TotalIssues" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -68,95 +62,5 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
-    <script>
-
-        $.validator.addMethod("reqif",
-            function (value, element, parameters) {
-                var onging = $("#Series_Onging").is(":checked");
-                return onging == false;
-            });
-
-        $.validator.unobtrusive.adapters.add("reqif", [], function (options) {
-            options.rules.reqif = {};
-            options.messages["reqif"] = options.message;
-        });
-
-        $(function(){
-
-            ongoingChanged();
-
-            function split( val ) {
-              return val.split( /,\s*/ );
-            }
-            function extractLast( term ) {
-              return split( term ).pop();
-            }
-
-            $('#Series_Publishers').autocomplete({
-                minLength: 0,
-                source: function( request, response ) {
-                  $.getJSON( "Create?handler=Search", {
-                    term: extractLast( request.term )
-                  }, response );
-                },
-                focus: function() {
-                  // prevent value inserted on focus
-                  return false;
-                },
-                select: function( event, ui ) {
-                    var terms = split( this.value );
-                    // remove the current input
-                    terms.pop();
-                    // add the selected item
-                    terms.push( ui.item.value );
-                    // add placeholder to get the comma-and-space at the end
-                    terms.push( "" );
-                    this.value = terms.join( ", " );
-                    return false;
-                }
-            })
-
-            .on( "keydown", function( event ) {
-                if ( event.keyCode === $.ui.keyCode.TAB &&
-                    $( this ).autocomplete( "instance" ).menu.active ) {
-                  event.preventDefault();
-                }
-              })
-
-
-        })
-
-
-
-        //$(document).ready(function () {
-        //    $("#productName").autocomplete({
-        //        minLength: 2,
-        //        source: function (request, response) {
-        //            console.log("in funct");
-        //            $.ajax({
-        //                    url: "Create?handler=Search",
-        //                    data: ({ term: request.term}),
-        //                    dataType: "json",
-        //                    type: "GET",
-        //                    contentType: "application/json; charset=utf-8",
-        //                    success: function (data) {
-        //                    console.log("success");
-        //                    response($.map(data, function (item) {
-        //                        console.log("response"+item)
-        //                        return item;
-        //                    }))
-        //                    }
-                            
-        //            });
-        //        },
-        //        select: function (e, i) {
-        //            $("#productName").val(i.item.val);
-        //        },
-        //        minLength: 0
-        //    }).focus(function () {
-        //        $(this).autocomplete("search");
-        //    });
-        //});
-    </script>
+    <script src="~/js/Series.js"></script>
 }

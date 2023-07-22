@@ -6,28 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ComicShelf.Models;
+using ComicShelf.Services;
 
 namespace ComicShelf.Pages.Authors
 {
     public class DetailsModel : PageModel
     {
-        private readonly ComicShelf.Models.ComicShelfContext _context;
+        private readonly AuthorsService _service;
 
-        public DetailsModel(ComicShelf.Models.ComicShelfContext context)
+        public DetailsModel(AuthorsService service)
         {
-            _context = context;
+            _service = service;
         }
 
       public Author Author { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Authors == null)
+            if (id == null )
             {
                 return NotFound();
             }
 
-            var author = await _context.Authors.FirstOrDefaultAsync(m => m.Id == id);
+            var author = _service.Get(id);
             if (author == null)
             {
                 return NotFound();

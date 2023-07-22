@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using ComicShelf.Models;
+using ComicShelf.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -14,12 +13,16 @@ namespace ComicShelf.Pages.SeriesNs
 {
     public class CreateModel : PageModel
     {
-        private readonly Models.ComicShelfContext _context;
+        //private readonly Models.ComicShelfContext _context;
+        private readonly SearchService _searchController;
+        private readonly SeriesService _seriesService;
 
-        public CreateModel(Models.ComicShelfContext context)
+        public CreateModel(SearchService searchController, PublishersService publishersController, SeriesService seriesController)
         {
-            _context = context;
-            AvailablePublishers = _context.Publishers.OrderBy(x => x.Name).Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+            _searchController = searchController;
+            _seriesService = seriesController;
+
+            AvailablePublishers = publishersController.GetAll().OrderBy(x => x.Name).Select(x => new SelectListItem(x.Name, x.Id.ToString()));
             var enums = Enum.GetNames(typeof(Models.Enums.Type));
             var values = Enum.GetValues(typeof(Models.Enums.Type));
             for (var i = 0; i < values.Length; i++)
@@ -41,7 +44,7 @@ namespace ComicShelf.Pages.SeriesNs
 
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
             //if (Publishers != null)
             //{
@@ -51,69 +54,19 @@ namespace ComicShelf.Pages.SeriesNs
             //    TryValidateModel(ModelState);
             //}
 
-            if (!ModelState.IsValid || _context.Series == null || Series == null)
+            if (!ModelState.IsValid ||  Series == null)
             {
                 return Page();
             }
 
-            _context.Series.Add(Series.ToModel(_context));
-            await _context.SaveChangesAsync();
+            _seriesService.Add(Series);
 
             return RedirectToPage("./Index");
         }
 
         public IActionResult OnGetSearch(string term)
         {
-            return new JsonResult(_context.Publishers.Where(x => x.Name.Contains(term)).Select(x => x.Name));
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-    public class RequiredIfAttribute : ValidationAttribute, IClientModelValidator
-    {
-        public string PropertyName { get; set; }
-        public object Value { get; set; }
-
-        public RequiredIfAttribute(string propertyName, object value, string errorMessage = "")
-        {
-            PropertyName = propertyName;
-            ErrorMessage = errorMessage;
-            Value = value;
-        }
-
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            var instance = validationContext.ObjectInstance;
-            var type = instance.GetType();
-            var proprtyvalue = type.GetProperty(PropertyName).GetValue(instance, null);
-            if (proprtyvalue != null)
-            {
-                if (proprtyvalue.ToString() == Value.ToString() && value == null)
-                {
-                    return new ValidationResult(ErrorMessage);
-                }
-            }
-            return ValidationResult.Success;
-        }
-
-        public void AddValidation(ClientModelValidationContext context)
-        {
-            MergeAttribute(context.Attributes, "data-val", "true");
-            var errorMessage = FormatErrorMessage(context.ModelMetadata.GetDisplayName());
-            MergeAttribute(context.Attributes, "data-val-reqif", errorMessage);
-        }
-
-        private bool MergeAttribute(
-        IDictionary<string, string> attributes,
-        string key,
-        string value)
-        {
-            if (attributes.ContainsKey(key))
-            {
-                return false;
-            }
-            attributes.Add(key, value);
-            return true;
+            return new JsonResult(_searchController.FindPublishersByTerm(term));
         }
     }
 }

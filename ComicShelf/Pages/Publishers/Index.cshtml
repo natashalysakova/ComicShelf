@@ -2,10 +2,20 @@
 @model ComicShelf.Pages.Publishers.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Publishers";
 }
 
-<h1>Index</h1>
+<h1>Publishers</h1>
+@{
+    var warning = ViewData["PublisherNotification"]?.ToString();
+    if (!string.IsNullOrEmpty(warning))
+    {
+        <div class="alert alert-danger" role="alert">
+            @warning
+        </div>
+    }
+}
+
 
 <p>
     <a asp-page="Create">Create New</a>

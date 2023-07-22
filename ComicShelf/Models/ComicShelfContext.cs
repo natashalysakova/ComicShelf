@@ -25,9 +25,6 @@ namespace ComicShelf.Models
 
         //public virtual DbSet<PublisherSeries> PublisherSeries { get; set; }
 
-        [NotMapped]
-        public Country UnknownCountry { get => Countries.Single(x => x.Name == "Unknown"); }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Author>().ToTable("Author");
