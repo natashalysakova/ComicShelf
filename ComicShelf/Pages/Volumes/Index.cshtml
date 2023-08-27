@@ -1,0 +1,127 @@
+﻿@page "/"
+@model ComicShelf.Pages.Volumes.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+
+<div class="row">
+    @foreach (var item in Model.Volumes)
+    {
+        <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6 col-sm-12 p-1">
+
+            <div class="card">
+                <h5 class="card-header">@item.Title</h5>
+                @*                <img src="https://static.icy-veins.com/wp/wp-content/uploads/2023/06/necro-2-1-e1689097098668.png" class="card-img-top" />
+            *@
+@*                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(item.Name))
+                    {
+                        <h6 class="card-title">@item.Name</h6>
+                    }
+                    <p class="text-body-secondary">@item.Type</p>
+                </div>
+*@                <img src="..." class="card-img-top" alt="...">
+@*                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">@(string.Join(", ", item.Publishers.Select(x => $"{x.Country.Flag} {x.Name}")))</li>
+                    <li class="list-group-item">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-cash-coin"></i></span>
+                            <span type="text" class="form-control">@item.HasIssues</span>
+                            <span class="input-group-text">/</span>
+                            @{
+                                if (item.Ongoing)
+                                {
+                                    <span class="form-control text-bg-success">Ongoing</span>
+                                }
+                                else
+                                {
+                                    <span type="text" class="form-control">@item.TotalIssues</span>
+                                }
+                            }
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-bookmark-check"></i></span>
+                            <span type="text" class="form-control">@item.Volumes.Count(x=>x.Status == Models.Enums.Status.Completed)</span>
+                            <span class="input-group-text">/</span>
+                            <span type="text" class="form-control">@item.Volumes.Count</span>
+                        </div>
+                    </li>
+                </ul>
+*@                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-6 text-start">
+                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
+                        </div>
+                        <div class="col-6 text-end">
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary ">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@*<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Volume[0].Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volume[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volume[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volume[0].Raiting)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volume[0].PurchaseStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volume[0].PurchaseDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Volume) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Raiting)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchaseStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchaseDate)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+*@

@@ -21,6 +21,8 @@ namespace ComicShelf.Models
         public virtual DbSet<Publisher> Publishers { get; set; }
         public virtual DbSet<Series> Series { get; set; }
         public virtual DbSet<Volume> Volumes { get; set; }
+        public virtual DbSet<VolumeCover> VolumeCovers { get; set; }
+
         //public virtual DbSet<AuthorVolume> AuthorVolume { get; set; }
 
         //public virtual DbSet<PublisherSeries> PublisherSeries { get; set; }
@@ -33,22 +35,8 @@ namespace ComicShelf.Models
             modelBuilder.Entity<Publisher>().ToTable("Publisher");
             modelBuilder.Entity<Series>().ToTable("Series");
             modelBuilder.Entity<Volume>().ToTable("Volume");
-            ////modelBuilder.Entity<AuthorVolume>().ToTable("AuthorVolume");
-            ////modelBuilder.Entity<PublisherSeries>().ToTable("PublisherSeries");
+            modelBuilder.Entity<VolumeCover>().ToTable("VolumeCovers");
 
-            //modelBuilder.Entity<AuthorVolume>(entity =>
-            //{
-            //    entity.HasKey(e => new { e.AuthorsId, e.VolumesId });
-
-            //    entity.HasIndex(e => e.VolumesId, "IX_AuthorVolume_VolumesId");
-            //});
-
-            //modelBuilder.Entity<PublisherSeries>(entity =>
-            //{
-            //    entity.HasKey(e => new { e.PublishersId, e.SeriesId });
-
-            //    entity.HasIndex(e => e.SeriesId, "IX_PublisherSeries_SeriesId");
-            //});
 
         }
     }

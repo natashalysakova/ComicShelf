@@ -17,7 +17,7 @@ namespace ComicShelf.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -111,7 +111,7 @@ namespace ComicShelf.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CountryId")
+                    b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -180,7 +180,7 @@ namespace ComicShelf.Migrations
                     b.Property<int>("Raiting")
                         .HasColumnType("int");
 
-                    b.Property<int>("SeriesId")
+                    b.Property<int?>("SeriesId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -195,6 +195,20 @@ namespace ComicShelf.Migrations
                     b.HasIndex("SeriesId");
 
                     b.ToTable("Volume", (string)null);
+                });
+
+            modelBuilder.Entity("ComicShelf.Models.VolumeCover", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Cover")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VolumeCovers", (string)null);
                 });
 
             modelBuilder.Entity("PublisherSeries", b =>
@@ -242,9 +256,7 @@ namespace ComicShelf.Migrations
                 {
                     b.HasOne("ComicShelf.Models.Country", "Country")
                         .WithMany("Publishers")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CountryId");
 
                     b.Navigation("Country");
                 });
@@ -253,11 +265,20 @@ namespace ComicShelf.Migrations
                 {
                     b.HasOne("ComicShelf.Models.Series", "Series")
                         .WithMany("Volumes")
-                        .HasForeignKey("SeriesId")
+                        .HasForeignKey("SeriesId");
+
+                    b.Navigation("Series");
+                });
+
+            modelBuilder.Entity("ComicShelf.Models.VolumeCover", b =>
+                {
+                    b.HasOne("ComicShelf.Models.Volume", "Volume")
+                        .WithOne("Cover")
+                        .HasForeignKey("ComicShelf.Models.VolumeCover", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Series");
+                    b.Navigation("Volume");
                 });
 
             modelBuilder.Entity("PublisherSeries", b =>
@@ -287,6 +308,8 @@ namespace ComicShelf.Migrations
 
             modelBuilder.Entity("ComicShelf.Models.Volume", b =>
                 {
+                    b.Navigation("Cover");
+
                     b.Navigation("Issues");
                 });
 #pragma warning restore 612, 618

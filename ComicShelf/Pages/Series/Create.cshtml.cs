@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using ComicShelf.Models;
+using ComicShelf.Models.Enums;
+using ComicShelf.Pages.Volumes;
 using ComicShelf.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -23,12 +25,8 @@ namespace ComicShelf.Pages.SeriesNs
             _seriesService = seriesController;
 
             AvailablePublishers = publishersController.GetAll().OrderBy(x => x.Name).Select(x => new SelectListItem(x.Name, x.Id.ToString()));
-            var enums = Enum.GetNames(typeof(Models.Enums.Type));
-            var values = Enum.GetValues(typeof(Models.Enums.Type));
-            for (var i = 0; i < values.Length; i++)
-            {
-                Types.Add(new SelectListItem { Text = enums[i], Value = values.GetValue(i).ToString() });
-            }
+
+            Types.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Status)));   
         }
 
         public IActionResult OnGet()

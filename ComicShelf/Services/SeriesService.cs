@@ -93,6 +93,11 @@ namespace ComicShelf.Services
 
             this.Update(original);
         }
+
+        internal Series GetByName(string selectedSeries)
+        {
+            return dbSet.Where(x => x.Name == selectedSeries).Single();
+        }
     }
 
     enum SeriesControllerSort

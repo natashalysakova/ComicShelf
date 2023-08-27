@@ -1,0 +1,68 @@
+﻿@page
+@model ComicShelf.Pages.Volumes.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Volume</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="SelectedSeries" class="form-control" placeholder="Series" />
+                <label asp-for="Volume.Series" class="control-label"></label>
+                <span asp-validation-for="Volume.Series" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Volume.Number" class="form-control" placeholder="Volume #"/>
+                <label asp-for="Volume.Number" class="control-label"></label>
+                <span asp-validation-for="Volume.Number" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Volume.Title" class="form-control" placeholder="Title" />
+                <label asp-for="Volume.Title" class="control-label"></label>
+                <span asp-validation-for="Volume.Title" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <select asp-for="Volume.Status" class="form-control" asp-items="@Model.Statuses"></select>
+                <label asp-for="Volume.Status" class="control-label"></label>
+                <span asp-validation-for="Volume.Status" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <select asp-for="Volume.Raiting" class="form-control" asp-items="@Model.Ratings"></select>
+                <label asp-for="Volume.Raiting" class="control-label"></label>
+                <span asp-validation-for="Volume.Raiting" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <select asp-for="Volume.PurchaseStatus" class="form-control" asp-items="@Model.PurchaseStatuses"></select>
+                <label asp-for="Volume.PurchaseStatus" class="control-label"></label>
+                <span asp-validation-for="Volume.PurchaseStatus" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Volume.PurchaseDate" class="form-control" />
+                <label asp-for="Volume.PurchaseDate" class="control-label"></label>
+                <span asp-validation-for="Volume.PurchaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/Volume.js"></script>
+}

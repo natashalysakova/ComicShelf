@@ -17,5 +17,15 @@ namespace ComicShelf.Services
         {
             return _context.Publishers.Where(x => x.Name.ToLower().Contains(term.ToLower())).Select(x => x.Name);
         }
+
+        internal IEnumerable<string> FindSeriesByTerm(string term)
+        {
+            if(string.IsNullOrEmpty(term))
+                return _context.Series.Select(x => x.Name);
+
+            var nameContains = _context.Series.Where(x => x.Name.ToLower().Contains(term.ToLower())).Select(x => x.Name);
+            var originalNameContains = _context.Series.Where(x => x.OriginalName != null && x.OriginalName.ToLower().Contains(term.ToLower())).Select(x => x.Name);
+            return nameContains.Union(originalNameContains).Distinct();
+        }
     }
 }
