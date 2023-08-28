@@ -1,0 +1,115 @@
+﻿@using ComicShelf.Models;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Volume
+
+<div class="modal-header">
+    <h1 class="modal-title fs-5" id="exampleModalLabel">@Model.Series.Name #@Model.Number</h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Title</h5>
+            @*@if (Model.Series != null)
+            {
+                <h6 class="card-subtitle mb-2 text-muted">@Model.Series.Name</h6>
+            }
+            <p class="card-text">
+                Volume #
+                <span class="badge text-bg-info">@Model.Number</span>
+            </p>*@
+
+        </div>
+
+        @if (Model.Cover != null)
+        {
+            <img src="src=" data:image;base64,@System.Convert.ToBase64String(Model.Cover.Cover)"" class="card-img-top" />
+        }
+
+        <ul class="list-group list-group-flush">
+
+            <li class="list-group-item">
+                <div class="input-group">
+                    @{
+                        string icon;
+
+                        switch (Model.PurchaseStatus)
+                        {
+                            case Models.Enums.PurchaseStatus.Announced:
+                                icon = "bi-megaphone";
+                                break;
+                            case Models.Enums.PurchaseStatus.Pirated:
+                                icon = "bi-flag";
+                                break;
+                            case Models.Enums.PurchaseStatus.Gift:
+                                icon = "bi-gift";
+                                break;
+                            default:
+                                icon = "bi-cash-coin";
+                                break;
+                        }
+                    }
+                    <span class="input-group-text">
+                        <i class="bi @icon"></i>
+                    </span>
+                    <span class="form-control" type="text">@Model.PurchaseStatus</span>
+                    @if (Model.PurchaseDate != default)
+                    {
+                        <span type="text" class="form-control">@Model.PurchaseDate.ToShortDateString()</span>
+                    }
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="input-group">
+                    @{
+                        string iconRead;
+
+                        switch (Model.Status)
+                        {
+                            case Models.Enums.Status.Completed:
+                                iconRead = "bi-book-fill";
+                                break;
+                            case Models.Enums.Status.Reading:
+                                iconRead = "bi-book-half";
+                                break;
+                            default:
+                                iconRead = "bi-book";
+                                break;
+                        }
+                    }
+                    <span class="input-group-text"><i class="bi @iconRead"></i></span>
+                    <span type="text" class="form-control">@Model.Status</span>
+                </div>
+            </li>
+
+            <li class="list-group-item">
+                <div class="input-group">
+
+                    <span class="input-group-text"><i class="bi bi-bookmark-check"></i></span>
+                    <span type="text" class="form-control">@Model.Number</span>
+                    <span class="input-group-text">/</span>
+                    <span type="text" class="form-control">@Model.Issues.Count</span>
+
+                </div>
+            </li>
+        </ul>
+        <div class="card-footer">
+            
+        </div>
+    </div>
+
+
+</div>
+<div class="modal-footer text-center">
+    <div class="row">
+        <div class="col-6 text-start">
+            <a asp-page="./Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-page="./Edit" asp-route-id="@Model.Id" class="btn btn-primary ">Edit</a>
+        </div>
+    </div>
+</div>

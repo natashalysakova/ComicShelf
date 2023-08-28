@@ -15,9 +15,14 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating mb-3">
-                <input asp-for="SelectedSeries" class="form-control" placeholder="Series" />
+                <input asp-for="Volume.Series" class="form-control" placeholder="Series" />
                 <label asp-for="Volume.Series" class="control-label"></label>
                 <span asp-validation-for="Volume.Series" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">                
+                <select asp-for="Volume.Authors" class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" data-style="btn-dark" asp-items="@Model.Authors"></select>
+                <label asp-for="Volume.Authors" class="control-label"></label>
+                <span asp-validation-for="Volume.Authors" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Volume.Number" class="form-control" placeholder="Volume #"/>
@@ -28,6 +33,11 @@
                 <input asp-for="Volume.Title" class="form-control" placeholder="Title" />
                 <label asp-for="Volume.Title" class="control-label"></label>
                 <span asp-validation-for="Volume.Title" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Volume.Issues" class="form-control" placeholder="Issues in volume" />
+                <label asp-for="Volume.Issues" class="control-label"></label>
+                <span asp-validation-for="Volume.Issues" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <select asp-for="Volume.Status" class="form-control" asp-items="@Model.Statuses"></select>
@@ -65,4 +75,5 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script src="~/js/Volume.js"></script>
+
 }

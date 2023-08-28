@@ -5,6 +5,7 @@
     {
         None,
         Writer,
-        Artist
+        Artist,
+        Mangaka
     }
 }

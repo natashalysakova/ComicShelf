@@ -8,6 +8,9 @@ namespace ComicShelf.Services
         {
         }
 
-
+        internal Author GetByName(string trimmedItem)
+        {
+            return dbSet.Where(x=>x.Name == trimmedItem).FirstOrDefault();
+        }
     }
 }
