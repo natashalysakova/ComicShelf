@@ -15,7 +15,7 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating mb-3">
-                <input asp-for="Volume.Series" class="form-control" placeholder="Series" />
+                <select asp-for="Volume.Series" class="selectpicker form-control" placeholder="Series" data-live-search="true" data-style="btn-dark" asp-items="@Model.Series"></select>
                 <label asp-for="Volume.Series" class="control-label"></label>
                 <span asp-validation-for="Volume.Series" class="text-danger"></span>
             </div>
@@ -58,6 +58,11 @@
                 <input asp-for="Volume.PurchaseDate" class="form-control" />
                 <label asp-for="Volume.PurchaseDate" class="control-label"></label>
                 <span asp-validation-for="Volume.PurchaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Volume.Cover" class="form-control" />
+                <label asp-for="Volume.Cover" class="control-label"></label>
+                <span asp-validation-for="Volume.Cover" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input type="submit" value="Create" class="btn btn-primary" />

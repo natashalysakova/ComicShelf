@@ -1,6 +1,9 @@
-﻿namespace ComicShelf.Services
+﻿using System.Collections;
+using System.Collections.Generic;
+
+namespace ComicShelf.Services
 {
-    public interface IService
+    public interface IService 
     {
     }
 }

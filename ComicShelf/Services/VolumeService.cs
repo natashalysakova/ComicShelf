@@ -1,6 +1,11 @@
 ﻿using ComicShelf.Models;
 using ComicShelf.Models.Enums;
 using ComicShelf.Pages.Volumes;
+using Microsoft.Extensions.Hosting.Internal;
+using System.Security.Policy;
+using UnidecodeSharpFork;
+using static System.Net.Mime.MediaTypeNames;
+using System.Web;
 using ComicType = ComicShelf.Models.Enums.Type;
 
 namespace ComicShelf.Services
@@ -21,12 +26,12 @@ namespace ComicShelf.Services
         public void Add(VolumeModel model)
         {
             var series = _seriesService.Get(int.Parse(model.Series));
-            if(series == null)
+            if (series == null)
             {
                 series = new Series() { Name = model.Series, Type = ComicType.Comics };
                 _seriesService.Add(series);
             }
-      
+
             var authorList = new List<Author>();
             foreach (var item in model.Authors)
             {
@@ -41,7 +46,7 @@ namespace ComicShelf.Services
                 {
                     Roles role;
 
-                    if(series.Type == ComicType.Manga)
+                    if (series.Type == ComicType.Manga)
                     {
                         role = Roles.Mangaka;
                     }
@@ -59,6 +64,16 @@ namespace ComicShelf.Services
 
             var issues = new List<Issue>(model.Issues);
 
+            var urlPath = string.Empty;
+            var cover = new VolumeCover();
+            if (model.Cover != null)
+            {
+
+                urlPath = FileUtility.DownloadFileFromWeb(model.Cover, series.Name, model.Number, out byte[] coverBytes);
+                cover.Cover = coverBytes;
+                cover.Extention = new FileInfo(model.Cover).Extension;
+            }
+
             var volume = new Volume()
             {
                 Title = model.Title,
@@ -70,17 +85,43 @@ namespace ComicShelf.Services
                 PurchaseStatus = model.PurchaseStatus,
                 Raiting = model.Raiting,
                 Status = model.Status,
+                CoverUrl = urlPath,
+                Cover = cover
             };
 
-            if (model.Cover != null)
+            this.Add(volume);
+        }
+
+        internal string GetSeriesName(Volume volume)
+        {
+            return _seriesService.GetAll().Single(x => x.Volumes.Contains(volume)).Name;
+        }
+
+        public override void Update(Volume item)
+        {
+            if (item.CoverUrl.StartsWith("http"))
             {
-                var cover = new VolumeCover() { Cover = model.Cover };
-                _coverService.Add(cover);
-                volume.Cover = cover;
+                var seriesName = GetSeriesName(item);
+                item.CoverUrl = FileUtility.DownloadFileFromWeb(item.CoverUrl, seriesName, item.Number, out byte[] img);
+                var extention = new FileInfo(item.CoverUrl).Extension;
+
+                var cover = _coverService.GetCoverForVolume(item);
+                if(cover == null)
+                {
+                    var original = Get(item.Id);
+                    cover = new VolumeCover() { Cover = img, Extention = extention };
+                    original.Cover = cover;
+                    _coverService.Add(cover);
+                }
+                else
+                {
+                    cover.Cover = img;
+                    cover.Extention = extention;
+                    _coverService.Update(cover);
+                }
             }
 
-            this.Add(volume);
-
+            base.Update(item);
         }
     }
 }

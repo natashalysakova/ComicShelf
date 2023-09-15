@@ -27,6 +27,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.9" />
+    <PackageReference Include="UnidecodeSharpFork" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +40,13 @@
 
   <ItemGroup>
     <None Include="Pages\Publishers\PublisherInputView.cshtml" />
+    <None Include="wwwroot\images\Atel%27ie Chakluns%27kikh Kapelyukhiv\Volume 5.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\" />
+    <Folder Include="Localization\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

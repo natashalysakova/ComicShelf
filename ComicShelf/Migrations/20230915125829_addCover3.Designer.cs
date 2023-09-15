@@ -4,6 +4,7 @@ using ComicShelf.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComicShelf.Migrations
 {
     [DbContext(typeof(ComicShelfContext))]
-    partial class ComicShelfContextModelSnapshot : ModelSnapshot
+    [Migration("20230915125829_addCover3")]
+    partial class addCover3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,10 +212,6 @@ namespace ComicShelf.Migrations
                     b.Property<byte[]>("Cover")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Extention")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

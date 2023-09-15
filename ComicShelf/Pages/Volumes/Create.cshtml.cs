@@ -16,23 +16,24 @@ namespace ComicShelf.Pages.Volumes
     {
         private readonly VolumeService _volumeService;
         private readonly SearchService _searchService;
-        private readonly AuthorsService _authorsService;
 
         public CreateModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService)
         {
             _volumeService = volumeService;
             _searchService = searchService;
-            _authorsService = authorsService;
             Statuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Status)));
             PurchaseStatuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(PurchaseStatus)));
             Ratings.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Rating)));
-            Authors.AddRange(_authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+            Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+            Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
         }
 
         public List<SelectListItem> Statuses { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> PurchaseStatuses { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Ratings { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> Series { get; set; } = new List<SelectListItem>();
+
 
         public IActionResult OnGet()
         {

@@ -63,13 +63,13 @@ div {
     font-style: italic;
     font-weight: 900;
     color: hotpink;
-
+    background-color: dodgerblue;
     overflow: hidden;
     height: 35px;
 }
 
 .book-title {
-    margin: 5px;
+    margin: 5px 5px 5px 5px;
     position: absolute;
     line-height: 15px;
     top: 35px;
@@ -81,4 +81,18 @@ div {
     color: black;
     writing-mode: vertical-rl;
     text-orientation: mixed;
+    transform: rotate(180deg);
+}
+
+
+.thumb .preview {
+    position: absolute;
+    visibility: hidden;
+}
+
+.thumb:hover, .thumb:hover .preview {
+    visibility: visible;
+    top: 0;
+    left: 100px;
+    z-index: 1;
 }

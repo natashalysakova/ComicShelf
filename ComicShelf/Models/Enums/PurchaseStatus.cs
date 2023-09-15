@@ -8,6 +8,7 @@
         Pirated,
         Gift,
         Free,
-        GiftedAway
+        GiftedAway,
+        Wishlist
     }
 }

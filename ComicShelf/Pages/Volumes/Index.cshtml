@@ -1,10 +1,6 @@
 ﻿@page "/"
 @model ComicShelf.Pages.Volumes.IndexModel
 
-@{
-    ViewData["Title"] = "Index";
-}
-
 <p>
     <a asp-page="Create">Create New</a>
 </p>
@@ -13,33 +9,22 @@
 <div class="shelf">
     @foreach (var item in Model.AnnouncedAndPreordered)
     {
-        <div class="book" data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="@item.Id">
-
-            @if(item.PurchaseStatus == Models.Enums.PurchaseStatus.Announced)
-            {
-                <span class="position-absolute top-100 start-50 translate-middle p-2 bg-info border border-light rounded-circle"></span>
-
-            }
-            else
-            {
-                <span class="position-absolute top-100 start-50 translate-middle p-2 bg-success border border-light rounded-circle"></span>
-
-            }
-
-            <div class="book-number">@item.Number</div>
-            <div class="book-title">@item.Series.Name</div>
-        </div>
+        <partial name="_ShelfPartial" model="@item" />
+        
     }
 </div>
-
+<h5>Wishlist</h5>
+<div class="shelf">
+    @foreach (var item in Model.WishList)
+    {
+        <partial name="_ShelfPartial" model="@item" />
+    }
+</div>
 <h5>Shelf</h5>
 <div class="shelf">
     @foreach (var item in Model.Purchased)
     {
-        <div class="book" data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="@item.Id">
-            <div class="book-number">@item.Number</div>
-            <div class="book-title">@item.Series.Name</div>
-        </div>
+        <partial name="_ShelfPartial" model="@item" />
     }
 </div>
 
@@ -63,9 +48,9 @@
 
                 </div>
 
-                @if (item.Cover != null)
+                @if (item.CoverUrl != null)
                 {
-                    <img src="src=" data:image;base64,@System.Convert.ToBase64String(item.Cover.Cover)"" class="card-img-top" />
+                    <img src="@item.CoverUrl" class="card-img-top" height="440" style="object-fit:cover" />
                 }
 
                 @*                <div class="card-body">
@@ -160,9 +145,8 @@
 </div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            
         </div>
     </div>
 </div>

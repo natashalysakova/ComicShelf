@@ -7,5 +7,10 @@ namespace ComicShelf.Services
         public CoverService(ComicShelfContext context) : base(context)
         {
         }
+
+        internal VolumeCover GetCoverForVolume(Volume item)
+        {
+            return context.VolumeCovers.SingleOrDefault(x=>x.Volume.Id == item.Id);
+        }
     }
 }

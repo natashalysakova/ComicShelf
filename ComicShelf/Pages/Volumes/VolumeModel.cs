@@ -13,7 +13,7 @@ namespace ComicShelf.Pages.Volumes
         public PurchaseStatus PurchaseStatus { get; set; }
 
         public DateTime PurchaseDate { get; set; }
-        public byte[]? Cover { get; set; }
+        public string Cover { get; set; }
 
         public string[] Authors { get; set; }
         public int Issues { get; set; }

@@ -23,7 +23,7 @@ namespace ComicShelf.Pages.SeriesNs
 
         public void OnGetAsync()
         {
-            Series = _service.GetAll().Include("Publishers").Include("Publishers.Country").ToList();
+            Series = _service.GetAll().Include("Publishers").Include("Publishers.Country").Include("Volumes").ToList();
         }
     }
 }

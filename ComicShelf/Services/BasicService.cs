@@ -1,7 +1,9 @@
 ﻿using ComicShelf.Models;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.Internal.TypeMapping;
+using System.Collections;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace ComicShelf.Services
 {
@@ -9,6 +11,8 @@ namespace ComicShelf.Services
     {
         protected DbSet<T> dbSet;
         protected ComicShelfContext context;
+
+
         public BasicService(ComicShelfContext context)
         {
             this.context = context;
@@ -59,6 +63,23 @@ namespace ComicShelf.Services
         internal bool Exists(int id)
         {
             return Get(id) != null;
+        }
+
+        public void LoadReference(T item, string reference)
+        {
+            dbSet.Entry(item).Reference(reference).Load();
+        }
+        public void LoadReference<TProperty>(T item, Expression<Func<T, TProperty?>> expression) where TProperty : class
+        {
+            dbSet.Entry(item).Reference(expression).Load();
+        }
+        public void LoadCollection(T item, string collection)
+        {
+            dbSet.Entry(item).Collection(collection).Load();
+        }
+        public void LoadCollection<TProperty>(T item, Expression<Func<T, IEnumerable<TProperty>>> expression) where TProperty : class
+        {
+            dbSet.Entry(item).Collection(expression).Load();
         }
     }
 }

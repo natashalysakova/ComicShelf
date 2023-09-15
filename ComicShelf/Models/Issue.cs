@@ -9,6 +9,6 @@ namespace ComicShelf.Models
         public required string Name { get; set; }
         public int Number { get; set; }
 
-        public Volume Volume { get; set; }
+        public virtual Volume Volume { get; set; }
     }
 }

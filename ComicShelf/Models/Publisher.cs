@@ -7,7 +7,7 @@ namespace ComicShelf.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public required string Name { get; set; }
-        public Country? Country { get; set; }
+        public virtual Country? Country { get; set; }
         public virtual ICollection<Series> Series { get; set; } = new List<Series>();
 
 

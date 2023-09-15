@@ -7,29 +7,41 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ComicShelf.Models;
+using ComicShelf.Services;
+using ComicShelf.Models.Enums;
 
 namespace ComicShelf.Pages.Volumes
 {
     public class EditModel : PageModel
     {
-        private readonly ComicShelf.Models.ComicShelfContext _context;
+        VolumeService _volumeService;
+        private readonly CoverService _coverService;
 
-        public EditModel(ComicShelf.Models.ComicShelfContext context)
+        public EditModel(VolumeService volumeService, CoverService coverService)
         {
-            _context = context;
+            _volumeService = volumeService;
+            _coverService = coverService;
+            Statuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Status)));
+            PurchaseStatuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(PurchaseStatus)));
+            Ratings.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Rating)));
+
         }
+
+        public List<SelectListItem> Statuses { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> PurchaseStatuses { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> Ratings { get; set; } = new List<SelectListItem>();
 
         [BindProperty]
         public Volume Volume { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Volumes == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var volume =  await _context.Volumes.FirstOrDefaultAsync(m => m.Id == id);
+            var volume = _volumeService.Get(id);
             if (volume == null)
             {
                 return NotFound();
@@ -46,16 +58,14 @@ namespace ComicShelf.Pages.Volumes
             {
                 return Page();
             }
-
-            _context.Attach(Volume).State = EntityState.Modified;
-
+         
             try
             {
-                await _context.SaveChangesAsync();
+                _volumeService.Update(Volume);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!VolumeExists(Volume.Id))
+                if (!_volumeService.Exists(Volume.Id))
                 {
                     return NotFound();
                 }
@@ -66,11 +76,6 @@ namespace ComicShelf.Pages.Volumes
             }
 
             return RedirectToPage("./Index");
-        }
-
-        private bool VolumeExists(int id)
-        {
-          return (_context.Volumes?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

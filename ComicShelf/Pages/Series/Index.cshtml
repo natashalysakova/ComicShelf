@@ -81,17 +81,32 @@
         <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6 col-sm-12 p-1">
 
             <div class="card">
-                <h5 class="card-header">@item.OriginalName</h5>
+                @if (!string.IsNullOrEmpty(item.Name))
+                {
+                    <h5 class="card-header">@item.Name</h5>
+                }
+                else
+                {
+                    <h5 class="card-header">@item.OriginalName</h5>
+                }
                 @*                <img src="https://static.icy-veins.com/wp/wp-content/uploads/2023/06/necro-2-1-e1689097098668.png" class="card-img-top" />
-            *@
+                *@
                 <div class="card-body">
-                    @if (!string.IsNullOrEmpty(item.Name))
+                    @if (!string.IsNullOrEmpty(item.OriginalName))
                     {
-                        <h6 class="card-title">@item.Name</h6>
+                        <h6 class="card-title">@item.OriginalName</h6>
                     }
                     <p class="text-body-secondary">@item.Type</p>
                 </div>
-                <img src="..." class="card-img-top" alt="...">
+                @{
+                    var latestVolume = item.Volumes.Where(x => x.Number == item.Volumes.Max(y => y.Number));
+                    var url = "...";
+                    if (latestVolume.Any())
+                    {
+                        url = latestVolume.First().CoverUrl;
+                    }
+                }
+                <img src="~/@url" class="card-img-top" alt="...">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">@(string.Join(", ", item.Publishers.Select(x => $"{x.Country.Flag} {x.Name}")))</li>
                     <li class="list-group-item">
