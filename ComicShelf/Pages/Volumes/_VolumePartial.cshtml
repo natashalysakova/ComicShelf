@@ -15,7 +15,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-5">
-                <img src="@Model.CoverUrl" class="img-fluid" height="500px" />
+                <img src="@Model.CoverUrl" class="img-fluid volume-image"/>
             </div>
             <div class="col-md-7">
                 @if (!string.IsNullOrEmpty(Model.Series.OriginalName))
@@ -92,91 +92,8 @@
             </div>
         </div>
     </div>
-    @*<div class="card">
-    <div class="card-body">
-    <h5 class="card-title">@Model.Title</h5>
-    </div>
-
-    @if (Model.CoverUrl != null)
-    {
-    <img src="@Model.CoverUrl" class="card-img-top" />
-    }
-
-    <ul class="list-group list-group-flush">
-
-    <li class="list-group-item">
-    <div class="input-group">
-    @{
-    string icon;
-
-    switch (Model.PurchaseStatus)
-    {
-    case Models.Enums.PurchaseStatus.Announced:
-    icon = "bi-megaphone";
-    break;
-    case Models.Enums.PurchaseStatus.Pirated:
-    icon = "bi-flag";
-    break;
-    case Models.Enums.PurchaseStatus.Gift:
-    icon = "bi-gift";
-    break;
-    default:
-    icon = "bi-cash-coin";
-    break;
-    }
-    }
-    <span class="input-group-text">
-    <i class="bi @icon"></i>
-    </span>
-    <span class="form-control" type="text">@Model.PurchaseStatus</span>
-    @if (Model.PurchaseDate != default)
-    {
-    <span type="text" class="form-control">@Model.PurchaseDate.ToShortDateString()</span>
-    }
-    </div>
-    </li>
-    <li class="list-group-item">
-    <div class="input-group">
-    @{
-    string iconRead;
-
-    switch (Model.Status)
-    {
-    case Models.Enums.Status.Completed:
-    iconRead = "bi-book-fill";
-    break;
-    case Models.Enums.Status.Reading:
-    iconRead = "bi-book-half";
-    break;
-    default:
-    iconRead = "bi-book";
-    break;
-    }
-    }
-    <span class="input-group-text"><i class="bi @iconRead"></i></span>
-    <span type="text" class="form-control">@Model.Status</span>
-    </div>
-    </li>
-
-    <li class="list-group-item">
-    <div class="input-group">
-
-    <span class="input-group-text"><i class="bi bi-bookmark-check"></i></span>
-    <span type="text" class="form-control">@Model.Number</span>
-    <span class="input-group-text">/</span>
-    <span type="text" class="form-control">@Model.Issues.Count</span>
-
-    </div>
-    </li>
-    </ul>
-    <div class="card-footer">
-
-    </div>
-    </div>*@
-
-
 </div>
-@*<div class="modal-footer text-center">
+<div class="modal-footer text-center">
     <div class="row">
         <div class="col-6 text-start">
             <a asp-page="./Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
@@ -185,4 +102,4 @@
             <a asp-page="./Edit" asp-route-id="@Model.Id" class="btn btn-primary ">Edit</a>
         </div>
     </div>
-</div>*@
+</div>

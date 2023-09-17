@@ -14,7 +14,10 @@
                 @Html.DisplayNameFor(model => model.Countries[0].Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Countries[0].Flag)
+                @Html.DisplayNameFor(model => model.Countries[0].FlagPNG)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Countries[0].FlagSVG)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Countries[0].Publishers)
@@ -24,35 +27,38 @@
     </thead>
     <tbody>
 
-     @foreach (var country in Model.Countries)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => country.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => country.Flag)
-                    </td>
-                    <td>
-                        @{
-                            foreach (var publisher in country.Publishers)
-                            {
-                                <a asp-page="/Publishers/Details" asp-route-id="@publisher.Id">@publisher.Name</a>
-                                <br />
-                            }
+        @foreach (var country in Model.Countries)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => country.Name)
+                </td>
+                <td>
+                    <img class="flag" src="@country.FlagPNG" />
+                </td>
+                <td>
+                    <img class="flag" src="@country.FlagSVG" />
+                </td>
+                <td>
+                    @{
+                        foreach (var publisher in country.Publishers)
+                        {
+                            <a asp-page="/Publishers/Details" asp-route-id="@publisher.Id">@publisher.Name</a>
+                            <br />
                         }
-                    </td>
-@*                    <td>
-                        <a asp-page="./Edit" asp-route-id="@country.Id">Edit</a> |
-                        <a asp-page="./Delete" asp-route-id="@country.Id">Delete</a>
-                    </td>*@
-                </tr>
-            }
-           
+                    }
+                </td>
+                @*                    <td>
+            <a asp-page="./Edit" asp-route-id="@country.Id">Edit</a> |
+            <a asp-page="./Delete" asp-route-id="@country.Id">Delete</a>
+            </td>*@
+            </tr>
+        }
 
-@*        <form method="post">
-            <input type="submit" value="Index" class="btn btn-primary" />
+
+        @*        <form method="post">
+        <input type="submit" value="Index" class="btn btn-primary" />
         </form>
-*@
+        *@
     </tbody>
 </table>

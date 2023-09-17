@@ -7,6 +7,7 @@ using UnidecodeSharpFork;
 using static System.Net.Mime.MediaTypeNames;
 using System.Web;
 using ComicType = ComicShelf.Models.Enums.Type;
+using Microsoft.EntityFrameworkCore;
 
 namespace ComicShelf.Services
 {
@@ -62,13 +63,12 @@ namespace ComicShelf.Services
                 authorList.Add(author);
             }
 
-            var issues = new List<Issue>(model.Issues);
+            var issues = GenerateEmptyIssues(model.Issues, series.Type).ToList();
 
             var urlPath = string.Empty;
             var cover = new VolumeCover();
             if (model.CoverFile != null && model.CoverFile.Length > 0)
             {
-
                 //urlPath = FileUtility.DownloadFileFromWeb(model.Cover, series.Name, model.Number, out byte[] coverBytes, out string extention);
                 urlPath = FileUtility.SaveOnServer(model.CoverFile, series.Name, model.Number, out byte[] coverBytes, out string extention);
                 cover.Cover = coverBytes;
@@ -94,9 +94,27 @@ namespace ComicShelf.Services
             this.Add(volume);
         }
 
+        private IEnumerable<Issue> GenerateEmptyIssues(int issues, ComicType type)
+        {
+            for (int i = 1; i <= issues; i++)
+            {
+                yield return new Issue() { Number = i, Name = type == ComicType.Comics ? "Issue " + i : "Chapter " + i };
+            } 
+        }
+
         internal string GetSeriesName(Volume volume)
         {
             return _seriesService.GetAll().Single(x => x.Volumes.Contains(volume)).Name;
+        }
+
+        public bool Exists(string seriesName, int volumeNumber)
+        {
+            return dbSet.Any(x => x.Series.Name == seriesName && x.Number == volumeNumber);
+        }
+
+        public override IQueryable<Volume> GetAll()
+        {
+            return base.GetAll().Include(x => x.Series);
         }
 
         public override void Update(Volume item)
@@ -123,6 +141,13 @@ namespace ComicShelf.Services
             //}
 
             base.Update(item);
+        }
+
+        public IList<Volume> Filter(PurchaseFilters purchaseFilters)
+        {
+            var selectedStatuses = purchaseFilters.ToStatusList();
+
+            return GetAll().Where(x => selectedStatuses.Contains(x.PurchaseStatus)).ToList();
         }
     }
 }

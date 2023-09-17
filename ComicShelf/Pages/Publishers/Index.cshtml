@@ -43,7 +43,7 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(x=> item.Country.Flag)
+                    <img src="@item.Country.FlagPNG" class="flag"/>
                     @Html.DisplayFor(x=> item.Country.Name)
                 </td>
                 <td>

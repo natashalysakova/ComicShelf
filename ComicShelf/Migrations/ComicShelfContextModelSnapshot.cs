@@ -17,7 +17,7 @@ namespace ComicShelf.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -65,7 +65,15 @@ namespace ComicShelf.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Flag")
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlagPNG")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlagSVG")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -176,6 +184,9 @@ namespace ComicShelf.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CoverId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CoverUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -195,7 +206,7 @@ namespace ComicShelf.Migrations
                     b.Property<int>("Raiting")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SeriesId")
+                    b.Property<int>("SeriesId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -284,7 +295,9 @@ namespace ComicShelf.Migrations
                 {
                     b.HasOne("ComicShelf.Models.Series", "Series")
                         .WithMany("Volumes")
-                        .HasForeignKey("SeriesId");
+                        .HasForeignKey("SeriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Series");
                 });
@@ -327,7 +340,8 @@ namespace ComicShelf.Migrations
 
             modelBuilder.Entity("ComicShelf.Models.Volume", b =>
                 {
-                    b.Navigation("Cover");
+                    b.Navigation("Cover")
+                        .IsRequired();
 
                     b.Navigation("Issues");
                 });

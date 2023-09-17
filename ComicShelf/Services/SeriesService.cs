@@ -96,6 +96,10 @@ namespace ComicShelf.Services
             foreach (var item in splited.Distinct())
             {
                 var trimmedItem = item.Trim();
+
+                if (string.IsNullOrEmpty(trimmedItem))
+                    continue;
+
                 var publisher = _publishersService.GetByName(trimmedItem);
                 if (publisher == null)
                 {

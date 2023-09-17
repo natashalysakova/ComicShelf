@@ -1,9 +1,42 @@
 ﻿@page "/"
 @model ComicShelf.Pages.Volumes.IndexModel
 
+
 <p>
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Create New</button>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        
+        <input id="FilterAll" class="btn-check ps-filter" type="checkbox" autocomplete="off" />
+        <label for="FilterAll" class="btn btn-outline-light">All</label>
+
+        <input id="FilterAvailable" class="btn-check ps-filter" type="checkbox" autocomplete="off"  />
+        <label for="FilterAvailable" class="btn btn-outline-info">On the shelf</label>
+
+        <input id="FilterPreorder" class="btn-check ps-filter" type="checkbox" autocomplete="off" />
+        <label for="FilterPreorder" class="btn btn-outline-success">Preorder</label>
+
+        <input id="FilterWishlist" class="btn-check ps-filter" type="checkbox" autocomplete="off" />
+        <label for="FilterWishlist" class="btn btn-outline-primary">Wishlist</label>
+
+        <input id="FilterAnnounced" class="btn-check ps-filter" type="checkbox" autocomplete="off" />
+        <label for="FilterAnnounced" class="btn btn-outline-warning">Announced</label>
+
+        <input id="FilterGone" class="btn-check ps-filter" type="checkbox" autocomplete="off" />
+        <label for="FilterGone" class="btn btn-outline-secondary">Gone</label>
+
+        @*
+
+        <input type="checkbox" class="btn-check" id="ps_wishlist" autocomplete="off">
+        <label class="btn btn-outline-primary" for="ps_wishlist">Wishlist</label>
+
+        <input type="checkbox" class="btn-check" id="ps_announced" autocomplete="off">
+        <label class="btn btn-outline-primary" for="ps_announced">Announced</label>
+
+        <input type="checkbox" class="btn-check" id="ps_gone" autocomplete="off">
+        <label class="btn btn-outline-primary" for="ps_gone">Gone</label>*@
+    </div>
 </p>
+
 
 <div class="row" id="shelves">
     <partial name="_ShelfPartial" model="@Model.Volumes" />
@@ -25,7 +58,7 @@
 @section Scripts {
     <script src="~/js/Volume.js"></script>
     <script>
-        
+
     </script>
 }
 
@@ -59,7 +92,7 @@
             }
             <p class="text-body-secondary">@item.Type</p>
             </div>
-            
+
                 <ul class="list-group list-group-flush">
 
                     <li class="list-group-item">

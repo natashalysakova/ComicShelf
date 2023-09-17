@@ -1,5 +1,53 @@
 ﻿$(function () {
 
+    $('.ps-filter').each(function () {
+        $(this).prop('checked', true)
+        $(this).on('click', function (e) {
+
+            var all = $('#FilterAll')[0];
+            var value = e.target.checked
+
+            if (all == e.target) {
+
+
+                $('.ps-filter').each(function () {
+                    $(this).prop("checked", value);
+                });
+            }
+            else {
+                if (!value)
+                    all.checked = false;
+                else {
+                    if ($('.ps-filter:checked').length == $('.ps-filter').length - 1) {
+                        all.checked = true;
+                    }
+                }
+            }
+
+            var PurchaseFilters = {
+
+                "FilterAvailable": $('#FilterAvailable')[0].checked,
+                "FilterPreorder": $('#FilterPreorder')[0].checked,
+                "FilterWishlist": $('#FilterWishlist')[0].checked,
+                "FilterAnnounced": $('#FilterAnnounced')[0].checked,
+                "FilterGone": $('#FilterGone')[0].checked
+            };
+
+            $.ajax({
+                url: "?handler=Filtered",
+                type: 'GET',
+                //dataType: 'json',
+                //contentType: "application/json; charset=utf-8",
+                cache: false,
+                data: PurchaseFilters
+            }).done(function (result) {
+                $('#shelves').empty().html(result);
+            }).fail(function () {
+            //    alert("Sorry. Server unavailable. ");
+            });
+
+        });
+    });
 
 
     function split(val) {
@@ -41,13 +89,13 @@
     //    }
     //})
 
-   
+
     $(".multple-datalist").focusin(function () { $(this).attr("type", "email"); });
     $(".multple-datalist").focusout(function () { $(this).attr("type", "textbox"); });
 
 
     //NewVolume_Title
-    
+
 });
 
 function bookClick(id) {
@@ -56,7 +104,8 @@ function bookClick(id) {
         url: "?handler=Volume",
         type: 'GET',
         cache: false,
-        data: { id: id }
+        data: { id: id },
+        
     }).done(function (result) {
         $('#detail-modal-content').html(result);
     });
@@ -79,8 +128,9 @@ function switchCover() {
 }
 
 function createComplete(xnr) {
-    
+
     if (xnr.status == 200) {
+        $('#createAlert').hide();
         $('#createModal').modal('hide')
         var s = $('#shelves')
         s.html(xnr.responseText);
@@ -91,4 +141,19 @@ function createComplete(xnr) {
 
         al.show();
     }
+}
+
+function filterShelf(source) {
+    //$.ajax({
+    //    url: "?handler=Volume",
+    //    type: 'GET',
+    //    cache: false,
+    //    data: { id: id }
+    //}).done(function (result) {
+    //    $('#detail-modal-content').html(result);
+    //});
+
+
+
+
 }

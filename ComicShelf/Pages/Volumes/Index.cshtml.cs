@@ -11,6 +11,7 @@ using Microsoft.Extensions.Localization;
 using ComicShelf.Models.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net;
+using NuGet.Packaging;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -42,6 +43,7 @@ namespace ComicShelf.Pages.Volumes
         public List<SelectListItem> Ratings { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Series { get; set; } = new List<SelectListItem>();
+
         public IList<Volume> Volumes { get; set; } = default!;
         public IList<Volume> AnnouncedAndPreordered
         {
@@ -57,7 +59,6 @@ namespace ComicShelf.Pages.Volumes
                 return Volumes.Where(x => x.PurchaseStatus == Models.Enums.PurchaseStatus.Wishlist).ToList();
             }
         }
-
         public IList<Volume> Purchased
         {
             get
@@ -66,40 +67,96 @@ namespace ComicShelf.Pages.Volumes
             }
         }
 
+        
+
         public async Task OnGetAsync()
         {
             //Volumes = await volumeService.GetAll().Include(x => x.Series).OrderBy(x => x.Series.Name).ThenBy(x => x.Number).ToListAsync();
-            Volumes = await volumeService.GetAll().Include(x => x.Series).OrderByDescending(x => x.CreationDate).ToListAsync();
+            Volumes = await volumeService.GetAll().OrderByDescending(x => x.CreationDate).ToListAsync();
             ViewData["Title"] = _localizer.GetString("Main page");
         }
 
-        public async Task<PartialViewResult> OnGetVolumeAsync(int id)
+        public PartialViewResult OnGetVolumeAsync(int id)
         {
-            return Partial("_VolumePartial", volumeService.GetAll().Include(x=>x.Series).Single(x=>x.Id == id));
+            return Partial("_VolumePartial", volumeService.GetAll().Single(x=>x.Id == id));
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid || NewVolume == null)
             {
-                return new StatusCodeResult(500);
+                return StatusCode(400, "Fill mandatory fields");
+            }
+
+            if (volumeService.Exists(NewVolume.Series, NewVolume.Number))
+            {
+                return StatusCode(409, $"{NewVolume.Series} Volume #{NewVolume.Number} already exists");
             }
 
             volumeService.Add(NewVolume);
 
-            Volumes = await volumeService.GetAll().Include(x => x.Series).OrderByDescending(x => x.CreationDate).ToListAsync();
+            Volumes = await volumeService.GetAll().OrderByDescending(x => x.CreationDate).ToListAsync();
             return Partial("_ShelfPartial", Volumes);
         }
 
-        public IActionResult OnGetSearchSeries(string term)
+        public PartialViewResult OnGetFiltered(PurchaseFilters purchaseFilters)
         {
-            var res = _searchService.FindSeriesByTerm(term);
-            return new JsonResult(res);
+            Volumes = volumeService.Filter(purchaseFilters);
+            return Partial("_ShelfPartial", Volumes);
         }
-        public IActionResult OnGetSearchAutors(string term)
+
+        //public IActionResult OnGetSearchSeries(string term)
+        //{
+        //    var res = _searchService.FindSeriesByTerm(term);
+        //    return new JsonResult(res);
+        //}
+        //public IActionResult OnGetSearchAutors(string term)
+        //{
+        //    var res = _searchService.FindAutorByTerm(term);
+        //    return new JsonResult(res);
+        //}
+    }
+
+    public class PurchaseFilters
+    {
+        public bool FilterAvailable { get; set; }
+        public bool FilterPreorder { get; set; }
+        public bool FilterWishlist { get; set; }
+        public bool FilterAnnounced { get; set; }
+        public bool FilterGone { get; set; }
+
+        internal IEnumerable<PurchaseStatus> ToStatusList()
         {
-            var res = _searchService.FindAutorByTerm(term);
-            return new JsonResult(res);
+            IList<PurchaseStatus> statusList = new List<PurchaseStatus>();
+
+            if(FilterAvailable)
+            {
+                statusList.Add(PurchaseStatus.Bought);
+                statusList.Add(PurchaseStatus.Free);
+                statusList.Add(PurchaseStatus.Gift);
+            }
+
+            if(FilterPreorder)
+            {
+                statusList.Add(PurchaseStatus.Preordered);
+            }
+
+            if(FilterWishlist)
+            {
+                statusList.Add(PurchaseStatus.Wishlist);
+            }
+
+            if (FilterAnnounced)
+            {
+                statusList.Add(PurchaseStatus.Announced);
+            }
+
+            if (FilterGone)
+            {
+                statusList.Add(PurchaseStatus.GiftedAway);
+            }
+
+            return statusList;
         }
     }
 }

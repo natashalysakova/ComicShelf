@@ -9,6 +9,9 @@
     const int perRow = 5;
     var rows = Math.Ceiling(Model.Count() / (double)perRow);
 
+    if (rows == 0)
+        rows = 1;
+
     for (int i = 0; i < rows; i++)
     {
         <div class="shelf">
@@ -16,7 +19,7 @@
             {
                 <div class="book" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="bookClick(@item.Id)">
                     <img src="@item.CoverUrl" alt="">
-                    <div class="book-title">@item.Series.Name</div>
+                    <div class="book-title">@item.Series.Name<br>@item.Title</div>
                     <div class="book-number" style="background-color:@item.Series.Color;">@item.Number</div>
 
                     @if (item.PurchaseStatus == Models.Enums.PurchaseStatus.Announced || item.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered || item.PurchaseStatus == Models.Enums.PurchaseStatus.Wishlist)

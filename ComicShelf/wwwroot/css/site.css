@@ -84,8 +84,9 @@ div {
 
     .book:hover {
         transition: 0.2s ease-in;
-        transition-delay: 0.7s;
-        transform: scale(1.5);
+        /*transition-delay: 0.7s;*/
+        transform: scale(1.1);
+        box-shadow: 0px 0px 30px black;
         z-index: 1 !important;
     }
 
@@ -111,8 +112,9 @@ div {
     right: 0;
     bottom: 10px;
     line-height: 15px;
-    height: 65px;
-    padding: 10px 0 10px 0;
+    height: auto;
+    min-height: 50px;
+    padding: 10px 5px 10px 5px;
     text-align: justify-all;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: white;
@@ -155,4 +157,15 @@ div {
     overflow-clip-margin: unset;
     overflow: hidden;
     background-color: white;
+}
+
+
+.flag {
+    width: 22px;
+}
+
+.volume-image {
+    height: 400px;
+    width: 100%;
+    object-fit: cover;
 }

@@ -4,6 +4,7 @@ using ComicShelf.Services;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +14,6 @@ using System.IO;
 using System.Reflection;
 using System.Security.Policy;
 using UnidecodeSharpFork;
-using static System.Net.Mime.MediaTypeNames;
 
 internal class Program
 {
@@ -64,6 +64,7 @@ internal class Program
                 var context = services.GetRequiredService<ComicShelfContext>();
                 DbInitializer.Initialize(context);
                 RestoreImagesFromDB(context);
+                FillFlags(context);
                 FillColors(context);
             }
             catch (Exception ex)
@@ -85,6 +86,22 @@ internal class Program
         app.MapRazorPages();
 
         app.Run();
+    }
+
+    private static void FillFlags(ComicShelfContext context)
+    {
+        foreach (var item in context.Countries)
+        {
+            if (String.IsNullOrEmpty(item.FlagPNG) || String.IsNullOrEmpty(item.FlagSVG))
+            {
+                item.CountryCode = item.CountryCode.ToLower();
+                FileUtility.SaveFlagFromCDN(item.CountryCode, out string png, out string svg);
+                item.FlagPNG = png;
+                item.FlagSVG = svg;
+            }
+        }
+
+        context.SaveChanges();
     }
 
     private static void RestoreImagesFromDB(ComicShelfContext context)
@@ -178,7 +195,7 @@ public static class FileUtility
                     if (!Directory.Exists(localDirectory))
                         Directory.CreateDirectory(localDirectory);
 
-                    File.WriteAllBytes(localPath, imageBytes);
+                    System.IO.File.WriteAllBytes(localPath, imageBytes);
 
                 }
             }
@@ -194,8 +211,8 @@ public static class FileUtility
     internal static string SaveOnServer(IFormFile coverFile, string seriesName, int volumeNumber, out byte[] image, out string extention)
     {
         extention = new FileInfo(coverFile.FileName).Extension;
-        var escapedSeriesName = seriesName.Unidecode();
-        var destiantionFolder = $"{imageDir}\\{escapedSeriesName}";
+        var escapedSeriesName = seriesName.Unidecode().Replace(Path.GetInvalidFileNameChars(), string.Empty);
+        var destiantionFolder = $"{imageDir}\\Series\\{escapedSeriesName}";
         var filename = $"{escapedSeriesName} {volumeNumber} {coverFile.GetHashCode()}{extention}";
         var urlPath = Path.Combine(destiantionFolder, filename);
 
@@ -219,6 +236,42 @@ public static class FileUtility
         {
             throw;
         }
+    }
+
+    internal static void SaveFlagFromCDN(string countryCode, out string png, out string svg)
+    {
+        var urls = new List<string> {
+            $"https://flagcdn.com/{countryCode}.svg",
+            $"https://flagcdn.com/40x30/{countryCode}.png" };
+
+        var destiantionFolder = $"{imageDir}\\countries";
+
+        foreach (var url in urls)
+        {
+            var extention = url.Substring(url.LastIndexOf("."));
+            var filename = $"{countryCode}{extention}";
+
+            using (var client = new HttpClient())
+            {
+                using (var response = client.GetAsync(url))
+                {
+                    byte[] imageBytes =
+                        response.Result.Content.ReadAsByteArrayAsync().Result;
+
+                    var localDirectory = Path.Combine(serverRoot, destiantionFolder);
+                    var localPath = Path.Combine(localDirectory, filename);
+
+                    if (!Directory.Exists(localDirectory))
+                        Directory.CreateDirectory(localDirectory);
+
+                    File.WriteAllBytes(localPath, imageBytes);
+                }
+            }
+        }
+
+        png = Path.Combine(destiantionFolder, $"{countryCode}.png");
+        svg = Path.Combine(destiantionFolder, $"{countryCode}.svg");
+
     }
 }
 
@@ -354,5 +407,13 @@ public static class Extentions
 
 
         return random.Next(min, max) / 100.0;
+    }
+
+    public static string Replace(this string s, char[] separators, string newVal)
+    {
+        string[] temp;
+
+        temp = s.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        return String.Join(newVal, temp);
     }
 }

@@ -30,7 +30,7 @@ namespace ComicShelf.Services
 
             var selectListItems = allExceptUnknown.OrderByDescending(x=>x.Publishers.Count).ThenBy(x=>x.Name).Select(x => new SelectListItem()
             {
-                Text = $"{x.Flag} {x.Name}",
+                Text = $"{x.Name}",
                 Value = x.Id.ToString(),
                 Group = x.Publishers.Any() ? popularGroup : otherGroup
             })

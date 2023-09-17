@@ -23,10 +23,6 @@ namespace ComicShelf.Models
         public virtual DbSet<Volume> Volumes { get; set; }
         public virtual DbSet<VolumeCover> VolumeCovers { get; set; }
 
-        //public virtual DbSet<AuthorVolume> AuthorVolume { get; set; }
-
-        //public virtual DbSet<PublisherSeries> PublisherSeries { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Author>().ToTable("Author");
@@ -36,8 +32,6 @@ namespace ComicShelf.Models
             modelBuilder.Entity<Series>().ToTable("Series");
             modelBuilder.Entity<Volume>().ToTable("Volume");
             modelBuilder.Entity<VolumeCover>().ToTable("VolumeCovers");
-
-
         }
     }
 }
