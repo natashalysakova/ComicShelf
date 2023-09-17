@@ -34,9 +34,11 @@
                 <label asp-for="Volume.Title" class="control-label"></label>
                 <span asp-validation-for="Volume.Title" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Volume.Issues" class="form-control" placeholder="Issues in volume" />
-                <label asp-for="Volume.Issues" class="control-label"></label>
+            <div class="mb-3 row">
+                <label asp-for="Volume.Issues" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <input asp-for="Volume.Issues" class="form-control" placeholder="Issues in volume" />
+                </div>
                 <span asp-validation-for="Volume.Issues" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
@@ -59,11 +61,11 @@
                 <label asp-for="Volume.PurchaseDate" class="control-label"></label>
                 <span asp-validation-for="Volume.PurchaseDate" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
+@*            <div class="form-floating mb-3">
                 <input asp-for="Volume.Cover" class="form-control" />
                 <label asp-for="Volume.Cover" class="control-label"></label>
                 <span asp-validation-for="Volume.Cover" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-floating mb-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -2,38 +2,37 @@
 @model ComicShelf.Pages.Volumes.IndexModel
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Create New</button>
 </p>
 
-<h5>Announces and preorders</h5>
-<div class="shelf">
-    @foreach (var item in Model.AnnouncedAndPreordered)
-    {
-        <partial name="_ShelfPartial" model="@item" />
+<div class="row" id="shelves">
+    <partial name="_ShelfPartial" model="@Model.Volumes" />
+</div>
+
+
+
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" id="detail-modal-content">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <partial name="CreatePartial" />
+</div>
+
+@section Scripts {
+    <script src="~/js/Volume.js"></script>
+    <script>
         
-    }
-</div>
-<h5>Wishlist</h5>
-<div class="shelf">
-    @foreach (var item in Model.WishList)
-    {
-        <partial name="_ShelfPartial" model="@item" />
-    }
-</div>
-<h5>Shelf</h5>
-<div class="shelf">
-    @foreach (var item in Model.Purchased)
-    {
-        <partial name="_ShelfPartial" model="@item" />
-    }
-</div>
+    </script>
+}
 
-
-<div class="row">
+@*<div class="row">
     @foreach (var item in Model.Volumes)
     {
         <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6 col-sm-12 p-1">
-
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">@item.Title</h5>
@@ -53,14 +52,14 @@
                     <img src="@item.CoverUrl" class="card-img-top" height="440" style="object-fit:cover" />
                 }
 
-                @*                <div class="card-body">
+                                <div class="card-body">
             @if (!string.IsNullOrEmpty(item.Name))
             {
             <h6 class="card-title">@item.Name</h6>
             }
             <p class="text-body-secondary">@item.Type</p>
             </div>
-            *@
+            
                 <ul class="list-group list-group-flush">
 
                     <li class="list-group-item">
@@ -141,32 +140,6 @@
             </div>
         </div>
         @*        </a>
-    *@      }
+          }
 </div>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-        $(function () {
-            $('.book').on('click', function () {
-                console.log("clicked");
-                var id = $(this).data('id');
-                $.ajax({
-                    url: "?handler=Volume",
-                    type: 'GET',
-                    cache: false,
-                    data: { id: id }
-                }).done(function (result) {
-                    $('.modal-content').html(result);
-                });
-
-            });
-        })
-    </script>
-}
+*@

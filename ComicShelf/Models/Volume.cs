@@ -17,6 +17,7 @@ namespace ComicShelf.Models
         public DateTime PurchaseDate { get; set; }
         public string CoverUrl { get; set; }
         public virtual VolumeCover? Cover { get; set; }
+        public DateTime CreationDate { get; set; }
 
         public virtual ICollection<Author> Authors { get; set; } = new List<Author>();
         public virtual ICollection<Issue> Issues { get; set; } = new List<Issue>();

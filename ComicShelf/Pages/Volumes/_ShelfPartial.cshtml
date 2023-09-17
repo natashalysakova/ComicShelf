@@ -2,21 +2,37 @@
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model IEnumerable<Volume>
 
 
-<div class="thumb">
-    <div class="book" data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="@Model.Id">
-        <span class="preview"><img src="@Model.CoverUrl" alt="" width="300"></span>
-        <div class="book-number">@Model.Number</div>
-        <div class="book-title">@Model.Series.Name</div>
-    </div>
-    @if (Model.PurchaseStatus == Models.Enums.PurchaseStatus.Announced)
+@{
+    const int perRow = 5;
+    var rows = Math.Ceiling(Model.Count() / (double)perRow);
+
+    for (int i = 0; i < rows; i++)
     {
-        <span class="position-absolute top-100 start-50 translate-middle p-2 bg-info border border-light rounded-circle"></span>
+        <div class="shelf">
+            @foreach (var item in Model.Skip(i*perRow).Take(perRow))
+            {
+                <div class="book" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="bookClick(@item.Id)">
+                    <img src="@item.CoverUrl" alt="">
+                    <div class="book-title">@item.Series.Name</div>
+                    <div class="book-number" style="background-color:@item.Series.Color;">@item.Number</div>
+
+                    @if (item.PurchaseStatus == Models.Enums.PurchaseStatus.Announced || item.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered || item.PurchaseStatus == Models.Enums.PurchaseStatus.Wishlist)
+                    {
+                        <div class="book-badge book-badge-@item.PurchaseStatus.ToString().ToLower()">@item.PurchaseStatus</div>
+                    }
+                </div>
+            }
+            
+        </div>
+        <div class="shelf-face"></div>
 
     }
-    else
-    {
-        <span class="position-absolute top-100 start-50 translate-middle p-2 bg-success border border-light rounded-circle"></span>
-    }
-</div>
+}
+
+
+
+
+

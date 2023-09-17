@@ -25,7 +25,7 @@ namespace ComicShelf.Services
 
         public void Add(VolumeModel model)
         {
-            var series = _seriesService.Get(int.Parse(model.Series));
+            var series = _seriesService.GetByName(model.Series);
             if (series == null)
             {
                 series = new Series() { Name = model.Series, Type = ComicType.Comics };
@@ -41,7 +41,7 @@ namespace ComicShelf.Services
                     continue;
                 }
 
-                var author = _authorService.Get(int.Parse(trimmedItem));
+                var author = _authorService.GetByName(trimmedItem);
                 if (author == null)
                 {
                     Roles role;
@@ -66,12 +66,13 @@ namespace ComicShelf.Services
 
             var urlPath = string.Empty;
             var cover = new VolumeCover();
-            if (model.Cover != null)
+            if (model.CoverFile != null && model.CoverFile.Length > 0)
             {
 
-                urlPath = FileUtility.DownloadFileFromWeb(model.Cover, series.Name, model.Number, out byte[] coverBytes);
+                //urlPath = FileUtility.DownloadFileFromWeb(model.Cover, series.Name, model.Number, out byte[] coverBytes, out string extention);
+                urlPath = FileUtility.SaveOnServer(model.CoverFile, series.Name, model.Number, out byte[] coverBytes, out string extention);
                 cover.Cover = coverBytes;
-                cover.Extention = new FileInfo(model.Cover).Extension;
+                cover.Extention = extention;
             }
 
             var volume = new Volume()
@@ -86,7 +87,8 @@ namespace ComicShelf.Services
                 Raiting = model.Raiting,
                 Status = model.Status,
                 CoverUrl = urlPath,
-                Cover = cover
+                Cover = cover,
+                CreationDate = DateTime.Now,
             };
 
             this.Add(volume);
@@ -99,27 +101,26 @@ namespace ComicShelf.Services
 
         public override void Update(Volume item)
         {
-            if (item.CoverUrl.StartsWith("http"))
-            {
-                var seriesName = GetSeriesName(item);
-                item.CoverUrl = FileUtility.DownloadFileFromWeb(item.CoverUrl, seriesName, item.Number, out byte[] img);
-                var extention = new FileInfo(item.CoverUrl).Extension;
+            //if (item.CoverUrl.StartsWith("http"))
+            //{
+            //    var seriesName = GetSeriesName(item);
+            //    item.CoverUrl = FileUtility.SaveOnServer(model.CoverFile, seriesName, item.Number, out byte[] coverBytes, out string extention);
 
-                var cover = _coverService.GetCoverForVolume(item);
-                if(cover == null)
-                {
-                    var original = Get(item.Id);
-                    cover = new VolumeCover() { Cover = img, Extention = extention };
-                    original.Cover = cover;
-                    _coverService.Add(cover);
-                }
-                else
-                {
-                    cover.Cover = img;
-                    cover.Extention = extention;
-                    _coverService.Update(cover);
-                }
-            }
+            //    var cover = _coverService.GetCoverForVolume(item);
+            //    if(cover == null)
+            //    {
+            //        var original = Get(item.Id);
+            //        cover = new VolumeCover() { Cover = coverBytes, Extention = extention };
+            //        original.Cover = cover;
+            //        _coverService.Add(cover);
+            //    }
+            //    else
+            //    {
+            //        cover.Cover = coverBytes;
+            //        cover.Extention = extention;
+            //        _coverService.Update(cover);
+            //    }
+            //}
 
             base.Update(item);
         }

@@ -1,4 +1,7 @@
 ﻿$(function () {
+
+
+
     function split(val) {
         return val.split(/,\s*/);
     }
@@ -39,5 +42,53 @@
     //})
 
    
+    $(".multple-datalist").focusin(function () { $(this).attr("type", "email"); });
+    $(".multple-datalist").focusout(function () { $(this).attr("type", "textbox"); });
 
+
+    //NewVolume_Title
+    
 });
+
+function bookClick(id) {
+    console.log("clicked");
+    $.ajax({
+        url: "?handler=Volume",
+        type: 'GET',
+        cache: false,
+        data: { id: id }
+    }).done(function (result) {
+        $('#detail-modal-content').html(result);
+    });
+}
+
+function updateTitle() {
+    $('#NewVolume_Title').val("Том " + $('#NewVolume_Number').val());
+}
+
+function switchCover() {
+    if ($('#fileRadio').prop("checked") == true) {
+        $('#Cover').show();
+        $('#NewVolume_Cover').hide();
+    }
+    else {
+        $('#Cover').hide();
+        $('#NewVolume_Cover').show()
+
+    }
+}
+
+function createComplete(xnr) {
+    
+    if (xnr.status == 200) {
+        $('#createModal').modal('hide')
+        var s = $('#shelves')
+        s.html(xnr.responseText);
+    }
+    else {
+        var al = $('#createAlert');
+        al.text(xnr.responseText);
+
+        al.show();
+    }
+}

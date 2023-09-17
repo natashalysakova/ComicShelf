@@ -3,7 +3,7 @@ using ComicShelf.Pages.SeriesNs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using System.Drawing;
 
 namespace ComicShelf.Services
 {
@@ -22,6 +22,16 @@ namespace ComicShelf.Services
         public Series? GetWithPublishers(int? id)
         {
             return dbSet.Include(x => x.Publishers).SingleOrDefault(x => x.Id == id);
+        }
+
+        public override void Add(Series item)
+        {
+            var color = ColorUtility.GetRandomColor(minSaturation: 50, minValue: 50);
+            var complementary = ColorUtility.GetOppositeColor(color);
+            item.Color = ColorUtility.HexConverter(color);
+            item.ComplimentColor = ColorUtility.HexConverter(complementary);
+
+            base.Add(item);
         }
 
         public void Add(SeriesModel model)
@@ -46,6 +56,9 @@ namespace ComicShelf.Services
                 publisherList.Add(publisher);
             }
 
+            var color = ColorUtility.GetRandomColor(minSaturation: 50, minValue: 50);
+            var complementary = ColorUtility.GetOppositeColor(color);
+
             var series = new Series()
             {
                 Name = model.Name,
@@ -57,6 +70,8 @@ namespace ComicShelf.Services
                 Completed = model.Completed,
                 HasIssues = model.HasIssues,
                 TotalIssues = model.TotalIssues.HasValue ? model.TotalIssues.Value : 0,
+                Color = ColorUtility.HexConverter(color),
+                ComplimentColor = ColorUtility.HexConverter(complementary)
             };
 
             this.Add(series);
@@ -96,7 +111,7 @@ namespace ComicShelf.Services
 
         internal Series GetByName(string selectedSeries)
         {
-            return dbSet.Where(x => x.Name == selectedSeries).Single();
+            return dbSet.Where(x => x.Name == selectedSeries).SingleOrDefault();
         }
     }
 

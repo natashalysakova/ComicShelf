@@ -15,6 +15,8 @@ namespace ComicShelf.Models
         public int TotalIssues { get; set; }
         public int HasIssues { get; set; }
         public bool Completed { get; set; }
+        public string Color { get; set; }
+        public string ComplimentColor { get; set; }
 
         public virtual ICollection<Publisher> Publishers { get; set; } = new List<Publisher>();
         public virtual ICollection<Volume> Volumes { get; set; } = new List<Volume>();

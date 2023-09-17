@@ -6,7 +6,7 @@
 
 <div class="modal-header">
     <div class="row">
-        <h1 class="modal-title" id="exampleModalLabel">@Model.Series.Name #@Model.Number</h1>
+        <h3 class="modal-title" id="exampleModalLabel">@Model.Series.Name #@Model.Number</h3>
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
@@ -15,7 +15,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-5">
-                <img src="@Model.CoverUrl" class="img-fluid" />
+                <img src="@Model.CoverUrl" class="img-fluid" height="500px" />
             </div>
             <div class="col-md-7">
                 @if (!string.IsNullOrEmpty(Model.Series.OriginalName))
@@ -46,7 +46,8 @@
                         }
                     }
                     <span class="input-group-text">
-                        <i class="bi @icon"></i>
+                        Статус
+                        
                     </span>
                     <span class="form-control" type="text">@Model.PurchaseStatus</span>
                     @if (Model.PurchaseDate != default)
@@ -81,6 +82,11 @@
                     <span type="text" class="form-control">@Model.Number</span>
                     <span class="input-group-text">/</span>
                     <span type="text" class="form-control">@Model.Issues.Count</span>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="bi bi-bookmark-check"></i></span>
+                    <span type="text" class="form-control">@Model.CreationDate</span>
                 </div>
 
             </div>

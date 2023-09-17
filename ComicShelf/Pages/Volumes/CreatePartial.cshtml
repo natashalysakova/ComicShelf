@@ -1,0 +1,150 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ComicShelf.Pages.Volumes.IndexModel
+
+<div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+        <form method="post" data-ajax-method="post" data-ajax="true" enctype="multipart/form-data" data-ajax-complete="createComplete">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Add new volume</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert" style="display: none;" id="createAlert">
+                    This is a danger alert—check it out!
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3 row">
+                    <label asp-for="NewVolume.Series" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <input asp-for="NewVolume.Series" class="form-control" list="datalistOptions" placeholder="Type to search..." />
+                        <datalist id="datalistOptions">
+                            @foreach (var item in Model.Series)
+                            {
+                                <option value="@item.Text">@item.Text</option>
+                            }
+                        </datalist>
+                    </div>
+                    <span asp-validation-for="NewVolume.Series" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 row">
+                    <label asp-for="NewVolume.Authors" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <input asp-for="NewVolume.Authors" class="form-control multple-datalist" multiple list="autorsOptions" placeholder="Type to search..." />
+                        <datalist id="autorsOptions">
+                            @foreach (var item in Model.Authors)
+                            {
+                                <option data-value="@item.Value">@item.Text</option>
+                            }
+                        </datalist>
+                    </div>
+                    <span asp-validation-for="NewVolume.Authors" class="text-danger"></span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-4">
+                        <div class="row mb-3">
+                            <label asp-for="NewVolume.Number" class="col-sm-6 col-form-label"></label>
+
+                            <div class="col-sm-6">
+                                <input asp-for="NewVolume.Number" class="form-control" placeholder="Volume #" min="0" onchange="updateTitle()" />
+                            </div>
+                            <span asp-validation-for="NewVolume.Number" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-8">
+                        <div class="row mb-3">
+                            <label asp-for="NewVolume.Title" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="NewVolume.Title" class="form-control" placeholder="Title" value="Том" />
+                            </div>
+                            <span asp-validation-for="NewVolume.Title" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                        <div class="row mb-3">
+                            <label asp-for="NewVolume.PurchaseStatus" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-8">
+                                <select asp-for="NewVolume.PurchaseStatus" class="form-select" asp-items="@Model.PurchaseStatuses"></select>
+                            </div>
+                            <span asp-validation-for="NewVolume.PurchaseStatus" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="row mb-3">
+                            <label asp-for="NewVolume.Status" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-8">
+                                <select asp-for="NewVolume.Status" class="form-select" asp-items="@Model.Statuses"></select>
+                            </div>
+                            <span asp-validation-for="NewVolume.Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                @*                <div class="input-group mb-3">
+                <label asp-for="NewVolume.Issues" class="control-label"></label>
+                <input asp-for="NewVolume.Issues" class="form-control" placeholder="Issues in volume" />
+                <span asp-validation-for="NewVolume.Issues" class="text-danger"></span>
+                </div>*@
+
+                <div class="mb-3 row">
+                    <label asp-for="NewVolume.Raiting" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <input asp-for="NewVolume.Raiting" type="range" class="form-range" min="0" max="5" step="1">
+                    </div>
+                    <span asp-validation-for="NewVolume.Raiting" class="text-danger"></span>
+                </div>
+
+
+
+                <div class="mb-3 row">
+                    <label asp-for="NewVolume.PurchaseDate" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <input asp-for="NewVolume.PurchaseDate" class="form-control" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <span asp-validation-for="NewVolume.PurchaseDate" class="text-danger"></span>
+                </div>
+
+
+
+
+                <div class="mb-3 row">
+                    <label asp-for="NewVolume.CoverFile" class="col-sm-2 col-form-label"></label>
+
+@*                    <div class="btn-group col-sm-2" role="group" aria-label="Basic radio toggle button group">
+                        <input type="radio" class="btn-check" name="typeRadio" id="fileRadio" autocomplete="off" checked onchange="switchCover()">
+                        <label class="btn btn-outline-primary" for="fileRadio">File</label>
+
+                        <input type="radio" class="btn-check" name="typeRadio" id="urlRadio" autocomplete="off" onchange="switchCover()">
+                        <label class="btn btn-outline-primary" for="urlRadio">URL</label>
+                    </div>*@
+                    <div class="col-sm-10">
+                        <input asp-for="NewVolume.CoverFile" type="file" class="form-control" />
+@*                        <input asp-for="NewVolume.Cover" type="url" class="form-control" style="display: none;"/>
+*@                    </div>
+                    <span asp-validation-for="NewVolume.CoverFile" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}
