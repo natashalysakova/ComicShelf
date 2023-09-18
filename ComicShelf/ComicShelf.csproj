@@ -62,13 +62,12 @@
 
   <ItemGroup>
     <None Include="Pages\Publishers\PublisherInputView.cshtml" />
-    <None Include="wwwroot\images\Atel%27ie Chakluns%27kikh Kapelyukhiv\Volume 5.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Localization\" />
     <Folder Include="Migrations\" />
-    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\images\static\" />
   </ItemGroup>
 
 </Project>
