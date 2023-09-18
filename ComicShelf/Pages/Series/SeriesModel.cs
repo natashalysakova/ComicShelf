@@ -16,8 +16,10 @@ namespace ComicShelf.Pages.SeriesNs
         public string? OriginalName { get; set; }
         [DisplayName("Ongoing")]
         public bool Ongoing { get; set; }
+
         [DisplayName("Type")]
-        public required Models.Enums.Type Type { get; set; }
+        [Required]
+        public Models.Enums.Type Type { get; set; }
 
         [DisplayName("Total issues")]
         [RequiredIf(nameof(Ongoing), false, "Provide total issue for finished series")]
@@ -30,7 +32,6 @@ namespace ComicShelf.Pages.SeriesNs
         [DisplayName("Publishers")]
         public string Publishers { get; set; }
 
-        [SetsRequiredMembers]
         public SeriesModel(Models.Series series)
         {
             OriginalName = series.OriginalName;

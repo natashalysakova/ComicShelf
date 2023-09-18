@@ -11,7 +11,6 @@ using Microsoft.Extensions.Localization;
 using ComicShelf.Models.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net;
-using NuGet.Packaging;
 
 namespace ComicShelf.Pages.Volumes
 {

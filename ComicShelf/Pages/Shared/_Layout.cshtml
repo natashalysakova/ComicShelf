@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment hostingEnv
+
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
@@ -9,11 +11,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />
     <link rel="stylesheet" href="~/lib/jqueryui/themes/ui-darkness/jquery-ui.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ComicShelf.styles.css" asp-append-version="true" />
-
+@*    <link rel="stylesheet" href="~/ComicShelf.styles.css" asp-append-version="true" />
+*@
 </head>
 <body>
-    <header>
+    <header class="@hostingEnv.EnvironmentName">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Volumes/Index">ComicShelf</a>

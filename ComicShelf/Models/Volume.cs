@@ -1,5 +1,6 @@
 ﻿using ComicShelf.Models.Enums;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComicShelf.Models
@@ -9,7 +10,9 @@ namespace ComicShelf.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int Number { get; set; }
-        public required string Title { get; set; }
+
+        [Required]
+        public string Title { get; set; }
 
         public Status Status { get; set; }
         public Rating Raiting { get; set; }

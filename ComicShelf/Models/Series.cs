@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComicShelf.Models
 {
@@ -6,11 +7,14 @@ namespace ComicShelf.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public required string Name { get; set; }
+
+        [Required]
+        public  string Name { get; set; }
         public string? OriginalName { get; set; }
         public bool Ongoing { get; set; }
 
-        public required Enums.Type Type { get; set; }
+        [Required]
+        public Enums.Type Type { get; set; }
 
         public int TotalIssues { get; set; }
         public int HasIssues { get; set; }

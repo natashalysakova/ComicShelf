@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace ComicShelf.Models
 {
@@ -7,12 +7,6 @@ namespace ComicShelf.Models
     {
         public ComicShelfContext(DbContextOptions<ComicShelfContext> options) : base(options)
         {
-            
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\natas\\source\\repos\\ComicShelf\\ComicShelf\\Data\\database.mdf;Integrated Security=True;Connect Timeout=30");
         }
 
         public virtual DbSet<Author> Authors { get; set; }

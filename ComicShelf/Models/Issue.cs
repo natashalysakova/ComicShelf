@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComicShelf.Models
 {
@@ -6,7 +7,9 @@ namespace ComicShelf.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public required string Name { get; set; }
+        
+        [Required]
+        public string Name { get; set; }
         public int Number { get; set; }
 
         public int VolumeId { get; set; }

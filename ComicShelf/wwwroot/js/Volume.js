@@ -48,7 +48,7 @@
 
         });
     });
-
+    
 
     function split(val) {
         return val.split(/,\s*/);
@@ -143,17 +143,26 @@ function createComplete(xnr) {
     }
 }
 
-function filterShelf(source) {
-    //$.ajax({
-    //    url: "?handler=Volume",
-    //    type: 'GET',
-    //    cache: false,
-    //    data: { id: id }
-    //}).done(function (result) {
-    //    $('#detail-modal-content').html(result);
-    //});
+function resetValidation() {
+    var $form = $('form');
 
+    //reset jQuery Validate's internals
+    $form.validate().resetForm();
 
+    //reset unobtrusive validation summary, if it exists
+    $form.find("[data-valmsg-summary=true]")
+        .removeClass("validation-summary-errors")
+        .addClass("validation-summary-valid")
+        .find("ul").empty();
 
+    //reset unobtrusive field level, if it exists
+    $form.find("[data-valmsg-replace]")
+        .removeClass("field-validation-error")
+        .addClass("field-validation-valid")
+        .empty();
 
-}
+    $form.find("[data-valmsg-replace]").empty();
+
+    return $form;
+};
+

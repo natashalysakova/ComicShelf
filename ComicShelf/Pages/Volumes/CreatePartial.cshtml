@@ -20,7 +20,7 @@
                 <div class="mb-3 row">
                     <label asp-for="NewVolume.Series" class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-10">
-                        <input asp-for="NewVolume.Series" class="form-control" list="datalistOptions" placeholder="Type to search..." />
+                        <input asp-for="NewVolume.Series" class="form-control" list="datalistOptions" placeholder="Type to search..." autocomplete="off" />
                         <datalist id="datalistOptions">
                             @foreach (var item in Model.Series)
                             {
@@ -34,7 +34,7 @@
                 <div class="mb-3 row">
                     <label asp-for="NewVolume.Authors" class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-10">
-                        <input asp-for="NewVolume.Authors" class="form-control multple-datalist" multiple list="autorsOptions" placeholder="Type to search..." />
+                        <input asp-for="NewVolume.Authors" class="form-control multple-datalist" multiple list="autorsOptions" placeholder="Type to search..." autocomplete="off" />
                         <datalist id="autorsOptions">
                             @foreach (var item in Model.Authors)
                             {
@@ -136,7 +136,7 @@
             </div>
 
             <div class="modal-footer">
-                <input type="reset" value="Clear" class="btn btn-secondary" />
+                <input type="reset" onclick="resetValidation()" value="Clear" class="btn btn-secondary" />
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -147,5 +147,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
 }

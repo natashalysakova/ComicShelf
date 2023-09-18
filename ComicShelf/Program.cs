@@ -1,19 +1,21 @@
 using ComicShelf;
 using ComicShelf.Models;
 using ComicShelf.Services;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Razor.Language.Extensions;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
+using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Security.Policy;
 using UnidecodeSharpFork;
+using Microsoft.AspNetCore.DataProtection;
 
 internal class Program
 {
@@ -21,9 +23,47 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Configuration.AddUserSecrets<Program>();
+        }
+        else
+        {
+            builder.Configuration.AddJsonFile("connectionString.json");
+        }
+
+
+
         // Add services to the container.
         builder.Services.AddRazorPages();
-        builder.Services.AddDbContext<ComicShelfContext>();
+
+        //"server={ip};user id={db};password={password};database={dbName}"
+        var connectionString = builder.Configuration["mariaDbConnectionString"];
+        var version = ServerVersion.AutoDetect(connectionString);
+
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddDbContext<ComicShelfContext>(
+            options => options.UseMySql(connectionString, version)
+                .LogTo(Console.WriteLine, LogLevel.Information)
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors()
+        );
+        }
+        else
+        {
+            builder.Services.AddDbContext<ComicShelfContext>(
+                options => options.UseMySql(connectionString, version)
+            );
+        }
+
+        builder.Services.AddDbContext<ComicShelfContext>(
+            options => options.UseMySql(connectionString, version)
+                .LogTo(Console.WriteLine, LogLevel.Information)
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors()
+        );
+
         builder.Services.RegisterMyServices();
 
         builder.Services.AddLocalization(options => options.ResourcesPath = "Localization");
@@ -36,6 +76,13 @@ internal class Program
         {
             options.Filters.Add<ViewBagActionFilter>();
         });
+
+        //builder.Services.AddDataProtection().UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
+        //        {
+        //            EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+        //            ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+        //        });
+
 
         var app = builder.Build();
 
@@ -109,26 +156,31 @@ internal class Program
         var volumes = context.Volumes.Include(x => x.Cover).Include(x => x.Series).ToList();
         foreach (var item in volumes)
         {
-            if (item.Cover != null)
+            if (item.Cover.Cover != null)
             {
                 item.CoverUrl = FileUtility.RestoreCover(item.Series.Name, item.Number, item.Cover);
-                
             }
 
-            if(item.CreationDate == default)
+            if (item.Cover.Cover == null && !string.IsNullOrEmpty(item.CoverUrl))
+            {
+                item.Cover.Cover = FileUtility.ReadBytes(item.CoverUrl, out string newUrl);
+                item.CoverUrl = newUrl;
+            }
+
+            if (item.CreationDate == default)
             {
                 item.CreationDate = DateTime.Now;
             }
-
             context.SaveChanges();
         }
+
     }
 
     private static void FillColors(ComicShelfContext context)
     {
         foreach (var item in context.Series)
         {
-            if(string.IsNullOrEmpty(item.Color)  || string.IsNullOrEmpty(item.ComplimentColor))
+            if (string.IsNullOrEmpty(item.Color) || string.IsNullOrEmpty(item.ComplimentColor))
             {
                 var color = ColorUtility.GetRandomColor(minSaturation: 60, minValue: 60);
                 var complementary = ColorUtility.GetOppositeColor(color);
@@ -147,14 +199,19 @@ internal class Program
 
 public static class FileUtility
 {
+#if DEBUG
     const string serverRoot = "..\\ComicShelf\\wwwroot";
+#else
+    const string serverRoot = "/volume1/web/publish/wwwroot";
+#endif
+
     const string imageDir = "images";
 
     public static string RestoreCover(string seriesName, int volumeNumber, VolumeCover cover)
     {
-        var escapedSeriesName = seriesName.Unidecode();
+        var escapedSeriesName = seriesName.Unidecode().Replace(Path.GetInvalidFileNameChars(), string.Empty);
 
-        var localDirectory = Path.Combine(serverRoot, imageDir, escapedSeriesName);
+        var localDirectory = Path.Combine(serverRoot, imageDir, "Series", escapedSeriesName);
         var ext = cover.Extention;
         if (ext == string.Empty)
         {
@@ -168,13 +225,13 @@ public static class FileUtility
 
         File.WriteAllBytes(localPath, cover.Cover);
 
-        return Path.Combine(imageDir, escapedSeriesName, filename);
+        return Path.Combine(imageDir, "Series", escapedSeriesName, filename);
     }
 
     internal static string DownloadFileFromWeb(string url, string seriesName, int volumeNumber, out byte[] image, out string extention)
     {
         extention = new FileInfo(url).Extension;
-        var escapedSeriesName = seriesName.Unidecode();
+        var escapedSeriesName = seriesName.Unidecode().Replace(Path.GetInvalidFileNameChars(), string.Empty);
         var destiantionFolder = $"{imageDir}\\{escapedSeriesName}";
         var filename = $"{escapedSeriesName} {volumeNumber}{extention}";
         var urlPath = Path.Combine(destiantionFolder, filename);
@@ -220,7 +277,7 @@ public static class FileUtility
         {
             var localDirectory = Path.Combine(serverRoot, destiantionFolder);
             var localPath = Path.Combine(localDirectory, filename);
-            
+
             if (!Directory.Exists(localDirectory))
                 Directory.CreateDirectory(localDirectory);
 
@@ -248,7 +305,7 @@ public static class FileUtility
 
         foreach (var url in urls)
         {
-            var extention = url.Substring(url.LastIndexOf("."));
+            var extention = Path.GetExtension(url);
             var filename = $"{countryCode}{extention}";
 
             using (var client = new HttpClient())
@@ -272,6 +329,32 @@ public static class FileUtility
         png = Path.Combine(destiantionFolder, $"{countryCode}.png");
         svg = Path.Combine(destiantionFolder, $"{countryCode}.svg");
 
+    }
+
+    internal static byte[] ReadBytes(string coverUrl, out string newURL)
+    {
+        newURL = coverUrl;
+
+        var localPath = Path.Combine(serverRoot, coverUrl);
+        if (File.Exists(localPath))
+        {
+            return File.ReadAllBytes(localPath);
+        }
+        else
+        {
+            var dir = Path.GetDirectoryName(localPath);
+            var patten = $"{Path.GetFileNameWithoutExtension(localPath)} *{Path.GetExtension(localPath)}";
+            var files = Directory.GetFiles(dir, patten);
+
+            if (files.Length == 1)
+            {
+                newURL = Path.Combine(Path.GetDirectoryName(coverUrl), Path.GetFileName(files[0]));
+                return File.ReadAllBytes(files[0]);
+            }
+
+        }
+
+        return new byte[0];
     }
 }
 

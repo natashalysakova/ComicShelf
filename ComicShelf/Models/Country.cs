@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComicShelf.Models
 {
@@ -7,10 +8,14 @@ namespace ComicShelf.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public required string Name { get; set; }
-        public required string FlagPNG { get; set; }
-        public required string FlagSVG { get; set; }
-        public required string CountryCode { get; set; }   
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string FlagPNG { get; set; }
+        [Required]
+        public string FlagSVG { get; set; }
+        [Required]
+        public  string CountryCode { get; set; }   
 
         public virtual ICollection<Publisher> Publishers { get; set; } = new List<Publisher>();
     }

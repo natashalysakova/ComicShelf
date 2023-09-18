@@ -1,12 +1,15 @@
 ﻿using ComicShelf.Models.Enums;
 using ComicShelf.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace ComicShelf.Pages.Volumes
 {
     public class VolumeModel
     {
         public int Number { get; set; }
-        public required string Title { get; set; }
+
+        [Required]
+        public string Title { get; set; }
         public string Series { get; set; }
         public Status Status { get; set; }
         public Rating Raiting { get; set; }
@@ -18,10 +21,5 @@ namespace ComicShelf.Pages.Volumes
 
         public string[] Authors { get; set; }
         public int Issues { get; set; }
-
-        public VolumeModel()
-        {
-            PurchaseDate = DateTime.Today;
-        }
     }
 }

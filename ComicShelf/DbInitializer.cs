@@ -22,11 +22,11 @@ internal class DbInitializer
             return;
         }
 
-        
+
 
         CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
         var regions = cultures.Select(x => new RegionInfo(x.Name));
-        var results = regions.Select(x => x.EnglishName).Distinct().Order().ToList();
+        var results = regions.Select(x => x.EnglishName).Distinct().OrderBy(x => x).ToList();
 
         foreach (var country in results)
         {
@@ -51,7 +51,8 @@ internal class DbInitializer
             new Publisher(){ Name = "Vovkulaka", Country = ukraine },
             new Publisher(){ Name = "Marvel", Country = us },
             new Publisher(){ Name = "DC Comics", Country = us },
-            new Publisher(){ Name = "Dark Horse", Country = us }
+            new Publisher(){ Name = "Dark Horse", Country = us },
+            new Publisher(){ Name = "РМ", Country = ukraine }
         };
 
         foreach (var publisher in publisers)

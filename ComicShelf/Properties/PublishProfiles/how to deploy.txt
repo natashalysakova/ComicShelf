@@ -1,0 +1,9 @@
+﻿//stop existing 
+kill $(ps -ef | grep '[d]otnet ./ComicShelf.dll' | awk '{print $2}')
+
+publish 
+
+and run user script from Task Sceduler
+
+cd /volume1/web/publish/
+dotnet ./ComicShelf.dll --urls "http://192.168.0.107:5297"  --launch-profile httpProd &
