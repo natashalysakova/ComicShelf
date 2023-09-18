@@ -153,19 +153,17 @@ internal class Program
 
     private static void RestoreImagesFromDB(ComicShelfContext context)
     {
-        var volumes = context.Volumes.Include(x => x.Cover).Include(x => x.Series).ToList();
+        var volumes = context.Volumes.Include(x => x.Series).ToList();
         foreach (var item in volumes)
         {
-            if (item.Cover.Cover != null)
-            {
-                item.CoverUrl = FileUtility.RestoreCover(item.Series.Name, item.Number, item.Cover);
-            }
+            //if (item.Cover.Cover != null)
+            //{
+            //    item.CoverUrl = FileUtility.RestoreCover(item.Series.Name, item.Number, item.Cover);
+            //}
 
-            if (item.Cover.Cover == null && !string.IsNullOrEmpty(item.CoverUrl))
-            {
-                item.Cover.Cover = FileUtility.ReadBytes(item.CoverUrl, out string newUrl);
-                item.CoverUrl = newUrl;
-            }
+
+            item.CoverUrl = FileUtility.FindUrl(item.CoverUrl);
+
 
             if (item.CreationDate == default)
             {
@@ -207,26 +205,26 @@ public static class FileUtility
 
     const string imageDir = "images";
 
-    public static string RestoreCover(string seriesName, int volumeNumber, VolumeCover cover)
-    {
-        var escapedSeriesName = seriesName.Unidecode().Replace(Path.GetInvalidFileNameChars(), string.Empty);
+    //public static string RestoreCover(string seriesName, int volumeNumber, VolumeCover cover)
+    //{
+    //    var escapedSeriesName = seriesName.Unidecode().Replace(Path.GetInvalidFileNameChars(), string.Empty);
 
-        var localDirectory = Path.Combine(serverRoot, imageDir, "Series", escapedSeriesName);
-        var ext = cover.Extention;
-        if (ext == string.Empty)
-        {
-            ext = ".jpg";
-        }
-        var filename = $"{escapedSeriesName} {volumeNumber}{ext}";
-        var localPath = Path.Combine(localDirectory, filename);
+    //    var localDirectory = Path.Combine(serverRoot, imageDir, "Series", escapedSeriesName);
+    //    var ext = cover.Extention;
+    //    if (ext == string.Empty)
+    //    {
+    //        ext = ".jpg";
+    //    }
+    //    var filename = $"{escapedSeriesName} {volumeNumber}{ext}";
+    //    var localPath = Path.Combine(localDirectory, filename);
 
-        if (!Directory.Exists(localDirectory))
-            Directory.CreateDirectory(localDirectory);
+    //    if (!Directory.Exists(localDirectory))
+    //        Directory.CreateDirectory(localDirectory);
 
-        File.WriteAllBytes(localPath, cover.Cover);
+    //    File.WriteAllBytes(localPath, cover.Cover);
 
-        return Path.Combine(imageDir, "Series", escapedSeriesName, filename);
-    }
+    //    return Path.Combine(imageDir, "Series", escapedSeriesName, filename);
+    //}
 
     internal static string DownloadFileFromWeb(string url, string seriesName, int volumeNumber, out byte[] image, out string extention)
     {
@@ -265,7 +263,7 @@ public static class FileUtility
         }
     }
 
-    internal static string SaveOnServer(IFormFile coverFile, string seriesName, int volumeNumber, out byte[] image, out string extention)
+    internal static string SaveOnServer(IFormFile coverFile, string seriesName, int volumeNumber, out string extention)
     {
         extention = new FileInfo(coverFile.FileName).Extension;
         var escapedSeriesName = seriesName.Unidecode().Replace(Path.GetInvalidFileNameChars(), string.Empty);
@@ -285,8 +283,6 @@ public static class FileUtility
             {
                 coverFile.CopyTo(fileStream);
             }
-
-            image = File.ReadAllBytes(localPath);
             return urlPath;
         }
         catch (Exception)
@@ -331,14 +327,12 @@ public static class FileUtility
 
     }
 
-    internal static byte[] ReadBytes(string coverUrl, out string newURL)
+    internal static string FindUrl(string coverUrl)
     {
-        newURL = coverUrl;
-
         var localPath = Path.Combine(serverRoot, coverUrl);
         if (File.Exists(localPath))
         {
-            return File.ReadAllBytes(localPath);
+            return coverUrl;
         }
         else
         {
@@ -348,13 +342,11 @@ public static class FileUtility
 
             if (files.Length == 1)
             {
-                newURL = Path.Combine(Path.GetDirectoryName(coverUrl), Path.GetFileName(files[0]));
-                return File.ReadAllBytes(files[0]);
+                return Path.Combine(Path.GetDirectoryName(coverUrl), Path.GetFileName(files[0]));
             }
 
         }
-
-        return new byte[0];
+        return coverUrl;
     }
 }
 

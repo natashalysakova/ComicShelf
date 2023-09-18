@@ -15,13 +15,11 @@ namespace ComicShelf.Services
     {
         private readonly SeriesService _seriesService;
         private readonly AuthorsService _authorService;
-        private readonly CoverService _coverService;
 
-        public VolumeService(ComicShelfContext context, SeriesService seriesService, AuthorsService authorService, CoverService coverService) : base(context)
+        public VolumeService(ComicShelfContext context, SeriesService seriesService, AuthorsService authorService) : base(context)
         {
             _seriesService = seriesService;
             _authorService = authorService;
-            _coverService = coverService;
         }
 
         public void Add(VolumeModel model)
@@ -66,14 +64,13 @@ namespace ComicShelf.Services
             var issues = GenerateEmptyIssues(model.Issues, series.Type).ToList();
 
             var urlPath = string.Empty;
-            var cover = new VolumeCover();
-            if (model.CoverFile != null && model.CoverFile.Length > 0)
-            {
-                //urlPath = FileUtility.DownloadFileFromWeb(model.Cover, series.Name, model.Number, out byte[] coverBytes, out string extention);
-                urlPath = FileUtility.SaveOnServer(model.CoverFile, series.Name, model.Number, out byte[] coverBytes, out string extention);
-                cover.Cover = coverBytes;
-                cover.Extention = extention;
-            }
+            //var cover = new VolumeCover();
+            //if (model.CoverFile != null && model.CoverFile.Length > 0)
+            //{
+                urlPath = FileUtility.SaveOnServer(model.CoverFile, series.Name, model.Number, out string extention);
+            //    cover.Cover = coverBytes;
+            //    cover.Extention = extention;
+            //}
 
             var volume = new Volume()
             {
@@ -87,7 +84,7 @@ namespace ComicShelf.Services
                 Raiting = model.Raiting,
                 Status = model.Status,
                 CoverUrl = urlPath,
-                Cover = cover,
+                //Cover = cover,
                 CreationDate = DateTime.Now,
             };
 

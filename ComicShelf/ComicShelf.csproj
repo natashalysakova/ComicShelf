@@ -9,9 +9,17 @@
 
   <ItemGroup>
     <Compile Remove="Content\**" />
+    <Compile Remove="Data\**" />
+    <Compile Remove="wwwroot\images\Series\**" />
     <Content Remove="Content\**" />
+    <Content Remove="Data\**" />
+    <Content Remove="wwwroot\images\Series\**" />
     <EmbeddedResource Remove="Content\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="wwwroot\images\Series\**" />
     <None Remove="Content\**" />
+    <None Remove="Data\**" />
+    <None Remove="wwwroot\images\Series\**" />
   </ItemGroup>
 
   <ItemGroup>

@@ -36,19 +36,28 @@
             $.ajax({
                 url: "?handler=Filtered",
                 type: 'GET',
-                //dataType: 'json',
-                //contentType: "application/json; charset=utf-8",
                 cache: false,
                 data: PurchaseFilters
             }).done(function (result) {
                 $('#shelves').empty().html(result);
-            }).fail(function () {
-            //    alert("Sorry. Server unavailable. ");
             });
 
         });
     });
-    
+    $('#sort').on('click', function (event) {
+        event.preventDefault();
+
+        var $this = $(this),
+            sortDir = 'down';
+
+        if ($this.data('sort') !== 'up') {
+            sortDir = 'up';
+        }
+
+        $this.data('sort', sortDir).find('.bi').attr('class', 'bi bi-sort-' + sortDir);
+
+        // call sortDesc() or sortAsc() or whathaveyou...
+    });
 
     function split(val) {
         return val.split(/,\s*/);

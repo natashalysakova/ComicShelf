@@ -15,12 +15,10 @@ namespace ComicShelf.Pages.Volumes
     public class EditModel : PageModel
     {
         VolumeService _volumeService;
-        private readonly CoverService _coverService;
 
-        public EditModel(VolumeService volumeService, CoverService coverService)
+        public EditModel(VolumeService volumeService)
         {
             _volumeService = volumeService;
-            _coverService = coverService;
             Statuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Status)));
             PurchaseStatuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(PurchaseStatus)));
             Ratings.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Rating)));
