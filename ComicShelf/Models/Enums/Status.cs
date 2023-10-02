@@ -2,10 +2,10 @@
 {
     public enum Status
     {
-        NotStarted,
-        InQueue,
-        Reading,
-        Completed,
-        Dropped
+        NotStarted = 0,
+        InQueue = 1,
+        Reading = 2,
+        Completed = 3,
+        Dropped = 4
     }
 }

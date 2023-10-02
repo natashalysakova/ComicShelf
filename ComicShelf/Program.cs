@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Security.Policy;
 using UnidecodeSharpFork;
 using Microsoft.AspNetCore.DataProtection;
+using System.Globalization;
 
 internal class Program
 {
@@ -490,5 +491,10 @@ public static class Extentions
 
         temp = s.Split(separators, StringSplitOptions.RemoveEmptyEntries);
         return String.Join(newVal, temp);
+    }
+
+    public static bool ContainsIgnoreCase(this string source, string toCheck)
+    {
+        return source.IndexOf(toCheck, StringComparison.OrdinalIgnoreCase) != -1;
     }
 }

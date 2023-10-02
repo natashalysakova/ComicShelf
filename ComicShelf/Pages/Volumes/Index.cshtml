@@ -6,7 +6,7 @@
     <div class="row justify-content-between">
         <div class="col">
             <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Create New</button>
-            <div class="btn-group mb-3" role="group" aria-label="purchse status filters">
+@*            <div class="btn-group mb-3" role="group" aria-label="purchse status filters">
 
                 <input id="FilterAll" class="btn-check ps-filter" type="checkbox" autocomplete="off" />
                 <label for="FilterAll" class="btn btn-outline-secondary">All</label>
@@ -25,19 +25,48 @@
 
                 <input id="FilterGone" class="btn-check ps-filter" type="checkbox" autocomplete="off" />
                 <label for="FilterGone" class="btn btn-outline-secondary">Gone</label>
+            </div>*@
+
+            <div class="btn-group mb-3" role="group" aria-label="purchse status filters">
+
+                <input id="FilterAll" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" checked />
+                <label for="FilterAll" class="btn btn-outline-secondary">All</label>
+
+                <input id="FilterAvailable" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
+                <label for="FilterAvailable" class="btn btn-outline-secondary">Shelf</label>
+
+                <input id="FilterPreorder" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
+                <label for="FilterPreorder" class="btn btn-outline-secondary">Preorder</label>
+
+                <input id="FilterWishlist" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
+                <label for="FilterWishlist" class="btn btn-outline-secondary">Wishlist</label>
+
+                <input id="FilterAnnounced" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
+                <label for="FilterAnnounced" class="btn btn-outline-secondary">Announced</label>
+
+                <input id="FilterGone" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
+                <label for="FilterGone" class="btn btn-outline-secondary">Gone</label>
             </div>
+
+        </div>
+        <div class="col-lg-2">
+            <div class="input-group mb-3">
+                <input id="search-field" type="search" class="form-control search" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">
+
+@*                <button class="btn btn-outline-secondary" type="button" id="button-search"><i class="bi bi-search"></i></button>*@
+@*                <button class="btn btn-outline-secondary" type="button" id="button-search"><i class="bi bi-search"></i></button>
+*@            </div>
         </div>
         <div class="col-lg-3">
             <div class="mb-3 row">
                 <div class="col-auto">
-                    <select class="form-select" aria-label="Default select example">
+                    <select id="sortType" class="form-select" aria-label="Default select example">
                         <option value="0" selected>За датою додавання</option>
                         <option value="1">За назвою</option>
                         <option value="2">За датою покупки</option>
-                        <option value="3">Three</option>
                     </select>
                 </div>
-                <button id="sort" class="btn btn-outline-secondary col-auto" data-sort="down">
+                <button id="sortDirection" class="btn btn-outline-secondary col-auto" data-sort="down">
                     <i class="bi bi-sort-down"></i>
                 </button>
             </div>
@@ -76,7 +105,9 @@
 @section Scripts {
     <script src="~/js/Volume.js"></script>
     <script>
-
+        completed = (res) => {
+            alert('Posted using Unobtrusive AJAX');
+        };
     </script>
 }
 

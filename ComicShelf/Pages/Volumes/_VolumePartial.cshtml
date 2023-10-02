@@ -15,7 +15,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-5 mb-3">
-                <img src="@Model.CoverUrl" class="img-fluid volume-image"/>
+                <img src="@Model.CoverUrl" class="img-fluid volume-image" />
             </div>
             <div class="col-md-7">
                 @if (!string.IsNullOrEmpty(Model.Series.OriginalName))
@@ -26,35 +26,23 @@
                     </div>
                 }
                 <div class="input-group mb-3">
-                    @{
-                        string icon;
-
-                        switch (Model.PurchaseStatus)
-                        {
-                            case Models.Enums.PurchaseStatus.Announced:
-                                icon = "bi-megaphone";
-                                break;
-                            case Models.Enums.PurchaseStatus.Pirated:
-                                icon = "bi-flag";
-                                break;
-                            case Models.Enums.PurchaseStatus.Gift:
-                                icon = "bi-gift";
-                                break;
-                            default:
-                                icon = "bi-cash-coin";
-                                break;
-                        }
-                    }
-                    <span class="input-group-text">
-                        Статус
-                        
-                    </span>
-                    <span class="form-control" type="text">@Model.PurchaseStatus</span>
-                    @if (Model.PurchaseDate != default)
+                    @if (Model.Authors.Count < 2)
                     {
-                        <span type="text" class="form-control">@Model.PurchaseDate.ToShortDateString()</span>
+                        <span class="input-group-text">Автор</span>
                     }
+                    else
+                    {
+                        <span class="input-group-text">Автори</span>
+                    }
+
+                    <span type="text" class="form-control">@string.Join(", ", Model.Authors.Select(x=>x.Name))</span>
+
                 </div>
+                <form method="post" asp-page-handler="ChangeStatus" data-ajax-method="post" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#book-@Model.Id" data-ajax-complete="changeStatusSuccess">
+                    <div class="input-group mb-3">
+                        <partial name="_VolumeStatusPartial" model="Model" />
+                    </div>
+                </form>
 
                 <div class="input-group mb-3">
                     @{

@@ -57,7 +57,7 @@ div {
     border-left: 20px solid rgb(125, 125, 125);
     border-right: 20px solid rgb(125, 125, 125);
     border-top: 20px solid rgb(75, 75, 75);
-    min-height: 340px;
+    min-height: 370px;
 }
 @media (min-width:1000px) {
     .shelf {

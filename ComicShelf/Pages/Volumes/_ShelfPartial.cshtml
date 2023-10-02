@@ -15,20 +15,14 @@
     for (int i = 0; i < rows; i++)
     {
         <div class="shelf">
-            @foreach (var item in Model.Skip(i*perRow).Take(perRow))
-            {
-                <div class="book" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="bookClick(@item.Id)">
-                    <img src="@item.CoverUrl" alt="">
-                    <div class="book-title">@item.Series.Name<br>@item.Title</div>
-                    <div class="book-number" style="background-color:@item.Series.Color;">@item.Number</div>
 
-                    @if (item.PurchaseStatus == Models.Enums.PurchaseStatus.Announced || item.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered || item.PurchaseStatus == Models.Enums.PurchaseStatus.Wishlist)
-                    {
-                        <div class="book-badge book-badge-@item.PurchaseStatus.ToString().ToLower()">@item.PurchaseStatus</div>
-                    }
+            @foreach (var item in Model.Skip(i * perRow).Take(perRow))
+            {
+                <div class="book" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="bookClick(@item.Id)" id="book-@item.Id">
+                    <partial name="_BookPartial" model="item" />
                 </div>
             }
-            
+
         </div>
         <div class="shelf-face"></div>
 

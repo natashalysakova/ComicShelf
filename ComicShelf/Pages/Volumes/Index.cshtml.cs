@@ -11,6 +11,8 @@ using Microsoft.Extensions.Localization;
 using ComicShelf.Models.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net;
+using Org.BouncyCastle.Crypto.Engines;
+using NuGet.Packaging;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -48,7 +50,7 @@ namespace ComicShelf.Pages.Volumes
         {
             get
             {
-                return Volumes.Where(x=>x.PurchaseStatus == Models.Enums.PurchaseStatus.Announced || x.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered).ToList();
+                return Volumes.Where(x => x.PurchaseStatus == Models.Enums.PurchaseStatus.Announced || x.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered).ToList();
             }
         }
         public IList<Volume> WishList
@@ -66,21 +68,30 @@ namespace ComicShelf.Pages.Volumes
             }
         }
 
-        
+
 
         public async Task OnGetAsync()
         {
             //Volumes = await volumeService.GetAll().Include(x => x.Series).OrderBy(x => x.Series.Name).ThenBy(x => x.Number).ToListAsync();
-            Volumes = await volumeService.GetAll().OrderByDescending(x => x.CreationDate).ToListAsync();
+            Volumes = volumeService.Filter(new BookshelfParams());
             ViewData["Title"] = _localizer.GetString("Main page");
         }
 
         public PartialViewResult OnGetVolumeAsync(int id)
         {
-            return Partial("_VolumePartial", volumeService.GetAll().Single(x=>x.Id == id));
+            return Partial("_VolumePartial", volumeService.GetAll().Single(x => x.Id == id));
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostChangeStatus(int id, string purchaseStatus)
+        {
+            volumeService.UpdatePurchaseStatus(id, purchaseStatus);
+            var item = volumeService.Get(id);
+            volumeService.LoadReference(item, x => x.Series);
+            var partial = Partial("_BookPartial", item);
+            return partial;
+        }
+
+        public async Task<IActionResult> OnPostAddAsync()
         {
             if (!ModelState.IsValid || NewVolume == null)
             {
@@ -98,9 +109,9 @@ namespace ComicShelf.Pages.Volumes
             return Partial("_ShelfPartial", Volumes);
         }
 
-        public PartialViewResult OnGetFiltered(PurchaseFilters purchaseFilters)
+        public PartialViewResult OnGetFiltered(BookshelfParams filters)
         {
-            Volumes = volumeService.Filter(purchaseFilters);
+            Volumes = volumeService.Filter(filters);
             return Partial("_ShelfPartial", Volumes);
         }
 
@@ -116,46 +127,25 @@ namespace ComicShelf.Pages.Volumes
         //}
     }
 
-    public class PurchaseFilters
+    public class BookshelfParams
     {
-        public bool FilterAvailable { get; set; }
-        public bool FilterPreorder { get; set; }
-        public bool FilterWishlist { get; set; }
-        public bool FilterAnnounced { get; set; }
-        public bool FilterGone { get; set; }
+        //public bool FilterAvailable { get; set; }
+        //public bool FilterPreorder { get; set; }
+        //public bool FilterWishlist { get; set; }
+        //public bool FilterAnnounced { get; set; }
+        //public bool FilterGone { get; set; }
 
-        internal IEnumerable<PurchaseStatus> ToStatusList()
+        //Dictionary<string, bool> filters = new Dictionary<string, bool>();
+        public string? filter { get; set; }
+        public int? sort { get; set; }
+        public string? direction { get; set; }
+
+        public string? search { get; set; }
+
+        public BookshelfParams()
         {
-            IList<PurchaseStatus> statusList = new List<PurchaseStatus>();
+            direction = "down";
 
-            if(FilterAvailable)
-            {
-                statusList.Add(PurchaseStatus.Bought);
-                statusList.Add(PurchaseStatus.Free);
-                statusList.Add(PurchaseStatus.Gift);
-            }
-
-            if(FilterPreorder)
-            {
-                statusList.Add(PurchaseStatus.Preordered);
-            }
-
-            if(FilterWishlist)
-            {
-                statusList.Add(PurchaseStatus.Wishlist);
-            }
-
-            if (FilterAnnounced)
-            {
-                statusList.Add(PurchaseStatus.Announced);
-            }
-
-            if (FilterGone)
-            {
-                statusList.Add(PurchaseStatus.GiftedAway);
-            }
-
-            return statusList;
         }
     }
 }

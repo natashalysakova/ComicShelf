@@ -1,50 +1,15 @@
 ﻿$(function () {
 
     $('.ps-filter').each(function () {
-        $(this).prop('checked', true)
-        $(this).on('click', function (e) {
-
-            var all = $('#FilterAll')[0];
-            var value = e.target.checked
-
-            if (all == e.target) {
-
-
-                $('.ps-filter').each(function () {
-                    $(this).prop("checked", value);
-                });
-            }
-            else {
-                if (!value)
-                    all.checked = false;
-                else {
-                    if ($('.ps-filter:checked').length == $('.ps-filter').length - 1) {
-                        all.checked = true;
-                    }
-                }
-            }
-
-            var PurchaseFilters = {
-
-                "FilterAvailable": $('#FilterAvailable')[0].checked,
-                "FilterPreorder": $('#FilterPreorder')[0].checked,
-                "FilterWishlist": $('#FilterWishlist')[0].checked,
-                "FilterAnnounced": $('#FilterAnnounced')[0].checked,
-                "FilterGone": $('#FilterGone')[0].checked
-            };
-
-            $.ajax({
-                url: "?handler=Filtered",
-                type: 'GET',
-                cache: false,
-                data: PurchaseFilters
-            }).done(function (result) {
-                $('#shelves').empty().html(result);
-            });
-
-        });
+        //$(this).prop('checked', true)
+        $(this).on('click', filter)
     });
-    $('#sort').on('click', function (event) {
+
+    $('#button-search').on('click', filter)
+    $('#sortType').on('change', filter)
+    $('#search-field').on('input', filter)
+
+    $('#sortDirection').on('click', function (event) {
         event.preventDefault();
 
         var $this = $(this),
@@ -56,7 +21,8 @@
 
         $this.data('sort', sortDir).find('.bi').attr('class', 'bi bi-sort-' + sortDir);
 
-        // call sortDesc() or sortAsc() or whathaveyou...
+        filter(event);
+
     });
 
     function split(val) {
@@ -107,6 +73,33 @@
 
 });
 
+function filter (e) {
+
+    var all = $('#FilterAll')[0];
+    var value = e.target.checked
+
+    var filter = $('input[type=radio][name=filter]:checked').attr('id')
+    var sort = $('select[id=sortType]').val()
+    var dir = $('button[id=sortDirection').data('sort')
+    var search = $('input[id=search-field]').val()
+
+    var filters = {
+        "filter": filter,
+        "sort": sort,
+        "direction": dir,
+        "search": search
+    };
+
+    $.ajax({
+        url: "?handler=Filtered",
+        type: 'GET',
+        cache: false,
+        data: filters
+    }).done(function (result) {
+        $('#shelves').html(result);
+    });
+};
+
 function bookClick(id) {
     console.log("clicked");
     $.ajax({
@@ -118,6 +111,17 @@ function bookClick(id) {
     }).done(function (result) {
         $('#detail-modal-content').html(result);
     });
+}
+
+function changeStatusSuccess(e) {
+    console.log(e);
+
+    if (e.status == 200) {
+        $('#PurchaseStatus').addClass("text-success");
+    }
+    else {
+        $('#PurchaseStatus').addClass("text-danger");
+    }
 }
 
 function updateTitle() {
