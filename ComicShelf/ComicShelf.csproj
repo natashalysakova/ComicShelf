@@ -75,7 +75,6 @@
   <ItemGroup>
     <Folder Include="Localization\" />
     <Folder Include="Migrations\" />
-    <Folder Include="wwwroot\images\static\" />
   </ItemGroup>
 
 </Project>

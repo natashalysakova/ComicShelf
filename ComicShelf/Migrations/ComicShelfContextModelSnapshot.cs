@@ -129,18 +129,13 @@ namespace ComicShelf.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Color")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("Completed")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("ComplimentColor")
-                        .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int>("HasIssues")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -152,7 +147,7 @@ namespace ComicShelf.Migrations
                     b.Property<string>("OriginalName")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("TotalIssues")
+                    b.Property<int>("TotalVolumes")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
@@ -176,10 +171,13 @@ namespace ComicShelf.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime>("ModificationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("Number")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PurchaseDate")
+                    b.Property<DateTime?>("PurchaseDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("PurchaseStatus")
@@ -187,6 +185,9 @@ namespace ComicShelf.Migrations
 
                     b.Property<int>("Raiting")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReleaseDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("SeriesId")
                         .HasColumnType("int");

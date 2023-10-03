@@ -79,12 +79,15 @@ namespace ComicShelf.Pages.Volumes
 
         public PartialViewResult OnGetVolumeAsync(int id)
         {
-            return Partial("_VolumePartial", volumeService.GetAll().Single(x => x.Id == id));
+            var volume = volumeService.Get(id);
+            volumeService.LoadReference(volume, x => x.Series);
+            volumeService.LoadCollection(volume, x => x.Authors);
+            return Partial("_VolumePartial", volume);
         }
 
-        public async Task<IActionResult> OnPostChangeStatus(int id, string purchaseStatus)
+        public async Task<IActionResult> OnPostChangeStatus(int id, string purchaseStatus, DateTime purchaseDate, DateTime releaseDate)
         {
-            volumeService.UpdatePurchaseStatus(id, purchaseStatus);
+            volumeService.UpdatePurchaseStatus(id, purchaseStatus, purchaseDate, releaseDate);
             var item = volumeService.Get(id);
             volumeService.LoadReference(item, x => x.Series);
             var partial = Partial("_BookPartial", item);
@@ -105,7 +108,7 @@ namespace ComicShelf.Pages.Volumes
 
             volumeService.Add(NewVolume);
 
-            Volumes = await volumeService.GetAll().OrderByDescending(x => x.CreationDate).ToListAsync();
+            Volumes = volumeService.Filter(new BookshelfParams());
             return Partial("_ShelfPartial", Volumes);
         }
 
@@ -144,7 +147,8 @@ namespace ComicShelf.Pages.Volumes
 
         public BookshelfParams()
         {
-            direction = "down";
+            direction = "up";
+            sort = 2;
 
         }
     }

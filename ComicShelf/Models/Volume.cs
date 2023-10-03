@@ -18,9 +18,11 @@ namespace ComicShelf.Models
         public Status Status { get; set; }
         public Rating Raiting { get; set; }
         public PurchaseStatus PurchaseStatus { get; set; }
-        public DateTime PurchaseDate { get; set; }
+        public DateTime? PurchaseDate { get; set; }
         public string CoverUrl { get; set; }
         public DateTime CreationDate { get; set; }
+        public DateTime ModificationDate{ get; set; }
+        public DateTime? ReleaseDate{ get; set; }
 
         public int SeriesId { get; set; }
         public virtual Series Series { get; set; }

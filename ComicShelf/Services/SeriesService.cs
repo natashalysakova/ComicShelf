@@ -68,8 +68,7 @@ namespace ComicShelf.Services
                 Ongoing = model.Ongoing,
                 Publishers = publisherList,
                 Completed = model.Completed,
-                HasIssues = model.HasIssues,
-                TotalIssues = model.TotalIssues.HasValue ? model.TotalIssues.Value : 0,
+                TotalVolumes = model.TotalVolumes.HasValue ? model.TotalVolumes.Value : 0,
                 Color = ColorUtility.HexConverter(color),
                 ComplimentColor = ColorUtility.HexConverter(complementary)
             };
@@ -87,8 +86,7 @@ namespace ComicShelf.Services
             original.Id = model.Id;
             original.Ongoing = model.Ongoing;
             original.Completed = model.Completed;
-            original.HasIssues = model.HasIssues;
-            original.TotalIssues = model.TotalIssues.HasValue ? model.TotalIssues.Value : 0;
+            original.TotalVolumes = model.TotalVolumes.HasValue ? model.TotalVolumes.Value : 0;
 
             original.Publishers.Clear();
 

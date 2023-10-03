@@ -6,7 +6,7 @@
 
 <div class="modal-header">
     <div class="row">
-        <h3 class="modal-title" id="exampleModalLabel">@Model.Series.Name #@Model.Number</h3>
+        <div class="modal-title display-6" id="exampleModalLabel">@Model.Series.Name #@Model.Number</div>
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
@@ -38,9 +38,21 @@
                     <span type="text" class="form-control">@string.Join(", ", Model.Authors.Select(x=>x.Name))</span>
 
                 </div>
-                <form method="post" asp-page-handler="ChangeStatus" data-ajax-method="post" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#book-@Model.Id" data-ajax-complete="changeStatusSuccess">
+                <form method="post" asp-page-handler="ChangeStatus" data-ajax-method="post" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#book-@Model.Id" data-ajax-complete="changeStatusSuccess" id="update-on-status-change">
+
                     <div class="input-group mb-3">
-                        <partial name="_VolumeStatusPartial" model="Model" />
+                        <label asp-for="@Model.PurchaseStatus" class="input-group-text">Статус</label>
+                        <input type="hidden" value="@Model.Id" asp-for="@Model.Id" />
+                        <select asp-for="@Model.PurchaseStatus" asp-items="@Model.GetPurchaseStatusesListItems()" class="form-select" onchange="existhigPurchaseStatusChanged()"></select>
+                        <input type="submit" value="Update" class="btn btn-outline-success" />
+                    </div>
+                    <div class="input-group mb-3" id="new-release-date">
+                        <label asp-for="@Model.ReleaseDate" class="input-group-text"></label>
+                        <input asp-for="@Model.ReleaseDate" class="form-control" type="date" />
+                    </div>
+                    <div class="input-group mb-3" id="new-purchase-date">
+                        <label asp-for="@Model.PurchaseDate" class="input-group-text"></label>
+                        <input asp-for="@Model.PurchaseDate" class="form-control" type="date" />
                     </div>
                 </form>
 
@@ -72,22 +84,23 @@
                     <span type="text" class="form-control">@Model.Issues.Count</span>
                 </div>
 
-                <div class="input-group mb-3">
-                    <span class="input-group-text"><i class="bi bi-bookmark-check"></i></span>
-                    <span type="text" class="form-control">@Model.CreationDate</span>
+                <div class="text-end">
+                    <small>Створено @Model.CreationDate</small><br />
+                    <small>Змінено @Model.ModificationDate</small>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
-<div class="modal-footer text-center">
-    <div class="row">
-        <div class="col-6 text-start">
-            <a asp-page="./Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
-        </div>
-        <div class="col-6 text-end">
-            <a asp-page="./Edit" asp-route-id="@Model.Id" class="btn btn-primary ">Edit</a>
+<div class="modal-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-10">
+                <a asp-page="./Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger float-start"><i class="bi bi-trash"></i></a>
+            </div>
+            <div class="col-2">
+                <a asp-page="./Edit" asp-route-id="@Model.Id" class="btn btn-primary float-end">Edit</a>
+            </div>
         </div>
     </div>
 </div>

@@ -15,15 +15,30 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Volume.Id" />
             <div class="form-group">
-                <label asp-for="Volume.Number" class="control-label"></label>
-                <input asp-for="Volume.Number" class="form-control" />
-                <span asp-validation-for="Volume.Number" class="text-danger"></span>
+                <label asp-for="Volume.Series.Name" class="control-label"></label>
+                <input asp-for="Volume.Series.Name" class="form-control" readonly />
+                <span asp-validation-for="Volume.Series.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Volume.Title" class="control-label"></label>
                 <input asp-for="Volume.Title" class="form-control" />
                 <span asp-validation-for="Volume.Title" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Volume.Number" class="control-label"></label>
+                <input asp-for="Volume.Number" class="form-control" />
+                <span asp-validation-for="Volume.Number" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Volume.Authors" class="col-sm-2 col-form-label"></label>
+
+                <select asp-for="SelectedAutors" class="form-control multple-datalist" multiple list="autorsOptions" placeholder="Type to search..." autocomplete="off" asp-items="@Model.Authors">
+                </select>
+                <span asp-validation-for="Volume.Authors" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="Volume.Status" class="control-label"></label>
                 <select asp-for="Volume.Status" class="form-control" asp-items="@Model.Statuses"></select>
@@ -44,11 +59,16 @@
                 <input asp-for="Volume.PurchaseDate" class="form-control" />
                 <span asp-validation-for="Volume.PurchaseDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Volume.CoverUrl" class="control-label"></label>
                 <input asp-for="Volume.CoverUrl" class="form-control" />
                 <span asp-validation-for="Volume.CoverUrl" class="text-danger"></span>
             </div>
+
+            <div hidden>
+                <input asp-for="Volume.CreationDate" class="form-control" readonly />
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -61,5 +81,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

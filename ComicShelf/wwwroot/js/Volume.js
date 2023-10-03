@@ -1,4 +1,15 @@
-﻿$(function () {
+﻿$.validator.addMethod("reqif",
+    function (value, element, parameters) {
+        var onging = $("#NewVolume_PurchaseStatus").is(":checked");
+        return onging == false;
+    });
+
+$.validator.unobtrusive.adapters.add("reqif", [], function (options) {
+    options.rules.reqif = {};
+    options.messages["reqif"] = options.message;
+});
+
+$(function () {
 
     $('.ps-filter').each(function () {
         //$(this).prop('checked', true)
@@ -57,23 +68,14 @@
         //}
     })
 
-    //.on("keydown", function (event) {
-    //    if (event.keyCode === $.ui.keyCode.TAB &&
-    //        $(this).autocomplete("instance").menu.active) {
-    //        event.preventDefault();
-    //    }
-    //})
-
-
     $(".multple-datalist").focusin(function () { $(this).attr("type", "email"); });
     $(".multple-datalist").focusout(function () { $(this).attr("type", "textbox"); });
 
-
-    //NewVolume_Title
+    purchaseStatusChanged()
 
 });
 
-function filter (e) {
+function filter(e) {
 
     var all = $('#FilterAll')[0];
     var value = e.target.checked
@@ -107,17 +109,25 @@ function bookClick(id) {
         type: 'GET',
         cache: false,
         data: { id: id },
-        
+
     }).done(function (result) {
         $('#detail-modal-content').html(result);
+        existhigPurchaseStatusChanged()
     });
 }
 
 function changeStatusSuccess(e) {
     console.log(e);
+    $('#PurchaseStatus').removeClass("text-danger");
 
     if (e.status == 200) {
-        $('#PurchaseStatus').addClass("text-success");
+
+        $('#PurchaseStatus').addClass("text-success", 500, function () {
+            setTimeout(function () {
+                $('#PurchaseStatus').removeClass("text-success", 200);
+            }, 1000);
+        })
+        
     }
     else {
         $('#PurchaseStatus').addClass("text-danger");
@@ -179,3 +189,42 @@ function resetValidation() {
     return $form;
 };
 
+function purchaseStatusChanged() {
+    var value = $("#NewVolume_PurchaseStatus").find(":selected").val();
+    console.log(value);
+
+    if (value == "Preordered" || value == "Announced") {
+        $('#release-date').removeClass("collapse");
+    }
+    else {
+        $('#release-date').addClass("collapse");
+    }
+
+    if (value == "Announced" || value == "Wishlist") {
+
+        $('#purchase-date').addClass("collapse");
+    }
+    else {
+        $('#purchase-date').removeClass("collapse");
+    }
+}
+
+function existhigPurchaseStatusChanged() {
+    var value = $("#PurchaseStatus").find(":selected").text();
+
+    if (value == "Preordered" || value == "Announced") {
+        $('#new-release-date').removeClass("collapse");
+    }
+    else {
+        $('#new-release-date').addClass("collapse");
+    }
+
+    //new-purchase-date
+    if (value == "Announced" || value == "Wishlist") {
+
+        $('#new-purchase-date').addClass("collapse");
+    }
+    else {
+        $('#new-purchase-date').removeClass("collapse");
+    }
+}

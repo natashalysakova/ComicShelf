@@ -23,7 +23,7 @@ namespace ComicShelf.Pages.SeriesNs
 
         [DisplayName("Total issues")]
         [RequiredIf(nameof(Ongoing), false, "Provide total issue for finished series")]
-        public int? TotalIssues { get; set; }
+        public int? TotalVolumes { get; set; }
         [DisplayName("Have issues")]
         public int HasIssues { get; set; }
         [DisplayName("Completed collection")]
@@ -40,8 +40,7 @@ namespace ComicShelf.Pages.SeriesNs
             Ongoing = series.Ongoing;
             Name = series.Name;
             Publishers = string.Join(',', series.Publishers.Select(x => x.Name.ToString()));
-            HasIssues = series.HasIssues;
-            TotalIssues = series.TotalIssues;
+            TotalVolumes = series.TotalVolumes;
             Completed = series.Completed;
         }
 

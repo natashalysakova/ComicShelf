@@ -15,10 +15,12 @@ namespace ComicShelf.Pages.Volumes
     public class EditModel : PageModel
     {
         VolumeService _volumeService;
+        private readonly AuthorsService _authorsService;
 
-        public EditModel(VolumeService volumeService)
+        public EditModel(VolumeService volumeService, AuthorsService authorsService)
         {
             _volumeService = volumeService;
+            _authorsService = authorsService;
             Statuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Status)));
             PurchaseStatuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(PurchaseStatus)));
             Ratings.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Rating)));
@@ -28,9 +30,13 @@ namespace ComicShelf.Pages.Volumes
         public List<SelectListItem> Statuses { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> PurchaseStatuses { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Ratings { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
 
         [BindProperty]
         public Volume Volume { get; set; } = default!;
+        [BindProperty]
+        public IList<string> SelectedAutors { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -44,7 +50,13 @@ namespace ComicShelf.Pages.Volumes
             {
                 return NotFound();
             }
+            _volumeService.LoadReference(volume, x => x.Series);
+            _volumeService.LoadCollection(volume, x => x.Authors);
+
             Volume = volume;
+            Authors.AddRange(_authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+            SelectedAutors = volume.Authors.Select(x=>x.Id.ToString()).ToList();
+
             return Page();
         }
 
@@ -59,6 +71,8 @@ namespace ComicShelf.Pages.Volumes
          
             try
             {
+                Volume.Authors = _authorsService.GetAll().Where(x=> SelectedAutors.Contains(x.Id.ToString())).ToList();
+
                 _volumeService.Update(Volume);
             }
             catch (DbUpdateConcurrencyException)

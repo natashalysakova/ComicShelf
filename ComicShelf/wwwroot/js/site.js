@@ -11,3 +11,4 @@ function ongoingChanged() {
         $('#totalIssues').removeClass("invisible");
     }
 }
+

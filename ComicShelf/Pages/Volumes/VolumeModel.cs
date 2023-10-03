@@ -1,6 +1,8 @@
 ﻿using ComicShelf.Models.Enums;
 using ComicShelf.Models;
 using System.ComponentModel.DataAnnotations;
+using ComicShelf.Pages.SeriesNs;
+using System.ComponentModel;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -14,10 +16,15 @@ namespace ComicShelf.Pages.Volumes
         public Status Status { get; set; }
         public Rating Raiting { get; set; }
         public PurchaseStatus PurchaseStatus { get; set; }
-
-        public DateTime PurchaseDate { get; set; }
+        [DisplayName("Added to librarary")]
+        public DateTime? PurchaseDate { get; set; }
         //public string Cover { get; set; }
-        public IFormFile CoverFile { get; set; }
+        [RequiredIf(nameof(PurchaseStatus), PurchaseStatus.Announced, "Estimated release date is required")]
+        [DisplayName("Release")]
+        public DateTime? ReleaseDate { get; set; }
+
+
+        public IFormFile? CoverFile { get; set; }
 
         public string[] Authors { get; set; }
         public int Issues { get; set; }

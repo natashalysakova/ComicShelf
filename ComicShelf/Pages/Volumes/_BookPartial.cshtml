@@ -4,12 +4,20 @@
 *@
 @model Volume
 
+@{
+    var expired = Model.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered && Model.ReleaseDate < DateTime.Now ? "expired" : string.Empty;
+}
 
-    <img src="@Model.CoverUrl" alt="">
-    <div class="book-title">@Model.Series.Name<br>@Model.Title</div>
-    <div class="book-number" style="background-color:@Model.Series.Color;">@Model.Number</div>
-    @if (Model.PurchaseStatus == Models.Enums.PurchaseStatus.Announced || Model.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered || Model.PurchaseStatus == Models.Enums.PurchaseStatus.Wishlist)
+<img src="@Model.CoverUrl" alt="">
+<div class="book-title @expired">@Model.Series.Name<br>@Model.Title</div>
+<div class="book-number" style="background-color:@Model.Series.Color;">@Model.Number</div>
+@if (Model.PurchaseStatus == Models.Enums.PurchaseStatus.Announced || Model.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered || Model.PurchaseStatus == Models.Enums.PurchaseStatus.Wishlist)
+{
+    <div class="book-badge book-badge-@Model.PurchaseStatus.ToString().ToLower()">@Model.PurchaseStatus</div>
+
+    if (Model.ReleaseDate.HasValue)
     {
-        <div class="book-badge book-badge-@Model.PurchaseStatus.ToString().ToLower()">@Model.PurchaseStatus</div>
+        <div class=" book-badge badge-date @expired">@Model.ReleaseDate.Value.ToShortDateString()</div>
     }
+}
 

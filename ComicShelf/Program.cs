@@ -264,9 +264,9 @@ public static class FileUtility
         }
     }
 
-    internal static string SaveOnServer(IFormFile coverFile, string seriesName, int volumeNumber, out string extention)
+    internal static string SaveOnServer(IFormFile coverFile, string seriesName, int volumeNumber)
     {
-        extention = new FileInfo(coverFile.FileName).Extension;
+        var extention = new FileInfo(coverFile.FileName).Extension;
         var escapedSeriesName = seriesName.Unidecode().Replace(Path.GetInvalidFileNameChars(), string.Empty);
         var destiantionFolder = $"{imageDir}\\Series\\{escapedSeriesName}";
         var filename = $"{escapedSeriesName} {volumeNumber} {coverFile.GetHashCode()}{extention}";

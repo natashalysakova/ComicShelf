@@ -36,43 +36,45 @@ namespace ComicShelf.Services
             var authorList = new List<Author>();
             foreach (var item in model.Authors)
             {
-                var trimmedItem = item.Trim();
-                if (string.IsNullOrEmpty(trimmedItem))
-                {
-                    continue;
-                }
+                var splitted = item.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
-                var author = _authorService.GetByName(trimmedItem);
-                if (author == null)
+                foreach (var splittedItem in splitted)
                 {
-                    Roles role;
-
-                    if (series.Type == ComicType.Manga)
+                    var trimmedItem = splittedItem.Trim();
+                    if (string.IsNullOrEmpty(trimmedItem))
                     {
-                        role = Roles.Mangaka;
-                    }
-                    else
-                    {
-                        role = Roles.None;
+                        continue;
                     }
 
-                    author = new Author() { Name = trimmedItem, Roles = role };
-                    _authorService.Add(author);
-                }
+                    var author = _authorService.GetByName(trimmedItem);
+                    if (author == null)
+                    {
+                        Roles role;
 
-                authorList.Add(author);
+                        if (series.Type == ComicType.Manga)
+                        {
+                            role = Roles.Mangaka;
+                        }
+                        else
+                        {
+                            role = Roles.None;
+                        }
+
+                        author = new Author() { Name = trimmedItem, Roles = role };
+                        _authorService.Add(author);
+                    }
+
+                    authorList.Add(author);
+                }
             }
 
             var issues = GenerateEmptyIssues(model.Issues, series.Type).ToList();
 
-            var urlPath = string.Empty;
-            //var cover = new VolumeCover();
-            //if (model.CoverFile != null && model.CoverFile.Length > 0)
-            //{
-            urlPath = FileUtility.SaveOnServer(model.CoverFile, series.Name, model.Number, out string extention);
-            //    cover.Cover = coverBytes;
-            //    cover.Extention = extention;
-            //}
+            string? urlPath;
+            if (model.CoverFile != null)
+                urlPath = FileUtility.SaveOnServer(model.CoverFile, series.Name, model.Number);
+            else
+                urlPath = "images\\static\\no-cover.png";
 
             var volume = new Volume()
             {
@@ -88,6 +90,8 @@ namespace ComicShelf.Services
                 CoverUrl = urlPath,
                 //Cover = cover,
                 CreationDate = DateTime.Now,
+                ModificationDate = DateTime.Now,
+                ReleaseDate = model.ReleaseDate
             };
 
             this.Add(volume);
@@ -118,26 +122,13 @@ namespace ComicShelf.Services
 
         public override void Update(Volume item)
         {
-            //if (item.CoverUrl.StartsWith("http"))
-            //{
-            //    var seriesName = GetSeriesName(item);
-            //    item.CoverUrl = FileUtility.SaveOnServer(model.CoverFile, seriesName, item.Number, out byte[] coverBytes, out string extention);
+            if (item.CreationDate == default)
+                item.CreationDate = DateTime.Now;
 
-            //    var cover = _coverService.GetCoverForVolume(item);
-            //    if(cover == null)
-            //    {
-            //        var original = Get(item.Id);
-            //        cover = new VolumeCover() { Cover = coverBytes, Extention = extention };
-            //        original.Cover = cover;
-            //        _coverService.Add(cover);
-            //    }
-            //    else
-            //    {
-            //        cover.Cover = coverBytes;
-            //        cover.Extention = extention;
-            //        _coverService.Update(cover);
-            //    }
-            //}
+            item.ModificationDate = DateTime.Now;
+
+            if(item.SeriesId == 0)
+                item.SeriesId = _seriesService.GetByName(item.Series.Name).Id;
 
             base.Update(item);
         }
@@ -212,12 +203,23 @@ namespace ComicShelf.Services
             return filterd.ToList();
         }
 
-        internal void UpdatePurchaseStatus(int id, string purchaseStatus)
+        internal void UpdatePurchaseStatus(int id, string purchaseStatus, DateTime purchaseDate, DateTime releaseDate)
         {
             var item = Get(id);
             if (item != null)
             {
                 item.PurchaseStatus = (PurchaseStatus)Enum.Parse(typeof(PurchaseStatus), purchaseStatus);
+                
+                if(purchaseDate != default)
+                {
+                    item.PurchaseDate = purchaseDate;
+                }
+
+                if(releaseDate != default)
+                {
+                    item.ReleaseDate = releaseDate;
+                }
+
                 Update(item);
             }
         }
