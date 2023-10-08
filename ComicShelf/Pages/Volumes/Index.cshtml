@@ -1,68 +1,72 @@
 ﻿@page "/"
+@using ComicShelf.Localization;
+@using Microsoft.AspNetCore.Mvc.Localization;
 @model ComicShelf.Pages.Volumes.IndexModel
+@inject IHtmlLocalizer<SharedResource> Localizer
 
+@{
+    ViewData["Title"] = Localizer["MainPage"];
+}
 
 <p>
     <div class="row justify-content-between">
         <div class="col">
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Create New</button>
-            <div class="btn-group mb-3" role="group" aria-label="purchse status filters">
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["AddNewVolume"]</button>
+            <div class="btn-group btn-group-sm mb-3" role="group" aria-label="purchse status filters">
 
                 <input id="FilterAll" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" checked />
-                <label for="FilterAll" class="btn btn-outline-secondary">All</label>
+                <label for="FilterAll" class="btn btn-outline-secondary">
+                    @Localizer["FilterAll"]</label>
 
                 <input id="FilterAvailable" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
-                <label for="FilterAvailable" class="btn btn-outline-secondary">Shelf</label>
+                <label for="FilterAvailable" class="btn btn-outline-secondary">
+                    @Localizer["FilterAvailable"]</label>
 
                 <input id="FilterPreorder" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
-                <label for="FilterPreorder" class="btn btn-outline-secondary">Preorder</label>
+                <label for="FilterPreorder" class="btn btn-outline-secondary">
+                    @Localizer["FilterPreorder"]
+                </label>
 
                 <input id="FilterWishlist" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
-                <label for="FilterWishlist" class="btn btn-outline-secondary">Wishlist</label>
+                <label for="FilterWishlist" class="btn btn-outline-secondary">
+                    @Localizer["FilterWishlist"]
+                </label>
 
                 <input id="FilterAnnounced" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
-                <label for="FilterAnnounced" class="btn btn-outline-secondary">Announced</label>
+                <label for="FilterAnnounced" class="btn btn-outline-secondary">
+                    @Localizer["FilterAnnounced"]
+                </label>
 
                 <input id="FilterGone" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
-                <label for="FilterGone" class="btn btn-outline-secondary">Gone</label>
+                <label for="FilterGone" class="btn btn-outline-secondary">
+                    @Localizer["FilterGone"]
+                </label>
             </div>
 
         </div>
-        <div class="col-lg-2">
-            <div class="input-group mb-3">
-                <input id="search-field" type="search" class="form-control search" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="mb-3 row">
-                <div class="col-auto">
-                    <select id="sortType" class="form-select" aria-label="Default select example">
-                        <option value="0" >За датою додавання</option>
-                        <option value="1">За назвою</option>
-                        <option value="2" selected>За датою покупки</option>
-                    </select>
-                </div>
-                <button id="sortDirection" class="btn btn-outline-secondary col-auto" data-sort="up">
-                    <i class="bi bi-sort-up"></i>
-                </button>
-            </div>
+        <div class="col-lg-5">
             <div class="row">
-
-                    
-
-                    
+                <div class="input-group col-md mb-3 ">
+                    <input id="search-field" type="search" class="form-control search" placeholder="@Localizer["Search"]" aria-label="Search" aria-describedby="button-addon2">
+                </div>
+                <div class="input-group col-md mb-3 ">
+                    <select id="sortType" class="form-select" aria-label="Default select example">
+                        <option value="0">@Localizer["ByCreationDate"]</option>
+                        <option value="1">@Localizer["ByTitle"]</option>
+                        <option value="2" selected>@Localizer["ByPurchaseDate"]</option>
+                    </select>
+                    <button id="sortDirection" class="btn btn-outline-secondary" data-sort="up">
+                        <i class="bi bi-sort-up"></i>
+                    </button>
+                </div>
             </div>
-                    
         </div>
-
     </div>
-
-
 </p>
 
 
-<div class="row" id="shelves">
-    <partial name="_ShelfPartial" model="@Model.Volumes" />
+<div class="row" id="shelves" style="background-color: hotpink;">
+    <partial name="_ShelfPartial" model="@Model.Volumes" view-data="@ViewData" />
 </div>
 
 
@@ -75,7 +79,7 @@
 </div>
 
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <partial name="CreatePartial" />
+    <partial name="CreatePartial"/>
 </div>
 
 @section Scripts {

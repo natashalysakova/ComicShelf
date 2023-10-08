@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using ComicShelf.Localization;
 using ComicShelf.Models;
 using ComicShelf.Models.Enums;
-using ComicShelf.Pages.Volumes;
 using ComicShelf.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
+using ComicShelf.Utilities;
 
 namespace ComicShelf.Pages.SeriesNs
 {
@@ -18,15 +20,17 @@ namespace ComicShelf.Pages.SeriesNs
         //private readonly Models.ComicShelfContext _context;
         private readonly SearchService _searchController;
         private readonly SeriesService _seriesService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public CreateModel(SearchService searchController, PublishersService publishersController, SeriesService seriesController)
+        public CreateModel(SearchService searchController, PublishersService publishersController, SeriesService seriesController, IStringLocalizer<SharedResource> localizer)
         {
             _searchController = searchController;
             _seriesService = seriesController;
+            this._localizer = localizer;
 
             AvailablePublishers = publishersController.GetAll().OrderBy(x => x.Name).Select(x => new SelectListItem(x.Name, x.Id.ToString()));
 
-            Types.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Models.Enums.Type)));   
+            Types.AddRange(SeriesUtilities.GetTypesSelectItemList(_localizer));   
         }
 
         public IActionResult OnGet()

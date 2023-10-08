@@ -5,7 +5,7 @@
 @model IEnumerable<Volume>
 
 
-@{
+@*@{
     const int perRow = 5;
     var rows = Math.Ceiling(Model.Count() / (double)perRow);
 
@@ -27,9 +27,19 @@
         <div class="shelf-face"></div>
 
     }
-}
+}*@
+<div class="row">
 
 
+    <div class="shelf">
+        @foreach (var item in Model)
+        {
 
+                <div class="book" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="bookClick(@item.Id)" id="book-@item.Id">
+                    <partial name="_BookPartial" model="item" view-data="@ViewData" />
+                </div>
 
+        }
+    </div>
+</div>
 

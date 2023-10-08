@@ -45,10 +45,17 @@
                 <span asp-validation-for="Volume.Status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Volume.Raiting" class="control-label"></label>
-                <select asp-for="Volume.Raiting" class="form-control" asp-items="@Model.Ratings"></select>
-                <span asp-validation-for="Volume.Raiting" class="text-danger"></span>
-            </div>
+                @foreach (var rating in Model.Ratings)
+                {
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" value="@rating" asp-for="Volume.Rating">
+                        <label class="form-check-label" asp-for="Volume.Rating">@rating</label>
+                    </div>
+                }
+@*                <label asp-for="Volume.Rating" class="control-label"></label>
+                <select asp-for="Volume.Rating" class="form-control" asp-items="@Model.Ratings"></select>
+                <span asp-validation-for="Volume.Rating" class="text-danger"></span>
+*@            </div>
             <div class="form-group">
                 <label asp-for="Volume.PurchaseStatus" class="control-label"></label>
                 <select asp-for="Volume.PurchaseStatus" class="form-control" asp-items="@Model.PurchaseStatuses"></select>

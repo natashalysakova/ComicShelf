@@ -14,7 +14,7 @@ namespace ComicShelf.Pages.Volumes
         public string Title { get; set; }
         public string Series { get; set; }
         public Status Status { get; set; }
-        public Rating Raiting { get; set; }
+        public int Rating { get; set; }
         public PurchaseStatus PurchaseStatus { get; set; }
         [DisplayName("Added to librarary")]
         public DateTime? PurchaseDate { get; set; }

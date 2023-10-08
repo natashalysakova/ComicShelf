@@ -1,23 +1,39 @@
-﻿@using ComicShelf.Models;
+﻿@using ComicShelf.Localization;
+@using ComicShelf.Models;
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IHtmlLocalizer<SharedResource> Localizer
+
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model Volume
 
 @{
-    var expired = Model.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered && Model.ReleaseDate < DateTime.Now ? "expired" : string.Empty;
+    var expired = (Model.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered || Model.PurchaseStatus == Models.Enums.PurchaseStatus.Announced) && Model.ReleaseDate < DateTime.Now ? "expired" : string.Empty;
 }
 
-<img src="@Model.CoverUrl" alt="">
-<div class="book-title @expired">@Model.Series.Name<br>@Model.Title</div>
+<img class="book-cover" src="@Model.CoverUrl" alt="">
+
+<div class="book-header">
+    <div class="book-title @expired"></div>
+    <div class="book-text">@Model.Series.Name<br>@Model.Title</div>
+</div>
 <div class="book-number" style="background-color:@Model.Series.Color;">@Model.Number</div>
 @if (Model.PurchaseStatus == Models.Enums.PurchaseStatus.Announced || Model.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered || Model.PurchaseStatus == Models.Enums.PurchaseStatus.Wishlist)
 {
-    <div class="book-badge book-badge-@Model.PurchaseStatus.ToString().ToLower()">@Model.PurchaseStatus</div>
+    <div class="book-badge book-badge-@Model.PurchaseStatus.ToString().ToLower()">@Localizer[Model.PurchaseStatus.ToString()]</div>
 
     if (Model.ReleaseDate.HasValue)
     {
         <div class=" book-badge badge-date @expired">@Model.ReleaseDate.Value.ToShortDateString()</div>
     }
 }
+@if (Model.Rating != 0)
+{
+        <div class="star">
+            <span class="number">@Model.Rating</span>
+        </div>
+}
+
+
 

@@ -9,6 +9,9 @@ using ComicShelf.Models;
 using ComicShelf.Services;
 using ComicShelf.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using ComicShelf.Localization;
+using Microsoft.Extensions.Localization;
+using ComicShelf.Utilities;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -16,14 +19,18 @@ namespace ComicShelf.Pages.Volumes
     {
         private readonly VolumeService _volumeService;
         private readonly SearchService _searchService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public CreateModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService)
+        public CreateModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer)
         {
             _volumeService = volumeService;
             _searchService = searchService;
-            Statuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Status)));
-            PurchaseStatuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(PurchaseStatus)));
-            Ratings.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Rating)));
+            _localizer = localizer;
+
+            Statuses.AddRange(VolumeUtilities.GetStatusSelectItemList(_localizer));
+            PurchaseStatuses.AddRange(VolumeUtilities.GetPurchaseStatusSelectItemList(_localizer));
+            Ratings.AddRange(VolumeUtilities.GetRatingsSelectItemList(_localizer));
+
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
         }

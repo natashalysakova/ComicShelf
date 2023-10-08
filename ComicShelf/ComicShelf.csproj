@@ -73,8 +73,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Localization\" />
     <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Localization\Pages.Volumes\IndexModel.uk-UA.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

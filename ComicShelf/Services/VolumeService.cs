@@ -85,7 +85,7 @@ namespace ComicShelf.Services
                 Number = model.Number,
                 PurchaseDate = model.PurchaseDate,
                 PurchaseStatus = model.PurchaseStatus,
-                Raiting = model.Raiting,
+                Rating = model.Rating,
                 Status = model.Status,
                 CoverUrl = urlPath,
                 //Cover = cover,
@@ -203,21 +203,24 @@ namespace ComicShelf.Services
             return filterd.ToList();
         }
 
-        internal void UpdatePurchaseStatus(int id, string purchaseStatus, DateTime purchaseDate, DateTime releaseDate)
+        internal void UpdatePurchaseStatus(VolumeUpdateModel volumeToUpdate)
         {
-            var item = Get(id);
+            var item = Get(volumeToUpdate.Id);
             if (item != null)
             {
-                item.PurchaseStatus = (PurchaseStatus)Enum.Parse(typeof(PurchaseStatus), purchaseStatus);
-                
-                if(purchaseDate != default)
+                item.PurchaseStatus = volumeToUpdate.PurchaseStatus;
+                item.Status = volumeToUpdate.Status;
+
+                item.Rating = volumeToUpdate.Rating;
+
+                if(volumeToUpdate.PurchaseDate != default)
                 {
-                    item.PurchaseDate = purchaseDate;
+                    item.PurchaseDate = volumeToUpdate.PurchaseDate;
                 }
 
-                if(releaseDate != default)
+                if(volumeToUpdate.ReleaseDate != default)
                 {
-                    item.ReleaseDate = releaseDate;
+                    item.ReleaseDate = volumeToUpdate.ReleaseDate;
                 }
 
                 Update(item);

@@ -72,7 +72,7 @@ $(function () {
     $(".multple-datalist").focusout(function () { $(this).attr("type", "textbox"); });
 
     purchaseStatusChanged()
-
+    newReadingStatusChanged()
 });
 
 function filter(e) {
@@ -113,18 +113,18 @@ function bookClick(id) {
     }).done(function (result) {
         $('#detail-modal-content').html(result);
         existhigPurchaseStatusChanged()
+        existhigReadingStatusChanged()
     });
 }
 
 function changeStatusSuccess(e) {
-    console.log(e);
     $('#PurchaseStatus').removeClass("text-danger");
 
     if (e.status == 200) {
 
-        $('#PurchaseStatus').addClass("text-success", 500, function () {
+        $('#update-on-status-change').addClass("text-success", 500, function () {
             setTimeout(function () {
-                $('#PurchaseStatus').removeClass("text-success", 200);
+                $('#update-on-status-change').removeClass("text-success", 200);
             }, 1000);
         })
         
@@ -134,8 +134,8 @@ function changeStatusSuccess(e) {
     }
 }
 
-function updateTitle() {
-    $('#NewVolume_Title').val("Том " + $('#NewVolume_Number').val());
+function updateTitle(title) {
+    $('#NewVolume_Title').val(title + " " + $('#NewVolume_Number').val());
 }
 
 function switchCover() {
@@ -191,7 +191,6 @@ function resetValidation() {
 
 function purchaseStatusChanged() {
     var value = $("#NewVolume_PurchaseStatus").find(":selected").val();
-    console.log(value);
 
     if (value == "Preordered" || value == "Announced") {
         $('#release-date').removeClass("collapse");
@@ -210,13 +209,15 @@ function purchaseStatusChanged() {
 }
 
 function existhigPurchaseStatusChanged() {
-    var value = $("#PurchaseStatus").find(":selected").text();
+    var value = $("#PurchaseStatus").find(":selected").val();
 
     if (value == "Preordered" || value == "Announced") {
         $('#new-release-date').removeClass("collapse");
+        $('#reading-status').addClass("collapse");
     }
     else {
         $('#new-release-date').addClass("collapse");
+        $('#reading-status').removeClass("collapse");
     }
 
     //new-purchase-date
@@ -226,5 +227,28 @@ function existhigPurchaseStatusChanged() {
     }
     else {
         $('#new-purchase-date').removeClass("collapse");
+    }
+}
+
+function existhigReadingStatusChanged() {
+
+    var value = $("#Status").find(":selected").val();
+
+    if (value == "Completed" || value == "Dropped") {
+        $('#rating-select').removeClass("collapse");
+    }
+    else {
+        $('#rating-select').addClass("collapse");
+    }
+}
+function newReadingStatusChanged() {
+
+    var value = $("#NewVolume_Status").find(":selected").val();
+
+    if (value == "Completed" || value == "Dropped") {
+        $('#new-rating-select').removeClass("collapse");
+    }
+    else {
+        $('#new-rating-select').addClass("collapse");
     }
 }

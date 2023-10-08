@@ -13,24 +13,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net;
 using Org.BouncyCastle.Crypto.Engines;
 using NuGet.Packaging;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.Localization;
+using ComicShelf.Localization;
+using ComicShelf.Utilities;
 
 namespace ComicShelf.Pages.Volumes
 {
     public class IndexModel : PageModel
     {
-        private readonly VolumeService volumeService;
-        private readonly IStringLocalizer<IndexModel> _localizer;
+        private readonly VolumeService _volumeService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly SearchService _searchService;
-
-        public IndexModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService, IStringLocalizer<IndexModel> localizer)
+        public IndexModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer)
         {
-            this.volumeService = volumeService;
-            this._localizer = localizer;
-
+            _volumeService = volumeService;
+            _localizer = localizer;
             _searchService = searchService;
-            Statuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Status)));
-            PurchaseStatuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(PurchaseStatus)));
-            Ratings.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Rating)));
+
+            Statuses.AddRange(VolumeUtilities.GetStatusSelectItemList(_localizer));
+            PurchaseStatuses.AddRange(VolumeUtilities.GetPurchaseStatusSelectItemList(_localizer));
+            Ratings.AddRange(VolumeUtilities.GetRatings());
+
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
 
@@ -41,7 +45,7 @@ namespace ComicShelf.Pages.Volumes
 
         public List<SelectListItem> Statuses { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> PurchaseStatuses { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> Ratings { get; set; } = new List<SelectListItem>();
+        public List<int> Ratings { get; set; } = new List<int>();
         public List<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Series { get; set; } = new List<SelectListItem>();
 
@@ -73,23 +77,32 @@ namespace ComicShelf.Pages.Volumes
         public async Task OnGetAsync()
         {
             //Volumes = await volumeService.GetAll().Include(x => x.Series).OrderBy(x => x.Series.Name).ThenBy(x => x.Number).ToListAsync();
-            Volumes = volumeService.Filter(new BookshelfParams());
-            ViewData["Title"] = _localizer.GetString("Main page");
+            Volumes = _volumeService.Filter(new BookshelfParams());
         }
 
         public PartialViewResult OnGetVolumeAsync(int id)
         {
-            var volume = volumeService.Get(id);
-            volumeService.LoadReference(volume, x => x.Series);
-            volumeService.LoadCollection(volume, x => x.Authors);
-            return Partial("_VolumePartial", volume);
-        }
+            var volume = _volumeService.Get(id);
+            _volumeService.LoadReference(volume, x => x.Series);
+            _volumeService.LoadCollection(volume, x => x.Authors);
 
-        public async Task<IActionResult> OnPostChangeStatus(int id, string purchaseStatus, DateTime purchaseDate, DateTime releaseDate)
+            var resultVD = new ViewDataDictionary<Volume>(ViewData, volume);
+            resultVD["PurchaseStatuses"] = VolumeUtilities.GetPurchaseStatusesSelectItemList(volume, _localizer);
+            resultVD["ReadingStatuses"] = VolumeUtilities.GetStatusSelectItemList(_localizer);
+            resultVD["Ratings"] = VolumeUtilities.GetRatings();
+
+            return new PartialViewResult()
+            {
+                ViewName = "_VolumePartial",
+                ViewData = resultVD
+            };
+        }        
+
+        public async Task<IActionResult> OnPostChangeStatus(VolumeUpdateModel volumeToUpdate)
         {
-            volumeService.UpdatePurchaseStatus(id, purchaseStatus, purchaseDate, releaseDate);
-            var item = volumeService.Get(id);
-            volumeService.LoadReference(item, x => x.Series);
+            _volumeService.UpdatePurchaseStatus(volumeToUpdate);
+            var item = _volumeService.Get(volumeToUpdate.Id);
+            _volumeService.LoadReference(item, x => x.Series);
             var partial = Partial("_BookPartial", item);
             return partial;
         }
@@ -101,55 +114,22 @@ namespace ComicShelf.Pages.Volumes
                 return StatusCode(400, "Fill mandatory fields");
             }
 
-            if (volumeService.Exists(NewVolume.Series, NewVolume.Number))
+            if (_volumeService.Exists(NewVolume.Series, NewVolume.Number))
             {
                 return StatusCode(409, $"{NewVolume.Series} Volume #{NewVolume.Number} already exists");
             }
 
-            volumeService.Add(NewVolume);
+            _volumeService.Add(NewVolume);
 
-            Volumes = volumeService.Filter(new BookshelfParams());
+            Volumes = _volumeService.Filter(new BookshelfParams());
             return Partial("_ShelfPartial", Volumes);
         }
 
         public PartialViewResult OnGetFiltered(BookshelfParams filters)
         {
-            Volumes = volumeService.Filter(filters);
+            Volumes = _volumeService.Filter(filters);
             return Partial("_ShelfPartial", Volumes);
         }
 
-        //public IActionResult OnGetSearchSeries(string term)
-        //{
-        //    var res = _searchService.FindSeriesByTerm(term);
-        //    return new JsonResult(res);
-        //}
-        //public IActionResult OnGetSearchAutors(string term)
-        //{
-        //    var res = _searchService.FindAutorByTerm(term);
-        //    return new JsonResult(res);
-        //}
-    }
-
-    public class BookshelfParams
-    {
-        //public bool FilterAvailable { get; set; }
-        //public bool FilterPreorder { get; set; }
-        //public bool FilterWishlist { get; set; }
-        //public bool FilterAnnounced { get; set; }
-        //public bool FilterGone { get; set; }
-
-        //Dictionary<string, bool> filters = new Dictionary<string, bool>();
-        public string? filter { get; set; }
-        public int? sort { get; set; }
-        public string? direction { get; set; }
-
-        public string? search { get; set; }
-
-        public BookshelfParams()
-        {
-            direction = "up";
-            sort = 2;
-
-        }
     }
 }

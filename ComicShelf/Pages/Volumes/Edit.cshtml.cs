@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using ComicShelf.Models;
 using ComicShelf.Services;
 using ComicShelf.Models.Enums;
+using Microsoft.Extensions.Localization;
+using ComicShelf.Localization;
+using ComicShelf.Utilities;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -16,20 +19,23 @@ namespace ComicShelf.Pages.Volumes
     {
         VolumeService _volumeService;
         private readonly AuthorsService _authorsService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public EditModel(VolumeService volumeService, AuthorsService authorsService)
+        public EditModel(VolumeService volumeService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer)
         {
             _volumeService = volumeService;
             _authorsService = authorsService;
-            Statuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Status)));
-            PurchaseStatuses.AddRange(Utilities.GetEnumAsSelectItemList(typeof(PurchaseStatus)));
-            Ratings.AddRange(Utilities.GetEnumAsSelectItemList(typeof(Rating)));
+            _localizer = localizer;
+
+            Statuses.AddRange(VolumeUtilities.GetStatusSelectItemList(_localizer));
+            PurchaseStatuses.AddRange(VolumeUtilities.GetPurchaseStatusSelectItemList(_localizer));
+            Ratings.AddRange(VolumeUtilities.GetRatings());
 
         }
 
         public List<SelectListItem> Statuses { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> PurchaseStatuses { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> Ratings { get; set; } = new List<SelectListItem>();
+        public List<int> Ratings { get; set; } = new List<int>();
         public List<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
 
         [BindProperty]
