@@ -171,6 +171,9 @@ namespace ComicShelf.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("Digitality")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ModificationDate")
                         .HasColumnType("datetime(6)");
 

@@ -10,6 +10,7 @@ using ComicType = ComicShelf.Models.Enums.Type;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
 using System.Linq.Expressions;
+using System.Text;
 
 namespace ComicShelf.Services
 {
@@ -117,7 +118,7 @@ namespace ComicShelf.Services
 
         public override IQueryable<Volume> GetAll()
         {
-            return base.GetAll().Include(x => x.Series).Include(x=>x.Authors);
+            return base.GetAll().Include(x => x.Series).Include(x => x.Authors);
         }
 
         public override void Update(Volume item)
@@ -127,7 +128,7 @@ namespace ComicShelf.Services
 
             item.ModificationDate = DateTime.Now;
 
-            if(item.SeriesId == 0)
+            if (item.SeriesId == 0)
                 item.SeriesId = _seriesService.GetByName(item.Series.Name).Id;
 
             base.Update(item);
@@ -169,10 +170,10 @@ namespace ComicShelf.Services
 
                 filterd = filterd.Where(x =>
                     x.Title.ToLower().Contains(param.search) ||
-                    x.Series.Name.ToLower().Contains(param.search) || 
-                    x.Series.OriginalName.ToLower().Contains(param.search) || 
-                    x.Authors.Any(y=>y.Name.ToLower().Contains(param.search)) ||
-                    x.Series.Publishers.Any(y=>y.Name.ToLower().Contains(param.search)) 
+                    x.Series.Name.ToLower().Contains(param.search) ||
+                    x.Series.OriginalName.ToLower().Contains(param.search) ||
+                    x.Authors.Any(y => y.Name.ToLower().Contains(param.search)) ||
+                    x.Series.Publishers.Any(y => y.Name.ToLower().Contains(param.search))
                 );
             }
 
@@ -184,10 +185,10 @@ namespace ComicShelf.Services
             switch (param.sort)
             {
                 case 1:
-                    filterd = filterd.OrderBy(x => x.Series.Name).ThenBy(x=>x.Number);
+                    filterd = filterd.OrderBy(x => x.Series.Name).ThenBy(x => x.Number);
                     break;
                 case 2:
-                    filterd = filterd.OrderBy(x => x.PurchaseDate).ThenBy(x=>x.Series.Name).ThenBy(x=>x.Number);
+                    filterd = filterd.OrderBy(x => x.PurchaseDate).ThenBy(x => x.Series.Name).ThenBy(x => x.Number);
                     break;
                 default:
                     filterd = filterd.OrderBy(x => x.CreationDate);
@@ -213,18 +214,29 @@ namespace ComicShelf.Services
 
                 item.Rating = volumeToUpdate.Rating;
 
-                if(volumeToUpdate.PurchaseDate != default)
+                if (volumeToUpdate.PurchaseDate != default)
                 {
                     item.PurchaseDate = volumeToUpdate.PurchaseDate;
                 }
 
-                if(volumeToUpdate.ReleaseDate != default)
+                if (volumeToUpdate.ReleaseDate != default)
                 {
                     item.ReleaseDate = volumeToUpdate.ReleaseDate;
                 }
 
                 Update(item);
             }
+        }
+
+        public override string SetNotificationMessage()
+        {
+            var builder = new StringBuilder();
+            if (GetAll().AsEnumerable().Any(x => x.Expired()))
+            {
+                builder.Append("There are volumes that need your attention");
+            }
+
+            return builder.ToString();
         }
     }
 }

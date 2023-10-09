@@ -110,7 +110,10 @@ namespace ComicShelf.Utilities
             return EnumUtilities.GetEnumAsSelectItemList<PurchaseStatus>(localizer);
         }
 
-
+        internal static IEnumerable<SelectListItem> GetDigitalitySelectItemList(IStringLocalizer<SharedResource> localizer)
+        {
+            return EnumUtilities.GetEnumAsSelectItemList<VolumeType>(localizer);
+        }
     }
     internal static class SeriesUtilities
     {

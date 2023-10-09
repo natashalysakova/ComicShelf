@@ -12,11 +12,17 @@ namespace ComicShelf
     {
         private readonly PublishersService publisherService;
         private readonly CountryService countryService;
+        private readonly VolumeService volumeService;
+        private readonly SeriesService seriesService;
+        private readonly AuthorsService authorsService;
 
-        public ViewBagActionFilter(PublishersService publisherService, CountryService countryService)
+        public ViewBagActionFilter(PublishersService publisherService, CountryService countryService, VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService)
         {
             this.publisherService = publisherService;
             this.countryService = countryService;
+            this.volumeService = volumeService;
+            this.seriesService = seriesService;
+            this.authorsService = authorsService;
 
             //DI will inject what you need here
 
@@ -35,6 +41,10 @@ namespace ComicShelf
             {
                 var controller = context.Controller as PageModel;
                 controller.ViewData.Add("PublisherNotification", publisherService.ShowNotification());
+                controller.ViewData.Add("CountryNotification", countryService.ShowNotification());
+                controller.ViewData.Add("VolumeNotification", volumeService.ShowNotification());
+                controller.ViewData.Add("SeriesNotification", seriesService.ShowNotification());
+                controller.ViewData.Add("AuthorsNotification", authorsService.ShowNotification());
 
                 //controller.ViewData.Add("Avatar", $"~/avatar/empty.png");
                 // or

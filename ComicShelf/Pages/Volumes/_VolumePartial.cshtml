@@ -60,9 +60,11 @@
                             <span type="text" class="form-control">@Model.Series.TotalVolumes</span>
                         }
                     }
-
                 </div>
-
+                <div class="input-group mb-3">
+                    <span class="input-group-text">@Localizer["Digitality"]</span>
+                    <span type="text" class="form-control">@Localizer[@Model.Digitality.ToString()]</span>
+                </div>
                 <hr />
                 <form method="post" asp-page-handler="ChangeStatus" data-ajax-method="post" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#book-@Model.Id" data-ajax-complete="changeStatusSuccess" id="update-on-status-change">
 
@@ -72,7 +74,6 @@
                         <input type="hidden" value="@Model.Id" asp-for="@Model.Id" />
                         <select asp-for="@Model.PurchaseStatus" asp-items="(IEnumerable<SelectListItem>)@ViewData["PurchaseStatuses"]" class="form-select" onchange="existhigPurchaseStatusChanged()"></select>
                     </div>
-
                     <div class="input-group mb-3" id="new-purchase-date">
                         <label asp-for="@Model.PurchaseDate" class="input-group-text">@Localizer["PurchaseDate"]</label>
                         <input asp-for="@Model.PurchaseDate" class="form-control" type="date" />

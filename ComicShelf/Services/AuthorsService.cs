@@ -8,6 +8,16 @@ namespace ComicShelf.Services
         {
         }
 
+        public override string SetNotificationMessage()
+        {
+            if (dbSet.Any(x => x.Roles == Models.Enums.Roles.None))
+            {
+                return "Some authors has no role";
+            }
+
+            return string.Empty;
+        }
+
         internal Author GetByName(string trimmedItem)
         {
             return dbSet.Where(x=>x.Name == trimmedItem).FirstOrDefault();

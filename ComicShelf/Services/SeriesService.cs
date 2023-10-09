@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
+using System.Text;
 
 namespace ComicShelf.Services
 {
@@ -12,7 +13,7 @@ namespace ComicShelf.Services
         private readonly PublishersService _publishersService;
         CountryService _countryService;
 
-        public SeriesService(ComicShelfContext context, PublishersService service, CountryService countryService) : base(context) 
+        public SeriesService(ComicShelfContext context, PublishersService service, CountryService countryService) : base(context)
         {
             _publishersService = service;
             _countryService = countryService;
@@ -115,10 +116,24 @@ namespace ComicShelf.Services
         {
             return dbSet.Where(x => x.Name == selectedSeries).SingleOrDefault();
         }
+
+        public override string SetNotificationMessage()
+        {
+            StringBuilder builder = new StringBuilder();
+
+            if (dbSet.Any(x => !x.Publishers.Any()  
+            || !x.Volumes.Any()  
+            || (!x.Ongoing && x.TotalVolumes == 0)))
+            {
+                return "You have not filled data for series";
+            }
+
+            return string.Empty;
+        }
     }
 
     enum SeriesControllerSort
     {
-        Name, Publisher, 
+        Name, Publisher,
     }
 }

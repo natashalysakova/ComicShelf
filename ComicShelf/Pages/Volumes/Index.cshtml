@@ -8,8 +8,8 @@
     ViewData["Title"] = Localizer["MainPage"];
 }
 
-<p>
-    <div class="row justify-content-between">
+
+    <div class="row justify-content-between" id="filters">
         <div class="col">
             <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["AddNewVolume"]</button>
             <div class="btn-group mb-3" role="group" aria-label="purchse status filters">
@@ -62,7 +62,7 @@
             </div>
         </div>
     </div>
-</p>
+
 
 
 <div class="row" id="shelves">
@@ -90,118 +90,3 @@
         };
     </script>
 }
-
-@*<div class="row">
-    @foreach (var item in Model.Volumes)
-    {
-        <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6 col-sm-12 p-1">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">@item.Title</h5>
-                    @if (item.Series != null)
-                    {
-                        <h6 class="card-subtitle mb-2 text-muted">@item.Series.Name</h6>
-                    }
-                    <p class="card-text">
-                        Volume #
-                        <span class="badge text-bg-info">@item.Number</span>
-                    </p>
-
-                </div>
-
-                @if (item.CoverUrl != null)
-                {
-                    <img src="@item.CoverUrl" class="card-img-top" height="440" style="object-fit:cover" />
-                }
-
-                                <div class="card-body">
-            @if (!string.IsNullOrEmpty(item.Name))
-            {
-            <h6 class="card-title">@item.Name</h6>
-            }
-            <p class="text-body-secondary">@item.Type</p>
-            </div>
-
-                <ul class="list-group list-group-flush">
-
-                    <li class="list-group-item">
-                        <div class="input-group">
-                            @{
-                                string icon;
-
-                                switch (item.PurchaseStatus)
-                                {
-                                    case Models.Enums.PurchaseStatus.Announced:
-                                        icon = "bi-megaphone";
-                                        break;
-                                    case Models.Enums.PurchaseStatus.Pirated:
-                                        icon = "bi-flag";
-                                        break;
-                                    case Models.Enums.PurchaseStatus.Gift:
-                                        icon = "bi-gift";
-                                        break;
-                                    default:
-                                        icon = "bi-cash-coin";
-                                        break;
-                                }
-                            }
-                            <span class="input-group-text">
-                                <i class="bi @icon"></i>
-                            </span>
-                            <span class="form-control" type="text">@item.PurchaseStatus</span>
-                            @if (item.PurchaseDate != default)
-                            {
-                                <span type="text" class="form-control">@item.PurchaseDate.ToShortDateString()</span>
-                            }
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="input-group">
-                            @{
-                                string iconRead;
-
-                                switch (item.Status)
-                                {
-                                    case Models.Enums.Status.Completed:
-                                        iconRead = "bi-book-fill";
-                                        break;
-                                    case Models.Enums.Status.Reading:
-                                        iconRead = "bi-book-half";
-                                        break;
-                                    default:
-                                        iconRead = "bi-book";
-                                        break;
-                                }
-                            }
-                            <span class="input-group-text"><i class="bi @iconRead"></i></span>
-                            <span type="text" class="form-control">@item.Status</span>
-                        </div>
-                    </li>
-
-                    <li class="list-group-item">
-                        <div class="input-group">
-
-                            <span class="input-group-text"><i class="bi bi-bookmark-check"></i></span>
-                            <span type="text" class="form-control">@item.Number</span>
-                            <span class="input-group-text">/</span>
-                            <span type="text" class="form-control">@item.Issues.Count</span>
-
-                        </div>
-                    </li>
-                </ul>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-6 text-start">
-                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
-                        </div>
-                        <div class="col-6 text-end">
-                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary ">Edit</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @*        </a>
-          }
-</div>
-*@

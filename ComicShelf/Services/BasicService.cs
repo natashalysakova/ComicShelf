@@ -4,6 +4,7 @@ using Npgsql.Internal.TypeMapping;
 using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 
 namespace ComicShelf.Services
 {
@@ -81,5 +82,21 @@ namespace ComicShelf.Services
         {
             dbSet.Entry(item).Collection(expression).Load();
         }
+
+
+
+        string notificationCache;
+
+        public string ShowNotification()
+        {
+            if (string.IsNullOrEmpty(notificationCache))
+            {
+                notificationCache = SetNotificationMessage();
+            }
+
+            return notificationCache;
+        }
+
+        public abstract string SetNotificationMessage();
     }
 }

@@ -19,10 +19,18 @@
 *@
 </head>
 <body>
-    <header class="@hostingEnv.EnvironmentName">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
+    <header>
+        <nav class="navbar fixed-top @hostingEnv.EnvironmentName navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Volumes/Index">@Localizer["MainHeader"]</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Volumes/Index">@Localizer["MainHeader"]
+                    @{
+                        var vnot = ViewData["VolumeNotification"];
+                        if (!string.IsNullOrEmpty(vnot.ToString()))
+                        {
+                            <span class="badge rounded-pill bg-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="@vnot">!</span>
+                        }
+                    }
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"s
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -33,19 +41,35 @@
                             <a class="nav-link" asp-page="/Volumes/Index">Shelf</a>
                         </li>*@
                         <li class="nav-item">
-                            <a class="nav-link" asp-page="/Series/Index">@Localizer["Series"]</a>
+                            <a class="nav-link" asp-page="/Series/Index">@Localizer["Series"]
+                                @{
+                                    var snot = ViewData["SeriesNotification"];
+                                    if (!string.IsNullOrEmpty(snot.ToString()))
+                                    {
+                                        <span class="badge rounded-pill bg-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="@snot">!</span>
+                                    }
+                                }
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-page="/Authors/Index">@Localizer["Authors"]</a>
+                            <a class="nav-link" asp-page="/Authors/Index">@Localizer["Authors"]
+                                @{
+                                    var anot = ViewData["AuthorsNotification"];
+                                    if (!string.IsNullOrEmpty(anot.ToString()))
+                                    {
+                                        <span class="badge rounded-pill bg-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="@anot">!</span>
+                                    }
+                                }
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-page="/Publishers/Index">
                                 @Localizer["Publishers"]
                                 @{
-                                    var value = ViewData["PublisherNotification"];
-                                    if (!string.IsNullOrEmpty(value.ToString()))
+                                    var pnot = ViewData["PublisherNotification"];
+                                    if (!string.IsNullOrEmpty(pnot.ToString()))
                                     {
-                                        <span class="badge rounded-pill bg-danger">!</span>
+                                        <span class="badge rounded-pill bg-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="@pnot">!</span>
                                     }
                                 }
                             </a>
@@ -54,12 +78,11 @@
                             <a class="nav-link" asp-page="/Countries/Index">
                                 @Localizer["Countries"]
                                 @{
-                                    //bool.TryParse(ViewData["CoutryNotification"].ToString(), out bool result);
-
-                                    //if(result)
-                                    //{
-                                    //    <span class="badge rounded-pill bg-danger">!</span>
-                                    //}
+                                    var cnot = ViewData["CountryNotification"];
+                                    if (!string.IsNullOrEmpty(cnot.ToString()))
+                                    {
+                                        <span class="badge rounded-pill bg-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="@cnot">!</span>
+                                    }
                                 }
                             </a>
                         </li>
@@ -69,13 +92,13 @@
             </div>
         </nav>
     </header>
-    <div class="container" style="min-height: 1000px;">
+    <div class="container" id="main-container"> 
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted bg-body-secondary">
         <div class="container">
             &copy; @DateTime.Today.Year - @Localizer["MainHeader"] - <a asp-area="" asp-page="/Privacy">@Localizer["Privacy"]</a>
         </div>

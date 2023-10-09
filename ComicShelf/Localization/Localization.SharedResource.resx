@@ -270,4 +270,13 @@
   <data name="Wishlist" xml:space="preserve">
     <value>{Wishlist}</value>
   </data>
+  <data name="Digitality" xml:space="preserve">
+    <value>{Digitality}</value>
+  </data>
+  <data name="Physical" xml:space="preserve">
+    <value>{Physical}</value>
+  </data>
+  <data name="Digital" xml:space="preserve">
+    <value>{Digital}</value>
+  </data>
 </root>

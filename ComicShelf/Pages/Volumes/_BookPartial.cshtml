@@ -9,7 +9,7 @@
 @model Volume
 
 @{
-    var expired = (Model.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered || Model.PurchaseStatus == Models.Enums.PurchaseStatus.Announced) && Model.ReleaseDate < DateTime.Now ? "expired" : string.Empty;
+    var expired = Model.Expired() ? "expired" : string.Empty;
 }
 
 <img class="book-cover" src="@Model.CoverUrl" alt="">
@@ -23,7 +23,7 @@
 {
     <div class="book-badge book-badge-@Model.PurchaseStatus.ToString().ToLower()">@Localizer[Model.PurchaseStatus.ToString()]</div>
 
-    if (Model.ReleaseDate.HasValue)
+    if (Model.ReleaseDate.HasValue && Model.PurchaseStatus!= Models.Enums.PurchaseStatus.Wishlist)
     {
         <div class=" book-badge badge-date @expired">@Model.ReleaseDate.Value.ToShortDateString()</div>
     }

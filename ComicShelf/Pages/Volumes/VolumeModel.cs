@@ -22,11 +22,10 @@ namespace ComicShelf.Pages.Volumes
         [RequiredIf(nameof(PurchaseStatus), PurchaseStatus.Announced, "Estimated release date is required")]
         [DisplayName("Release")]
         public DateTime? ReleaseDate { get; set; }
-
-
         public IFormFile? CoverFile { get; set; }
-
         public string[] Authors { get; set; }
         public int Issues { get; set; }
+        public VolumeType Digitality { get; set; }
+
     }
 }

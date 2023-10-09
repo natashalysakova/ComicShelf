@@ -40,7 +40,10 @@ namespace ComicShelf.Services
 
         }
 
-
+        public override string SetNotificationMessage()
+        {
+            return string.Empty;
+        }
     }
 
     enum CountrySort

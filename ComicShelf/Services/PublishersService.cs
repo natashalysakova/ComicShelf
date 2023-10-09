@@ -69,6 +69,15 @@ namespace ComicShelf.Services
             return notificationCache;
         }
 
+        public override string SetNotificationMessage()
+        {
+            if(dbSet.Any(x=>x.Country == null))
+            {
+                return "Some publishers has no country";
+            }
+
+            return string.Empty;
+        }
     }
 
     enum PublisherSort

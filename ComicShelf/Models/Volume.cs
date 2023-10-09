@@ -18,6 +18,7 @@ namespace ComicShelf.Models
         public Status Status { get; set; }
         public int Rating { get; set; }
         public PurchaseStatus PurchaseStatus { get; set; }
+        public VolumeType Digitality { get; set; }
         public DateTime? PurchaseDate { get; set; }
         public string CoverUrl { get; set; }
         public DateTime CreationDate { get; set; }
@@ -27,13 +28,12 @@ namespace ComicShelf.Models
         public int SeriesId { get; set; }
         public virtual Series Series { get; set; }
 
-        //public int CoverId { get; set; }
-        //public virtual VolumeCover Cover { get; set; }
-
         public virtual ICollection<Author> Authors { get; set; } = new List<Author>();
         public virtual ICollection<Issue> Issues { get; set; } = new List<Issue>();
 
-
-
+        internal bool Expired()
+        {
+            return ReleaseDate.HasValue && ReleaseDate < DateTime.Today;
+        }
     }
 }

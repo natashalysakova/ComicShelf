@@ -3,6 +3,11 @@
 
 // Write your JavaScript code.
 
+$(function () {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+});
+
 function ongoingChanged() {
     if ($('#Series_Ongoing').is(":checked")) {
         $('#totalIssues').addClass("invisible");

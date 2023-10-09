@@ -34,6 +34,7 @@ namespace ComicShelf.Pages.Volumes
             Statuses.AddRange(VolumeUtilities.GetStatusSelectItemList(_localizer));
             PurchaseStatuses.AddRange(VolumeUtilities.GetPurchaseStatusSelectItemList(_localizer));
             Ratings.AddRange(VolumeUtilities.GetRatings());
+            Digitalities.AddRange(VolumeUtilities.GetDigitalitySelectItemList(_localizer));
 
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
@@ -48,6 +49,7 @@ namespace ComicShelf.Pages.Volumes
         public List<int> Ratings { get; set; } = new List<int>();
         public List<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Series { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> Digitalities { get; set; } = new List<SelectListItem>();
 
         public IList<Volume> Volumes { get; set; } = default!;
         public IList<Volume> AnnouncedAndPreordered
@@ -90,6 +92,7 @@ namespace ComicShelf.Pages.Volumes
             resultVD["PurchaseStatuses"] = VolumeUtilities.GetPurchaseStatusesSelectItemList(volume, _localizer);
             resultVD["ReadingStatuses"] = VolumeUtilities.GetStatusSelectItemList(_localizer);
             resultVD["Ratings"] = VolumeUtilities.GetRatings();
+            resultVD["Digitality"] = VolumeUtilities.GetDigitalitySelectItemList(_localizer);
 
             return new PartialViewResult()
             {
@@ -102,9 +105,14 @@ namespace ComicShelf.Pages.Volumes
         {
             _volumeService.UpdatePurchaseStatus(volumeToUpdate);
             var item = _volumeService.Get(volumeToUpdate.Id);
-            _volumeService.LoadReference(item, x => x.Series);
-            var partial = Partial("_BookPartial", item);
-            return partial;
+            if(item == null)
+            {
+                _volumeService.LoadReference(item, x => x.Series);
+                var partial = Partial("_BookPartial", item);
+                return partial;
+            }
+
+            return StatusCode(404);
         }
 
         public async Task<IActionResult> OnPostAddAsync()
