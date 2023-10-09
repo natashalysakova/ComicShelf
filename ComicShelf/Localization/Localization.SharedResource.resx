@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,156 +118,156 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddNewVolume" xml:space="preserve">
-    <value>Новий том</value>
+    <value>{AddNewVolume}</value>
   </data>
   <data name="Announced" xml:space="preserve">
-    <value>Анонсовано</value>
+    <value>{Announced}</value>
   </data>
   <data name="Author" xml:space="preserve">
-    <value>Автор</value>
+    <value>{Author}</value>
   </data>
   <data name="Authors" xml:space="preserve">
-    <value>Автори</value>
+    <value>{Authors}</value>
   </data>
   <data name="Bought" xml:space="preserve">
-    <value>Куплено</value>
+    <value>{Bought}</value>
   </data>
   <data name="ByCreationDate" xml:space="preserve">
-    <value>За датою додавання</value>
+    <value>{ByCreationDate}</value>
   </data>
   <data name="ByPurchaseDate" xml:space="preserve">
-    <value>За датою покупки</value>
+    <value>{ByPurchaseDate}</value>
   </data>
   <data name="ByTitle" xml:space="preserve">
-    <value>За назвою</value>
+    <value>{ByTitle}</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Очистити</value>
+    <value>{Clear}</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Закрити</value>
+    <value>{Close}</value>
   </data>
   <data name="Completed" xml:space="preserve">
-    <value>Прочитано</value>
+    <value>{Completed}</value>
   </data>
   <data name="Countries" xml:space="preserve">
-    <value>Країни</value>
+    <value>{Countries}</value>
   </data>
   <data name="Cover" xml:space="preserve">
-    <value>Обкладинка</value>
+    <value>{Cover}</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Створити</value>
+    <value>{Create}</value>
   </data>
   <data name="Created" xml:space="preserve">
-    <value>Створено</value>
+    <value>{Created}</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Видалити</value>
+    <value>{Delete}</value>
   </data>
   <data name="Dropped" xml:space="preserve">
-    <value>Закинуто</value>
+    <value>{Dropped}</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Редагувати</value>
+    <value>{Edit}</value>
   </data>
   <data name="FilterAll" xml:space="preserve">
-    <value>Усі</value>
+    <value>{FilterAll}</value>
   </data>
   <data name="FilterAnnounced" xml:space="preserve">
-    <value>Анонси</value>
+    <value>{FilterAnnounced}</value>
   </data>
   <data name="FilterAvailable" xml:space="preserve">
-    <value>На поличці</value>
+    <value>{FilterAvailable}</value>
   </data>
   <data name="FilterGone" xml:space="preserve">
-    <value>Відсутні</value>
+    <value>{FilterGone}</value>
   </data>
   <data name="FilterPreorder" xml:space="preserve">
-    <value>Передзамовлення</value>
+    <value>{FilterPreorder}</value>
   </data>
   <data name="FilterWishlist" xml:space="preserve">
-    <value>Бажане</value>
+    <value>{FilterWishlist}</value>
   </data>
   <data name="Gift" xml:space="preserve">
-    <value>Подарунок</value>
+    <value>{Gift}</value>
   </data>
   <data name="GiftedAway" xml:space="preserve">
-    <value>Відсутнє</value>
+    <value>{GiftedAway}</value>
   </data>
   <data name="InQueue" xml:space="preserve">
-    <value>На черзі</value>
+    <value>{InQueue}</value>
   </data>
   <data name="MainHeader" xml:space="preserve">
-    <value>Поличка коміксів та манги</value>
+    <value>{MainHeader}</value>
   </data>
   <data name="MainPage" xml:space="preserve">
-    <value>Головна</value>
+    <value>{MainPage}</value>
   </data>
   <data name="Modified" xml:space="preserve">
-    <value>Змінено</value>
+    <value>{Modified}</value>
   </data>
   <data name="NotStarted" xml:space="preserve">
-    <value>Не починал(а)</value>
+    <value>{NotStarted}</value>
   </data>
   <data name="NumberInSeries" xml:space="preserve">
-    <value>№ в серії</value>
+    <value>{NumberInSeries}</value>
   </data>
   <data name="Ongoing" xml:space="preserve">
-    <value>Онгоінг</value>
+    <value>{Ongoing}</value>
   </data>
   <data name="OriginalTitile" xml:space="preserve">
-    <value>Оригінальна назва</value>
+    <value>{OriginalTitile}</value>
   </data>
   <data name="Pirated" xml:space="preserve">
-    <value>Спірачено</value>
+    <value>{Pirated}</value>
   </data>
   <data name="Preordered" xml:space="preserve">
-    <value>Передзамовлено</value>
+    <value>{Preordered}</value>
   </data>
   <data name="Privacy" xml:space="preserve">
-    <value>Положення про приватність</value>
+    <value>{Privacy}</value>
   </data>
   <data name="Publishers" xml:space="preserve">
-    <value>Видавці</value>
+    <value>{Publishers}</value>
   </data>
   <data name="PurchaseDate" xml:space="preserve">
-    <value>Дата покупки</value>
+    <value>{PurchaseDate}</value>
   </data>
   <data name="PurchaseStatus" xml:space="preserve">
-    <value>Статус</value>
+    <value>{PurchaseStatus}</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>Оцінка</value>
+    <value>{Rating}</value>
   </data>
   <data name="Reading" xml:space="preserve">
-    <value>Читаю</value>
+    <value>{Reading}</value>
   </data>
   <data name="ReadingStatus" xml:space="preserve">
-    <value>Читання</value>
+    <value>{ReadingStatus}</value>
   </data>
   <data name="ReleaseDate" xml:space="preserve">
-    <value>Дата релізу</value>
+    <value>{ReleaseDate}</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Пошук</value>
+    <value>{Search}</value>
   </data>
   <data name="Series" xml:space="preserve">
-    <value>Серія</value>
+    <value>{Series}</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Назва</value>
+    <value>{Title}</value>
   </data>
   <data name="TypeForSearch" xml:space="preserve">
-    <value>Друкуй для пошуку</value>
+    <value>{TypeForSearch}</value>
   </data>
   <data name="Update" xml:space="preserve">
-    <value>Оновити</value>
+    <value>{Update}</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Том</value>
+    <value>{Volume}</value>
   </data>
   <data name="Wishlist" xml:space="preserve">
-    <value>Бажане</value>
+    <value>{Wishlist}</value>
   </data>
 </root>

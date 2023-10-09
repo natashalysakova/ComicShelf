@@ -14,6 +14,8 @@ using System.Reflection;
 using System.Security.Policy;
 using Microsoft.AspNetCore.DataProtection;
 using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Builder;
 
 internal class Program
 {
@@ -64,7 +66,19 @@ internal class Program
 
         builder.Services.RegisterMyServices();
 
+        var supportedCultures = new[] {
+            new CultureInfo("uk-UA"),
+            new CultureInfo("en")
+        };
         builder.Services.AddLocalization(options => options.ResourcesPath = "Localization");
+        builder.Services.Configure<RequestLocalizationOptions>(options =>
+        {
+            
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+            options.DefaultRequestCulture = new RequestCulture("uk-UA", "uk-UA");
+        });
+
 
         builder.Services.AddMvc()
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -75,13 +89,6 @@ internal class Program
             options.Filters.Add<ViewBagActionFilter>();
         });
 
-        builder.Services.Configure<RequestLocalizationOptions>(options =>
-        {
-            var supportedCultures = new[] { "uk-UA", "en" };
-            options.SetDefaultCulture(supportedCultures[0])
-                .AddSupportedCultures(supportedCultures)
-                .AddSupportedUICultures(supportedCultures);
-        });
         //builder.Services.AddDataProtection().UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
         //        {
         //            EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
@@ -99,14 +106,9 @@ internal class Program
             app.UseHsts();
         }
 
-        //using (var scope = app.Services.CreateScope())
-        //{
-        //    var services = scope.ServiceProvider;
+        var locService = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+        app.UseRequestLocalization(locService.Value);
 
-        //    var context = services.GetRequiredService<ComicShelfContext>();
-        //    context.Database.EnsureCreated();
-        //    // DbInitializer.Initialize(context);
-        //}
 
         using (var scope = app.Services.CreateScope())
         {
@@ -126,10 +128,6 @@ internal class Program
             }
         }
 
-        app.UseRequestLocalization(new RequestLocalizationOptions
-        {
-            ApplyCurrentCultureToResponseHeaders = true
-        });
         app.UseStatusCodePages();
         app.UseHttpsRedirection();
         app.UseStaticFiles();

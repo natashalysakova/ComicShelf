@@ -12,7 +12,7 @@
     <div class="row justify-content-between">
         <div class="col">
             <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["AddNewVolume"]</button>
-            <div class="btn-group btn-group-sm mb-3" role="group" aria-label="purchse status filters">
+            <div class="btn-group mb-3" role="group" aria-label="purchse status filters">
 
                 <input id="FilterAll" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" checked />
                 <label for="FilterAll" class="btn btn-outline-secondary">
@@ -65,7 +65,7 @@
 </p>
 
 
-<div class="row" id="shelves" style="background-color: hotpink;">
+<div class="row" id="shelves">
     <partial name="_ShelfPartial" model="@Model.Volumes" view-data="@ViewData" />
 </div>
 

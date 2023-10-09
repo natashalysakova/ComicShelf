@@ -28,18 +28,18 @@
 
     }
 }*@
-<div class="row">
 
 
-    <div class="shelf">
-        @foreach (var item in Model)
-        {
 
-                <div class="book" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="bookClick(@item.Id)" id="book-@item.Id">
-                    <partial name="_BookPartial" model="item" view-data="@ViewData" />
-                </div>
+<div class="shelf">
+    @foreach (var item in Model)
+    {
 
-        }
-    </div>
+            <div class="book" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="bookClick(@item.Id)" id="book-@item.Id">
+                <partial name="_BookPartial" model="item" view-data="@ViewData" />
+            </div>
+
+    }
 </div>
+
 
