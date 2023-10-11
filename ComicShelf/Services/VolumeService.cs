@@ -224,6 +224,12 @@ namespace ComicShelf.Services
                     item.ReleaseDate = volumeToUpdate.ReleaseDate;
                 }
 
+                if(volumeToUpdate.CoverFile != null)
+                {
+                    LoadReference(item, x => x.Series);
+                    item.CoverUrl = FileUtility.SaveOnServer(volumeToUpdate.CoverFile, item.Series.Name, item.Number);
+                }
+
                 Update(item);
             }
         }

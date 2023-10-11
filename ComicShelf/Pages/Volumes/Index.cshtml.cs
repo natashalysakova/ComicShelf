@@ -105,7 +105,7 @@ namespace ComicShelf.Pages.Volumes
         {
             _volumeService.UpdatePurchaseStatus(volumeToUpdate);
             var item = _volumeService.Get(volumeToUpdate.Id);
-            if(item == null)
+            if(item != null)
             {
                 _volumeService.LoadReference(item, x => x.Series);
                 var partial = Partial("_BookPartial", item);

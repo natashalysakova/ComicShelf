@@ -117,17 +117,28 @@ function bookClick(id) {
     });
 }
 
+
+
+
+
 function changeStatusSuccess(e) {
     $('#PurchaseStatus').removeClass("text-danger");
 
     if (e.status == 200) {
+        // Get all elements with the class "update-on-status-change"
+        var elements = document.querySelectorAll('.update-on-status-change');
 
-        $('#update-on-status-change').addClass("text-success", 500, function () {
+        // Loop through each element
+        elements.forEach(function (element) {
+            // Add the "text-success" class with a delay
+            element.classList.add('text-success');
+
+            // Remove the "text-success" class after a delay
             setTimeout(function () {
-                $('#update-on-status-change').removeClass("text-success", 200);
+                element.classList.remove('text-success');
             }, 1000);
-        })
-        
+        });
+
     }
     else {
         $('#PurchaseStatus').addClass("text-danger");
@@ -250,5 +261,13 @@ function newReadingStatusChanged() {
     }
     else {
         $('#new-rating-select').addClass("collapse");
+    }
+}
+
+function showPreview(event) {
+    if (event.target.files.length > 0) {
+        var src = URL.createObjectURL(event.target.files[0]);
+        var preview = document.getElementById("volume-cover");
+        preview.src = src;
     }
 }

@@ -11,8 +11,23 @@
     <div class="modal-content">
         <form method="post" asp-page-handler="Add" data-ajax-method="post" data-ajax="true" enctype="multipart/form-data" data-ajax-complete="createComplete">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">@Localizer["AddNewVolume"]</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <div class="modal-title display-6 col-9">
+                    <input asp-for="NewVolume.Series" class="form-control form-control-lg modal-input-form" list="datalistOptions" placeholder="Введіть назву серії" autocomplete="off" />
+                    <datalist id="datalistOptions">
+                        @foreach (var item in Model.Series)
+                        {
+                            <option value="@item.Text">@item.Text</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="NewVolume.Series" class="text-danger"></span>
+                </div>
+                <label asp-for="NewVolume.Number" for="NewVolume.Number" class="modal-title display-6">#</label>
+                <div class="modal-title display-6 col-2">
+                    <input asp-for="NewVolume.Number" class="form-control form-control-lg modal-title display-6 modal-input-form" min="0" value="1" onchange="updateTitle('@Localizer["Volume"]')" />
+                    <span asp-validation-for="NewVolume.Number" class="text-danger"></span>
+                </div>
+                <button type="button" class="btn-close col-1" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
@@ -20,114 +35,93 @@
                 </div>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="mb-3 row">
-                    <label asp-for="NewVolume.Series" class="col-sm-2 col-form-label">@Localizer["Series"]</label>
-                    <div class="col-sm-10">
-                        <input asp-for="NewVolume.Series" class="form-control" list="datalistOptions" placeholder="@Localizer["TypeForSearch"]" autocomplete="off" />
-                        <datalist id="datalistOptions">
-                            @foreach (var item in Model.Series)
-                            {
-                                <option value="@item.Text">@item.Text</option>
-                            }
-                        </datalist>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <img src="~/images/static/no-cover.png" class="img-fluid volume-image" id="volume-cover" />
+                        <div class="mb-3 input-group">
+                            @*                            <label asp-for="NewVolume.CoverFile" class="input-group-text">@Localizer["Cover"]</label>
+                            *@                            <input asp-for="NewVolume.CoverFile" type="file" accept="image/*" class="form-control" onchange="showPreview(event);" />
+                        </div>
+                        <span asp-validation-for="NewVolume.CoverFile" class="text-danger"></span>
                     </div>
-                    <span asp-validation-for="NewVolume.Series" class="text-danger"></span>
-                </div>
+                    <div class="col-sm-7">
+                        @*                        <div class="input-group mb-3">
+                        <label asp-for="NewVolume.Series" class="input-group-text">@Localizer["Series"]</label>
+                        <input asp-for="NewVolume.Series" class="form-control" list="datalistOptions" placeholder="@Localizer["TypeForSearch"]" autocomplete="off" />
+                        </div>*@
 
-                <div class="mb-3 row">
-                    <label asp-for="NewVolume.Authors" class="col-sm-2 col-form-label">@Localizer["Authors"]</label>
-                    <div class="col-sm-10">
-                        <input asp-for="NewVolume.Authors" class="form-control multple-datalist" multiple list="autorsOptions" placeholder="@Localizer["TypeForSearch"]" autocomplete="off" />
+                        <div class="row mb-3">
+                            @{
+                                var defaultTitle = $"{@Localizer["Volume"].Value} 1";
+                            }
+                            <div class="input-group">
+                                <label asp-for="NewVolume.Title" class="input-group-text">@Localizer["Title"]</label>
+                                <input asp-for="NewVolume.Title" class="form-control" value="@defaultTitle" />
+                            </div>
+                            <span asp-validation-for="NewVolume.Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 input-group">
+                            <label asp-for="NewVolume.Authors" class="input-group-text">@Localizer["Authors"]</label>
+                            <input asp-for="NewVolume.Authors" class="form-control multple-datalist" multiple list="autorsOptions" placeholder="@Localizer["TypeForSearch"]" autocomplete="off" />
+                        </div>
                         <datalist id="autorsOptions">
                             @foreach (var item in Model.Authors)
                             {
                                 <option data-value="@item.Value">@item.Text</option>
                             }
                         </datalist>
-                    </div>
-                    <span asp-validation-for="NewVolume.Authors" class="text-danger"></span>
-                </div>
+                        <span asp-validation-for="NewVolume.Authors" class="text-danger"></span>
 
-                <div class="row mb-3">
-                    <div class="col-sm-4">
-                        <div class="row">
-                            <label asp-for="NewVolume.Number" class="col-sm-6 col-form-label">@Localizer["NumberInSeries"]</label>
-
-                            <div class="col-sm-6">
-                                <input asp-for="NewVolume.Number" class="form-control" min="0" onchange="updateTitle('@Localizer["Volume"]')" />
-                            </div>
-                            <span asp-validation-for="NewVolume.Number" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-8">
-                        <div class="row">
-                            <label asp-for="NewVolume.Title" class="col-sm-2 col-form-label">@Localizer["Title"]</label>
-                            <div class="col-sm-10">
-                                <input asp-for="NewVolume.Title" class="form-control" />
-                            </div>
-                            <span asp-validation-for="NewVolume.Title" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-sm-6">
-                        <div class="row">
-                            <label asp-for="NewVolume.PurchaseStatus" class="col-sm-4 col-form-label">@Localizer["PurchaseStatus"]</label>
-                            <div class="col-sm-8">
-                                <select asp-for="NewVolume.PurchaseStatus" class="form-select" asp-items="@Model.PurchaseStatuses" onchange="purchaseStatusChanged()"></select>
-                            </div>
-                            <span asp-validation-for="NewVolume.PurchaseStatus" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="row">
-                            <label asp-for="NewVolume.Digitality" class="col-sm-4 col-form-label">@Localizer["Digitality"]</label>
-                            <div class="col-sm-8">
+                        <div class="row mb-3">
+                            <div class="input-group">
+                                <label asp-for="NewVolume.Digitality" class="input-group-text">@Localizer["Digitality"]</label>
                                 <select asp-for="NewVolume.Digitality" class="form-select" asp-items="@Model.Digitalities"></select>
                             </div>
                             <span asp-validation-for="NewVolume.Digitality" class="text-danger"></span>
                         </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-6" id="purchase-date">
-                        <div class="row">
-                            <label asp-for="NewVolume.PurchaseDate" class="col-sm-4 col-form-label">@Localizer["PurchaseDate"]</label>
-                            <div class="col-sm-8">
-                                <input asp-for="NewVolume.PurchaseDate" class="form-control" type="date" />
-                            </div>
-                            <span asp-validation-for="NewVolume.PurchaseDate" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6" id="release-date">
-                        <div class="row">
-                            <label asp-for="NewVolume.ReleaseDate" class="col-sm-4 col-form-label">@Localizer["ReleaseDate"]</label>
-                            <div class="col-sm-8">
-                                <input asp-for="NewVolume.ReleaseDate" class="form-control" type="date" />
-                            </div>
-                            <span asp-validation-for="NewVolume.ReleaseDate" class="text-danger"></span>
-                        </div>
-                    </div>
 
-                </div>
+                        <div class="row mb-3">
+                            <div class="input-group">
+                                <label asp-for="NewVolume.PurchaseStatus" class="input-group-text">@Localizer["PurchaseStatus"]</label>
+                                <select asp-for="NewVolume.PurchaseStatus" class="form-select" asp-items="@Model.PurchaseStatuses" onchange="purchaseStatusChanged()"></select>
+                            </div>
+                            <span asp-validation-for="NewVolume.PurchaseStatus" class="text-danger"></span>
+
+                        </div>
 
 
-                <div class="row mb-3">
-                    <div class="col-sm-6">
-                        <div class="row">
-                            <label asp-for="NewVolume.Status" class="col-sm-4 col-form-label">@Localizer["ReadingStatus"]</label>
-                            <div class="col-sm-8">
-                                <select asp-for="NewVolume.Status" class="form-select" asp-items="@Model.Statuses" onchange="newReadingStatusChanged()"></select>
-                            </div>
-                            <span asp-validation-for="NewVolume.Status" class="text-danger"></span>
+                        <div class="row mb-3" id="purchase-date">
+                                <div class="input-group">
+                                    <label asp-for="NewVolume.PurchaseDate" class="input-group-text">@Localizer["PurchaseDate"]</label>
+                                    <input asp-for="NewVolume.PurchaseDate" class="form-control" type="date" />
+                                </div>
+                                <span asp-validation-for="NewVolume.PurchaseDate" class="text-danger"></span>
+
                         </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="input-group" id="new-rating-select">
+
+
+                        <div class="row mb-3" id="release-date">
+                            
+                                <div class="input-group">
+                                    <label asp-for="NewVolume.ReleaseDate" class="input-group-text">@Localizer["ReleaseDate"]</label>
+                                    <input asp-for="NewVolume.ReleaseDate" class="form-control" type="date" />
+                                </div>
+                                <span asp-validation-for="NewVolume.ReleaseDate" class="text-danger"></span>
+
+                        </div>
+
+
+                        <div class="row mb-3">
+                                <div class="input-group">
+                                    <label asp-for="NewVolume.Status" class="input-group-text">@Localizer["ReadingStatus"]</label>
+                                    <select asp-for="NewVolume.Status" class="form-select" asp-items="@Model.Statuses" onchange="newReadingStatusChanged()"></select>
+                                </div>
+                                <span asp-validation-for="NewVolume.Status" class="text-danger"></span>
+                        </div>
+
+                        <div class="input-group mb-3" id="new-rating-select">
                             <span class="input-group-text">@Localizer["Rating"]</span>
-
                             <div class="form-control">
                                 @for (int i = 0; i < Model.Ratings.Count; i++)
                                 {
@@ -139,16 +133,11 @@
                                 }
                             </div>
                         </div>
+
+
                     </div>
                 </div>
 
-                <div class="mb-3 row">
-                    <label asp-for="NewVolume.CoverFile" class="col-sm-2 col-form-label">@Localizer["Cover"]</label>
-                    <div class="col-sm-10">
-                        <input asp-for="NewVolume.CoverFile" type="file" class="form-control" />
-                    </div>
-                    <span asp-validation-for="NewVolume.CoverFile" class="text-danger"></span>
-                </div>
             </div>
 
             <div class="modal-footer">

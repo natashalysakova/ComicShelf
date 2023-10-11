@@ -10,6 +10,7 @@ namespace ComicShelf.Pages.Volumes
         public DateTime ReleaseDate { get; set; }
         public Status Status { get; set; }
         public int Rating { get; set; }
+        public IFormFile? CoverFile { get; set; }
 
     }
 }

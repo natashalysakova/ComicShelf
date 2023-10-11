@@ -33,7 +33,9 @@ namespace ComicShelf.Models
 
         internal bool Expired()
         {
-            return ReleaseDate.HasValue && ReleaseDate < DateTime.Today;
+            return 
+                (PurchaseStatus == PurchaseStatus.Announced || PurchaseStatus == PurchaseStatus.Preordered) && 
+                ReleaseDate.HasValue && ReleaseDate < DateTime.Today;
         }
     }
 }

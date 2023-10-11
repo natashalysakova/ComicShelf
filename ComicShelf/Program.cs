@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.DataProtection;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Builder;
+using MySqlConnector;
 
 internal class Program
 {
@@ -39,7 +40,33 @@ internal class Program
 
         //"server={ip};user id={db};password={password};database={dbName}"
         var connectionString = builder.Configuration["mariaDbConnectionString"];
-        var version = ServerVersion.AutoDetect(connectionString);
+
+        ServerVersion version = default;
+
+        do
+        {
+            try
+            {
+                Console.WriteLine("connecting to " + connectionString);
+                version = ServerVersion.AutoDetect(connectionString);
+                Console.WriteLine("Success");
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.Message.Contains("Unable to connect to any of the specified MySQL hosts"))
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Trying in 5 seconds");
+                    Thread.Sleep(5000);
+                }
+                else
+                {
+                    throw ex;
+                }
+            }           
+        }
+        while (version is null);
+        
 
         if (builder.Environment.IsDevelopment())
         {

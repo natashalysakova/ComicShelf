@@ -8,19 +8,23 @@
     ViewData["Title"] = Localizer["MainPage"];
 }
 
+<div id="main-container">
+
 
     <div class="row justify-content-between" id="filters">
         <div class="col">
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["AddNewVolume"]</button>
+            <button class="btn btn-light mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["AddNewVolume"]</button>
             <div class="btn-group mb-3" role="group" aria-label="purchse status filters">
 
                 <input id="FilterAll" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" checked />
                 <label for="FilterAll" class="btn btn-outline-secondary">
-                    @Localizer["FilterAll"]</label>
+                    @Localizer["FilterAll"]
+                </label>
 
                 <input id="FilterAvailable" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
                 <label for="FilterAvailable" class="btn btn-outline-secondary">
-                    @Localizer["FilterAvailable"]</label>
+                    @Localizer["FilterAvailable"]
+                </label>
 
                 <input id="FilterPreorder" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
                 <label for="FilterPreorder" class="btn btn-outline-secondary">
@@ -65,10 +69,10 @@
 
 
 
-<div class="row" id="shelves">
-    <partial name="_ShelfPartial" model="@Model.Volumes" view-data="@ViewData" />
+    <div class="row" id="shelves">
+        <partial name="_ShelfPartial" model="@Model.Volumes" view-data="@ViewData" />
+    </div>
 </div>
-
 
 
 <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -79,8 +83,9 @@
 </div>
 
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <partial name="CreatePartial"/>
+    <partial name="CreatePartial" />
 </div>
+
 
 @section Scripts {
     <script src="~/js/Volume.js"></script>
