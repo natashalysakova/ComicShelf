@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using ComicShelf.Pages.SeriesNs;
 using System.ComponentModel;
 
-namespace ComicShelf.Pages.Volumes
+namespace ComicShelf.ViewModels
 {
-    public class VolumeModel
+    public class VolumeCreateModel
     {
         public int Number { get; set; }
 
@@ -19,7 +19,7 @@ namespace ComicShelf.Pages.Volumes
         [DisplayName("Added to librarary")]
         public DateTime? PurchaseDate { get; set; }
         //public string Cover { get; set; }
-        [RequiredIf(nameof(PurchaseStatus), PurchaseStatus.Announced, "Estimated release date is required")]
+
         [DisplayName("Release")]
         public DateTime? ReleaseDate { get; set; }
         public IFormFile? CoverFile { get; set; }

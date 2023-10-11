@@ -2,20 +2,7 @@
 
 public static class Extentions
 {
-    public static IServiceCollection RegisterMyServices(this IServiceCollection services)
-    {
-        var type = typeof(IService);
-        var types = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(s => s.GetTypes())
-            .Where(p => type.IsAssignableFrom(p) && !p.IsAbstract);
-
-        foreach (var item in types)
-        {
-            services.AddScoped(item);
-        }
-
-        return services;
-    }
+    
 
     public static double NextDoublePercent(this Random random, int min = 0, int max = 100)
     {

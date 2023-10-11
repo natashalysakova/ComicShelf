@@ -21,16 +21,18 @@ namespace ComicShelf.Pages.SeriesNs
         private readonly SearchService _searchController;
         private readonly SeriesService _seriesService;
         private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly EnumUtilities _utilities;
 
-        public CreateModel(SearchService searchController, PublishersService publishersController, SeriesService seriesController, IStringLocalizer<SharedResource> localizer)
+        public CreateModel(SearchService searchController, PublishersService publishersController, SeriesService seriesController, IStringLocalizer<SharedResource> localizer, EnumUtilities utilities)
         {
             _searchController = searchController;
             _seriesService = seriesController;
-            this._localizer = localizer;
+            _localizer = localizer;
+            _utilities = utilities;
 
             AvailablePublishers = publishersController.GetAll().OrderBy(x => x.Name).Select(x => new SelectListItem(x.Name, x.Id.ToString()));
 
-            Types.AddRange(SeriesUtilities.GetTypesSelectItemList(_localizer));   
+            Types.AddRange(_utilities.GetTypesSelectItemList());   
         }
 
         public IActionResult OnGet()

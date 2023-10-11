@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Localization;
 using ComicShelf.Localization;
 using ComicShelf.Utilities;
+using ComicShelf.ViewModels;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -24,17 +25,19 @@ namespace ComicShelf.Pages.Volumes
     {
         private readonly VolumeService _volumeService;
         private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly EnumUtilities _enumUtilities;
         private readonly SearchService _searchService;
-        public IndexModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer)
+        public IndexModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer, EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
             _localizer = localizer;
+            _enumUtilities = enumUtilities;
             _searchService = searchService;
 
-            Statuses.AddRange(VolumeUtilities.GetStatusSelectItemList(_localizer));
-            PurchaseStatuses.AddRange(VolumeUtilities.GetPurchaseStatusSelectItemList(_localizer));
-            Ratings.AddRange(VolumeUtilities.GetRatings());
-            Digitalities.AddRange(VolumeUtilities.GetDigitalitySelectItemList(_localizer));
+            Statuses.AddRange(_enumUtilities.GetStatusSelectItemList());
+            PurchaseStatuses.AddRange(_enumUtilities.GetPurchaseStatusSelectItemList());
+            Ratings.AddRange(_enumUtilities.GetRatings());
+            Digitalities.AddRange(_enumUtilities.GetDigitalitySelectItemList());
 
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
@@ -42,7 +45,7 @@ namespace ComicShelf.Pages.Volumes
         }
 
         [BindProperty]
-        public VolumeModel NewVolume { get; set; } = default!;
+        public VolumeCreateModel NewVolume { get; set; } = default!;
 
         public List<SelectListItem> Statuses { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> PurchaseStatuses { get; set; } = new List<SelectListItem>();
@@ -79,7 +82,36 @@ namespace ComicShelf.Pages.Volumes
         public async Task OnGetAsync()
         {
             //Volumes = await volumeService.GetAll().Include(x => x.Series).OrderBy(x => x.Series.Name).ThenBy(x => x.Number).ToListAsync();
-            Volumes = _volumeService.Filter(new BookshelfParams());
+            var filters = new BookshelfParams();
+            FromCookies(filters);
+
+            Volumes = _volumeService.Filter(filters);
+            ViewData["DigitalityFilters"] = _enumUtilities.GetListOfValues<DigitalityEnum>();
+            ViewData["PurchaseFilters"] = _enumUtilities.GetListOfValues<PurchaseFilterEnum>();
+            ViewData["Sort"] = _enumUtilities.GetListOfValues<SortEnum>();
+
+            SetCookies(filters);
+        }
+
+        private void FromCookies(BookshelfParams filters)
+        {
+            Enum.TryParse(Request.Cookies["sort"], out SortEnum sort);
+            Enum.TryParse(Request.Cookies["digitality"], out DigitalityEnum digitality);
+            Enum.TryParse(Request.Cookies["purchase"], out PurchaseFilterEnum purchaseFilter);
+            Enum.TryParse(Request.Cookies["dir"], out DirectionEnum direction);
+
+            filters.sort = sort;
+            filters.direction = direction;
+            filters.digitality = digitality;
+            filters.filter = purchaseFilter;
+        }
+
+        private void SetCookies(BookshelfParams filters)
+        {
+            Response.Cookies.Append("sort", filters.sort.ToString());
+            Response.Cookies.Append("digitality", filters.digitality.ToString());
+            Response.Cookies.Append("purchase", filters.filter.ToString());
+            Response.Cookies.Append("dir", filters.direction.ToString());
         }
 
         public PartialViewResult OnGetVolumeAsync(int id)
@@ -89,10 +121,10 @@ namespace ComicShelf.Pages.Volumes
             _volumeService.LoadCollection(volume, x => x.Authors);
 
             var resultVD = new ViewDataDictionary<Volume>(ViewData, volume);
-            resultVD["PurchaseStatuses"] = VolumeUtilities.GetPurchaseStatusesSelectItemList(volume, _localizer);
-            resultVD["ReadingStatuses"] = VolumeUtilities.GetStatusSelectItemList(_localizer);
-            resultVD["Ratings"] = VolumeUtilities.GetRatings();
-            resultVD["Digitality"] = VolumeUtilities.GetDigitalitySelectItemList(_localizer);
+            resultVD["PurchaseStatuses"] = _enumUtilities.GetPurchaseStatusesSelectItemList(volume.PurchaseStatus);
+            resultVD["ReadingStatuses"] = _enumUtilities.GetStatusSelectItemList();
+            resultVD["Ratings"] = _enumUtilities.GetRatings();
+            resultVD["Digitality"] = _enumUtilities.GetDigitalitySelectItemList();
 
             return new PartialViewResult()
             {
@@ -136,6 +168,7 @@ namespace ComicShelf.Pages.Volumes
         public PartialViewResult OnGetFiltered(BookshelfParams filters)
         {
             Volumes = _volumeService.Filter(filters);
+            SetCookies(filters);
             return Partial("_ShelfPartial", Volumes);
         }
 

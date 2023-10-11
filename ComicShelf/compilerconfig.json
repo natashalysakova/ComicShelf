@@ -1,0 +1,13 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/site-new.css",
+    "inputFile": "wwwroot/css/site-new.scss",
+    "minify": {
+      "enabled": true
+    },
+    "includeInProject": true,
+    "options": {
+      "sourceMap": false
+    }
+  }
+]

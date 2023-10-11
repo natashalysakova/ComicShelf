@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="compilerconfig.json" />
     <Content Remove="Pages\Publishers\PublisherInputView.cshtml" />
   </ItemGroup>
 
@@ -70,6 +71,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="compilerconfig.json" />
     <None Include="Pages\Publishers\PublisherInputView.cshtml" />
   </ItemGroup>
 

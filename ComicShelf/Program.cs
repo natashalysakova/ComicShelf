@@ -17,6 +17,8 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Builder;
 using MySqlConnector;
+using ComicShelf.Services;
+using ComicShelf.Utilities;
 
 internal class Program
 {
@@ -63,10 +65,10 @@ internal class Program
                 {
                     throw ex;
                 }
-            }           
+            }
         }
         while (version is null);
-        
+
 
         if (builder.Environment.IsDevelopment())
         {
@@ -91,7 +93,7 @@ internal class Program
                 .EnableDetailedErrors()
         );
 
-        builder.Services.RegisterMyServices();
+        RegisterMyServices(builder.Services);
 
         var supportedCultures = new[] {
             new CultureInfo("uk-UA"),
@@ -100,7 +102,6 @@ internal class Program
         builder.Services.AddLocalization(options => options.ResourcesPath = "Localization");
         builder.Services.Configure<RequestLocalizationOptions>(options =>
         {
-            
             options.SupportedCultures = supportedCultures;
             options.SupportedUICultures = supportedCultures;
             options.DefaultRequestCulture = new RequestCulture("uk-UA", "uk-UA");
@@ -115,6 +116,15 @@ internal class Program
         {
             options.Filters.Add<ViewBagActionFilter>();
         });
+
+        builder.Services.AddSingleton(typeof(EnumUtilities));
+
+
+        builder.Services.AddSession(option =>
+        {
+            option.Cookie.Name = "VolumeFilters";
+        });
+        
 
         //builder.Services.AddDataProtection().UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
         //        {
@@ -143,10 +153,12 @@ internal class Program
             try
             {
                 var context = services.GetRequiredService<ComicShelfContext>();
-                DbInitializer.Initialize(context);
-                RestoreImagesFromDB(context);
-                FillFlags(context);
-                FillColors(context);
+                var dbInitializer = new DbInitializer(context);
+
+                dbInitializer.Initialize();
+                dbInitializer.RestoreImagesFromDB();
+                dbInitializer.FillFlags();
+                dbInitializer.FillColors();
             }
             catch (Exception ex)
             {
@@ -162,67 +174,24 @@ internal class Program
         app.UseRouting();
 
         app.UseAuthorization();
-
+        app.UseSession();
         app.MapRazorPages();
 
         app.Run();
     }
 
-    private static void FillFlags(ComicShelfContext context)
+    public static IServiceCollection RegisterMyServices(IServiceCollection services)
     {
-        foreach (var item in context.Countries)
+        var type = typeof(IService);
+        var types = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(s => s.GetTypes())
+            .Where(p => type.IsAssignableFrom(p) && !p.IsAbstract);
+
+        foreach (var item in types)
         {
-            if (String.IsNullOrEmpty(item.FlagPNG) || String.IsNullOrEmpty(item.FlagSVG))
-            {
-                item.CountryCode = item.CountryCode.ToLower();
-                FileUtility.SaveFlagFromCDN(item.CountryCode, out string png, out string svg);
-                item.FlagPNG = png;
-                item.FlagSVG = svg;
-            }
+            services.AddScoped(item);
         }
 
-        context.SaveChanges();
-    }
-
-    private static void RestoreImagesFromDB(ComicShelfContext context)
-    {
-        var volumes = context.Volumes.Include(x => x.Series).ToList();
-        foreach (var item in volumes)
-        {
-            //if (item.Cover.Cover != null)
-            //{
-            //    item.CoverUrl = FileUtility.RestoreCover(item.Series.Name, item.Number, item.Cover);
-            //}
-
-
-            item.CoverUrl = FileUtility.FindUrl(item.CoverUrl);
-
-
-            if (item.CreationDate == default)
-            {
-                item.CreationDate = DateTime.Now;
-            }
-            context.SaveChanges();
-        }
-
-    }
-
-    private static void FillColors(ComicShelfContext context)
-    {
-        foreach (var item in context.Series)
-        {
-            if (string.IsNullOrEmpty(item.Color) || string.IsNullOrEmpty(item.ComplimentColor))
-            {
-                var color = ColorUtility.GetRandomColor(minSaturation: 60, minValue: 60);
-                var complementary = ColorUtility.GetOppositeColor(color);
-
-                item.Color = ColorUtility.HexConverter(color);
-                item.ComplimentColor = ColorUtility.HexConverter(complementary);
-            }
-        }
-
-        context.SaveChanges();
-
-
+        return services;
     }
 }

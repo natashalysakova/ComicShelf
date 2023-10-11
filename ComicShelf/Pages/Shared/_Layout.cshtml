@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css"/>
     <link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />
     <link rel="stylesheet" href="~/lib/jqueryui/themes/ui-darkness/jquery-ui.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site-new.css" asp-append-version="true" />
 @*    <link rel="stylesheet" href="~/ComicShelf.styles.css" asp-append-version="true" />
 *@
 </head>
@@ -22,7 +22,8 @@
     <header>
         <nav class="navbar fixed-top @hostingEnv.EnvironmentName navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Volumes/Index">@Localizer["MainHeader"]
+                <a class="navbar-brand" asp-area="" asp-page="/Volumes/Index">
+                    @Localizer["@MainHeader"]
                     @{
                         var vnot = ViewData["VolumeNotification"];
                         if (!string.IsNullOrEmpty(vnot.ToString()))
@@ -41,7 +42,8 @@
                             <a class="nav-link" asp-page="/Volumes/Index">Shelf</a>
                         </li>*@
                         <li class="nav-item">
-                            <a class="nav-link" asp-page="/Series/Index">@Localizer["Series"]
+                            <a class="nav-link" asp-page="/Series/Index">
+                                @Localizer["@Series"]
                                 @{
                                     var snot = ViewData["SeriesNotification"];
                                     if (!string.IsNullOrEmpty(snot.ToString()))
@@ -52,7 +54,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-page="/Authors/Index">@Localizer["Authors"]
+                            <a class="nav-link" asp-page="/Authors/Index">
+                                @Localizer["@Authors"]
                                 @{
                                     var anot = ViewData["AuthorsNotification"];
                                     if (!string.IsNullOrEmpty(anot.ToString()))
@@ -64,7 +67,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-page="/Publishers/Index">
-                                @Localizer["Publishers"]
+                                @Localizer["@Publishers"]
                                 @{
                                     var pnot = ViewData["PublisherNotification"];
                                     if (!string.IsNullOrEmpty(pnot.ToString()))
@@ -76,7 +79,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-page="/Countries/Index">
-                                @Localizer["Countries"]
+                                @Localizer["@Countries"]
                                 @{
                                     var cnot = ViewData["CountryNotification"];
                                     if (!string.IsNullOrEmpty(cnot.ToString()))
@@ -100,7 +103,7 @@
 
     <footer class="border-top footer text-muted bg-body-secondary">
         <div class="container">
-            &copy; @DateTime.Today.Year - @Localizer["MainHeader"] - <a asp-area="" asp-page="/Privacy">@Localizer["Privacy"]</a>
+            &copy; @DateTime.Today.Year - @Localizer["@MainHeader"] - <a asp-area="" asp-page="/Privacy">@Localizer["@Privacy"]</a>
         </div>
     </footer>
 

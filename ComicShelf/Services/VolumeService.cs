@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
 using System.Linq.Expressions;
 using System.Text;
+using ComicShelf.ViewModels;
 
 namespace ComicShelf.Services
 {
@@ -25,7 +26,7 @@ namespace ComicShelf.Services
             _authorService = authorService;
         }
 
-        public void Add(VolumeModel model)
+        public void Add(VolumeCreateModel model)
         {
             var series = _seriesService.GetByName(model.Series);
             if (series == null)
@@ -140,21 +141,21 @@ namespace ComicShelf.Services
 
             switch (param.filter)
             {
-                case "FilterAvailable":
+                case PurchaseFilterEnum.Available:
                     statusList.Add(PurchaseStatus.Bought);
                     statusList.Add(PurchaseStatus.Free);
                     statusList.Add(PurchaseStatus.Gift);
                     break;
-                case "FilterPreorder":
+                case PurchaseFilterEnum.Preorders:
                     statusList.Add(PurchaseStatus.Preordered);
                     break;
-                case "FilterWishlist":
+                case PurchaseFilterEnum.Wishlist:
                     statusList.Add(PurchaseStatus.Wishlist);
                     break;
-                case "FilterAnnounced":
+                case PurchaseFilterEnum.Announced:
                     statusList.Add(PurchaseStatus.Announced);
                     break;
-                case "FilterGone":
+                case PurchaseFilterEnum.Gone:
                     statusList.Add(PurchaseStatus.GiftedAway);
                     break;
                 default:
@@ -162,7 +163,26 @@ namespace ComicShelf.Services
                     break;
             }
 
+
+
             var filterd = GetAll().Where(x => statusList.Contains(x.PurchaseStatus));
+
+
+            switch (param.digitality)
+            {
+                case DigitalityEnum.Physical:
+                    filterd = filterd.Where(x => x.Digitality == VolumeType.Physical);
+                    break;
+                case DigitalityEnum.Digital:
+                    filterd = filterd.Where(x=>x.Digitality == VolumeType.Digital);
+                    break;
+                case DigitalityEnum.All:
+                    break;
+                default:
+                    break;
+            }
+
+
 
             if (!string.IsNullOrEmpty(param.search))
             {
@@ -177,17 +197,17 @@ namespace ComicShelf.Services
                 );
             }
 
-            //<option value="0" selected>За датою додавання</option>
-            //<option value = "1" > За назвою </ option >
-            //<option value = "2" > За датою покупки</ option >
-            //<option value = "3" > Three </ option >
+            ///<option value="0" selected>За датою додавання</option>
+            ///<option value = "1" > За назвою </ option >
+            ///<option value = "2" > За датою покупки</ option >
+            ///<option value = "3" > Three </ option >
 
             switch (param.sort)
             {
-                case 1:
+                case SortEnum.BySeriesTitle:
                     filterd = filterd.OrderBy(x => x.Series.Name).ThenBy(x => x.Number);
                     break;
-                case 2:
+                case SortEnum.ByPurchaseDate:
                     filterd = filterd.OrderBy(x => x.PurchaseDate).ThenBy(x => x.Series.Name).ThenBy(x => x.Number);
                     break;
                 default:
@@ -196,7 +216,7 @@ namespace ComicShelf.Services
             }
 
 
-            if (param.direction == "up")
+            if (param.direction == DirectionEnum.up)
             {
                 filterd = filterd.Reverse();
             }
@@ -224,7 +244,7 @@ namespace ComicShelf.Services
                     item.ReleaseDate = volumeToUpdate.ReleaseDate;
                 }
 
-                if(volumeToUpdate.CoverFile != null)
+                if (volumeToUpdate.CoverFile != null)
                 {
                     LoadReference(item, x => x.Series);
                     item.CoverUrl = FileUtility.SaveOnServer(volumeToUpdate.CoverFile, item.Series.Name, item.Number);

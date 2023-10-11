@@ -9,6 +9,12 @@
 *@
 @model Volume
 
+<form method="post"
+      asp-page-handler="ChangeStatus" enctype="multipart/form-data" data-ajax-method="post" data-ajax="true"
+      data-ajax-mode="replace"
+      data-ajax-update="#book-@Model.Id"
+      data-ajax-complete="changeStatusSuccess">
+
 
 
 <div class="modal-header">
@@ -28,18 +34,18 @@
                 @if (!string.IsNullOrEmpty(Model.Series.OriginalName))
                 {
                     <div class="input-group mb-3">
-                        <span class="input-group-text">@Localizer["OriginalTitle"]</span>
+                            <span class="input-group-text">@Localizer["@OriginalTitile"]</span>
                         <span type="text" class="form-control">@Model.Series.OriginalName</span>
                     </div>
                 }
                 <div class="input-group mb-3">
                     @if (Model.Authors.Count < 2)
                     {
-                        <span class="input-group-text">@Localizer["Author"]</span>
+                            <span class="input-group-text">@Localizer["@Author"]</span>
                     }
                     else
                     {
-                        <span class="input-group-text">@Localizer["Authors"]</span>
+                            <span class="input-group-text">@Localizer["@Authors"]</span>
                     }
 
                     <span type="text" class="form-control">@string.Join(", ", Model.Authors.Select(x=>x.Name))</span>
@@ -47,13 +53,13 @@
                 </div>
 
                 <div class="input-group mb-3">
-                    <span class="input-group-text">@Localizer["NumberInSeries"]</span>
+                        <span class="input-group-text">@Localizer["@NumberInSeries"]</span>
                     <span type="text" class="form-control">@Model.Number</span>
                     <span class="input-group-text">/</span>
                     @{
                         if (@Model.Series.Ongoing)
                         {
-                            <span class="form-control text-bg-success">@Localizer["Ongoing"]</span>
+                                <span class="form-control text-bg-success">@Localizer["@Ongoing"]</span>
                         }
                         else
                         {
@@ -62,30 +68,24 @@
                     }
                 </div>
                 <div class="input-group mb-3">
-                    <span class="input-group-text">@Localizer["Digitality"]</span>
+                    <span class="input-group-text">@Localizer["@Digitality"]</span>
                     <span type="text" class="form-control">@Localizer[@Model.Digitality.ToString()]</span>
                 </div>
                 <hr />
-                <form method="post" 
-                    asp-page-handler="ChangeStatus" enctype="multipart/form-data" data-ajax-method="post" data-ajax="true" 
-                    data-ajax-mode="replace"
-                      data-ajax-update="#book-@Model.Id"
-                    data-ajax-complete="changeStatusSuccess">
-
                     <div class="input-group mb-3">
                         <label asp-for="@Model.PurchaseStatus" class="input-group-text"><span class="bi bi-coin"></span></label>
-                        <label asp-for="@Model.PurchaseStatus" class="input-group-text">@Localizer["PurchaseStatus"]</label>
+                        <label asp-for="@Model.PurchaseStatus" class="input-group-text">@Localizer["@PurchaseStatus"]</label>
                         <input type="hidden" value="@Model.Id" asp-for="@Model.Id" />
                         <select asp-for="@Model.PurchaseStatus" asp-items="(IEnumerable<SelectListItem>)@ViewData["PurchaseStatuses"]" class="form-select update-on-status-change" onchange="existhigPurchaseStatusChanged()"></select>
                     </div>
 
                     <div class="input-group mb-3" id="new-purchase-date">
-                        <label asp-for="@Model.PurchaseDate" class="input-group-text">@Localizer["PurchaseDate"]</label>
+                        <label asp-for="@Model.PurchaseDate" class="input-group-text">@Localizer["@PurchaseDate"]</label>
                         <input asp-for="@Model.PurchaseDate" class="form-control update-on-status-change" type="date" />
                     </div>
 
                     <div class="input-group mb-3" id="new-release-date">
-                        <label asp-for="@Model.ReleaseDate" class="input-group-text">@Localizer["ReleaseDate"]</label>
+                        <label asp-for="@Model.ReleaseDate" class="input-group-text">@Localizer["@ReleaseDate"]</label>
                         <input asp-for="@Model.ReleaseDate" class="form-control update-on-status-change" type="date" />
                     </div>
 
@@ -108,12 +108,12 @@
                         }
 
                         <label asp-for="@Model.Status" class="input-group-text"><i class="bi @iconRead"></i></label>
-                        <label asp-for="@Model.Status" class="input-group-text">@Localizer["ReadingStatus"]</label>
+                        <label asp-for="@Model.Status" class="input-group-text">@Localizer["@ReadingStatus"]</label>
                         <select asp-for="@Model.Status" asp-items="(IEnumerable<SelectListItem>)@ViewData["ReadingStatuses"]" class="form-select update-on-status-change" onchange="existhigReadingStatusChanged()"></select>
                     </div>
 
                     <div class="input-group mb-3" id="rating-select">
-                        <span class="input-group-text">@Localizer["Raiting"]</span>
+                        <span class="input-group-text">@Localizer["@Raiting"]</span>
                         <div class="form-control">
 
                             @foreach (var rating in (IEnumerable<int>)@ViewData["Ratings"])
@@ -134,13 +134,12 @@
 
                     <div class="input-group mb-3" id="new-cover">
                         <input id="CoverFile" name="CoverFile" class="form-control update-on-status-change" type="file" accept="image/*" onchange="showPreview(event);" />
-                        <label for="CoverFile" class="input-group-text">@Localizer["Cover"]</label>
+                        <label for="CoverFile" class="input-group-text">@Localizer["@Cover"]</label>
                     </div>
 
-                    <div class="text-end">
-                        <input type="submit" value="@Localizer["Update"]" class="btn btn-outline-success" />
-                    </div>
-                </form>
+@*                    <div class="text-end">
+                        <input type="submit" value="Update"]" class="btn btn-outline-success" />
+                    </div>*@
 
                
             </div>
@@ -154,13 +153,17 @@
                 <a asp-page="./Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger float-start"><i class="bi bi-trash"></i></a>
             </div>
             <div class="col-lg-4 col-6">
-                <div class="text-end">
-                    <small>@Localizer["Created"] @Model.CreationDate</small><br />
-                    <small>@Localizer["Modified"] @Model.ModificationDate</small>
-                </div>
+@*                <div class="text-end">
+                    <small>@Localizer["@Created"] @Model.CreationDate</small><br />
+                    <small>@Localizer["@Modified"] @Model.ModificationDate</small>
+                </div>*@
+                    <div class="text-end">
+                        <input type="submit" value="@Localizer["@Update"]" class="btn btn-success" />
+                    </div>
 @*                <a asp-page="./Edit" asp-route-id="@Model.Id" class="btn btn-primary float-end">Edit</a>
 *@            </div>
         </div>
     </div>
 </div>
+                </form>
 

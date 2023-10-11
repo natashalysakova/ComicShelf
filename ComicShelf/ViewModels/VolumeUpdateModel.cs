@@ -1,6 +1,6 @@
 ﻿using ComicShelf.Models.Enums;
 
-namespace ComicShelf.Pages.Volumes
+namespace ComicShelf.ViewModels
 {
     public class VolumeUpdateModel
     {

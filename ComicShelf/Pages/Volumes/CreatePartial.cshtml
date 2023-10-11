@@ -9,7 +9,7 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-        <form method="post" asp-page-handler="Add" data-ajax-method="post" data-ajax="true" enctype="multipart/form-data" data-ajax-complete="createComplete">
+        <form method="post" id="create-form" asp-page-handler="Add" data-ajax-method="post" data-ajax="true" enctype="multipart/form-data" data-ajax-complete="createComplete">
             <div class="modal-header">
 
                 <div class="modal-title display-6 col-9">
@@ -22,9 +22,9 @@
                     </datalist>
                     <span asp-validation-for="NewVolume.Series" class="text-danger"></span>
                 </div>
-                <label asp-for="NewVolume.Number" for="NewVolume.Number" class="modal-title display-6">#</label>
+                <label asp-for="NewVolume.Number" for="NewVolume_Number" class="modal-title display-6">#</label>
                 <div class="modal-title display-6 col-2">
-                    <input asp-for="NewVolume.Number" class="form-control form-control-lg modal-title display-6 modal-input-form" min="0" value="1" onchange="updateTitle('@Localizer["Volume"]')" />
+                    <input asp-for="NewVolume.Number" class="form-control form-control-lg modal-title display-6 modal-input-form" min="0" value="1" onchange="updateTitle('@Localizer["@Volume"]')" />
                     <span asp-validation-for="NewVolume.Number" class="text-danger"></span>
                 </div>
                 <button type="button" class="btn-close col-1" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -39,31 +39,25 @@
                     <div class="col-sm-5">
                         <img src="~/images/static/no-cover.png" class="img-fluid volume-image" id="volume-cover" />
                         <div class="mb-3 input-group">
-                            @*                            <label asp-for="NewVolume.CoverFile" class="input-group-text">@Localizer["Cover"]</label>
-                            *@                            <input asp-for="NewVolume.CoverFile" type="file" accept="image/*" class="form-control" onchange="showPreview(event);" />
+                            <input asp-for="NewVolume.CoverFile" type="file" accept="image/*" class="form-control" onchange="showPreview(event);" />
                         </div>
                         <span asp-validation-for="NewVolume.CoverFile" class="text-danger"></span>
                     </div>
                     <div class="col-sm-7">
-                        @*                        <div class="input-group mb-3">
-                        <label asp-for="NewVolume.Series" class="input-group-text">@Localizer["Series"]</label>
-                        <input asp-for="NewVolume.Series" class="form-control" list="datalistOptions" placeholder="@Localizer["TypeForSearch"]" autocomplete="off" />
-                        </div>*@
-
                         <div class="row mb-3">
                             @{
-                                var defaultTitle = $"{@Localizer["Volume"].Value} 1";
+                                var defaultTitle = $"{Localizer["Volume"].Value} 1";
                             }
                             <div class="input-group">
-                                <label asp-for="NewVolume.Title" class="input-group-text">@Localizer["Title"]</label>
+                                <label asp-for="NewVolume.Title" class="input-group-text">@Localizer["@Title"]</label>
                                 <input asp-for="NewVolume.Title" class="form-control" value="@defaultTitle" />
                             </div>
                             <span asp-validation-for="NewVolume.Title" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3 input-group">
-                            <label asp-for="NewVolume.Authors" class="input-group-text">@Localizer["Authors"]</label>
-                            <input asp-for="NewVolume.Authors" class="form-control multple-datalist" multiple list="autorsOptions" placeholder="@Localizer["TypeForSearch"]" autocomplete="off" />
+                            <label asp-for="NewVolume.Authors" class="input-group-text">@Localizer["@Authors"]</label>
+                            <input asp-for="NewVolume.Authors" class="form-control multple-datalist" multiple list="autorsOptions" placeholder="@Localizer["@TypeForSearch"]" autocomplete="off" />
                         </div>
                         <datalist id="autorsOptions">
                             @foreach (var item in Model.Authors)
@@ -75,7 +69,7 @@
 
                         <div class="row mb-3">
                             <div class="input-group">
-                                <label asp-for="NewVolume.Digitality" class="input-group-text">@Localizer["Digitality"]</label>
+                                <label asp-for="NewVolume.Digitality" class="input-group-text">@Localizer["@Digitality"]</label>
                                 <select asp-for="NewVolume.Digitality" class="form-select" asp-items="@Model.Digitalities"></select>
                             </div>
                             <span asp-validation-for="NewVolume.Digitality" class="text-danger"></span>
@@ -83,7 +77,7 @@
 
                         <div class="row mb-3">
                             <div class="input-group">
-                                <label asp-for="NewVolume.PurchaseStatus" class="input-group-text">@Localizer["PurchaseStatus"]</label>
+                                <label asp-for="NewVolume.PurchaseStatus" class="input-group-text">@Localizer["@PurchaseStatus"]</label>
                                 <select asp-for="NewVolume.PurchaseStatus" class="form-select" asp-items="@Model.PurchaseStatuses" onchange="purchaseStatusChanged()"></select>
                             </div>
                             <span asp-validation-for="NewVolume.PurchaseStatus" class="text-danger"></span>
@@ -92,43 +86,44 @@
 
 
                         <div class="row mb-3" id="purchase-date">
-                                <div class="input-group">
-                                    <label asp-for="NewVolume.PurchaseDate" class="input-group-text">@Localizer["PurchaseDate"]</label>
-                                    <input asp-for="NewVolume.PurchaseDate" class="form-control" type="date" />
-                                </div>
-                                <span asp-validation-for="NewVolume.PurchaseDate" class="text-danger"></span>
+                            <div class="input-group">
+                                <label asp-for="NewVolume.PurchaseDate" class="input-group-text">@Localizer["@PurchaseDate"]</label>
+                                <input asp-for="NewVolume.PurchaseDate" class="form-control" type="date" />
+                            </div>
+                            <span asp-validation-for="NewVolume.PurchaseDate" class="text-danger"></span>
 
                         </div>
 
 
                         <div class="row mb-3" id="release-date">
-                            
-                                <div class="input-group">
-                                    <label asp-for="NewVolume.ReleaseDate" class="input-group-text">@Localizer["ReleaseDate"]</label>
-                                    <input asp-for="NewVolume.ReleaseDate" class="form-control" type="date" />
-                                </div>
-                                <span asp-validation-for="NewVolume.ReleaseDate" class="text-danger"></span>
+
+                            <div class="input-group">
+                                <label asp-for="NewVolume.ReleaseDate" class="input-group-text">@Localizer["@ReleaseDate"]</label>
+                                <input asp-for="NewVolume.ReleaseDate" class="form-control" type="date" asp-validation-for="NewVolume.ReleaseDate" />
+                            </div>
+                            <span asp-validation-for="NewVolume.ReleaseDate" class="text-danger"></span>
 
                         </div>
 
 
                         <div class="row mb-3">
-                                <div class="input-group">
-                                    <label asp-for="NewVolume.Status" class="input-group-text">@Localizer["ReadingStatus"]</label>
-                                    <select asp-for="NewVolume.Status" class="form-select" asp-items="@Model.Statuses" onchange="newReadingStatusChanged()"></select>
-                                </div>
-                                <span asp-validation-for="NewVolume.Status" class="text-danger"></span>
+                            <div class="input-group">
+                                <label asp-for="NewVolume.Status" class="input-group-text">@Localizer["@ReadingStatus"]</label>
+                                <select asp-for="NewVolume.Status" class="form-select" asp-items="@Model.Statuses" onchange="newReadingStatusChanged()"></select>
+                            </div>
+                            <span asp-validation-for="NewVolume.Status" class="text-danger"></span>
                         </div>
 
                         <div class="input-group mb-3" id="new-rating-select">
-                            <span class="input-group-text">@Localizer["Rating"]</span>
+                            <span class="input-group-text">@Localizer["@Rating"]</span>
                             <div class="form-control">
                                 @for (int i = 0; i < Model.Ratings.Count; i++)
                                 {
                                     var rating = Model.Ratings[i];
+                                    var id = "Ratings_" + i;
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" value="@rating" asp-for="@Model.NewVolume.Rating" id="Ratings_@i">
-                                        <label class="form-check-label" asp-for="@Model.NewVolume.Rating">@rating</label>
+                                        <input class="form-check-input" type="radio" value="@rating" asp-for="@Model.NewVolume.Rating" id="@id">
+                                        <label class="form-check-label" for="@id">@rating</label>
                                     </div>
                                 }
                             </div>
@@ -141,9 +136,27 @@
             </div>
 
             <div class="modal-footer">
-                <input type="reset" onclick="resetValidation()" value="@Localizer["Clear"]" class="btn btn-secondary" />
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
-                <input type="submit" value="@Localizer["Create"]" class="btn btn-primary" />
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["@Close"]</button>
+                            <input type="reset" onclick="resetValidation(); resetPreview();" value="@Localizer["@Clear"]" class="btn btn-secondary" />
+                        </div>
+                        <div class="col-auto">
+                            <div class="row">
+                                <div class="form-check col-auto">
+                                    <input class="form-check-input" type="checkbox" value="" id="add-more">
+                                    <label class="form-check-label" for="add-more">
+                                        @Localizer["@AddOneMore"]
+                                    </label>
+                                </div>
+                                <input type="submit" value="@Localizer["@Create"]" class="btn btn-primary col-auto" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

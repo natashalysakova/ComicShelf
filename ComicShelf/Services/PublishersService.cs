@@ -48,26 +48,8 @@ namespace ComicShelf.Services
         public override void Update(Publisher country)
         {
             base.Update(country);
-            notificationCache = null;
         }
 
-        string notificationCache;
-
-        internal string ShowNotification()
-        {
-            if(string.IsNullOrEmpty(notificationCache))
-            {
-                var builder = new StringBuilder();
-                if (GetAll().Any(x => x.Country.Name == "Unknown"))
-                {
-                    builder.Append("There are publishers whose country is unknown");
-                }
-
-                notificationCache = builder.ToString();
-            }
-
-            return notificationCache;
-        }
 
         public override string SetNotificationMessage()
         {

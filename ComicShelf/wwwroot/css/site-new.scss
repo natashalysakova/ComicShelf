@@ -1,31 +1,27 @@
-html {
+﻿html {
     font-size: 14px;
     position: relative;
     font-family: 'NotoColorEmojiLimited', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     overflow-y: scroll;
     height: 100%;
-    margin:0;
+    margin: 0;
     padding: 0;
 }
-
 @media (min-width: 768px) {
     html {
         font-size: 16px;
-    } 
+    }
 }
 
+
+$primaryColor: #ff6a00;
 .Production {
-    background-color: #4F8D9E;
+    background-color: $primaryColor;
 }
 
 .Development {
     background-color: darkorange;
 }
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
 
 body {
     background-image: url(/images/static/00001-2935888061.png);
@@ -34,81 +30,33 @@ body {
     padding-right: 0px !important;
     margin-right: 0px !important;
     min-height: 100%;
-}
-    body.modal-open {
+
+    .modal-open {
         overflow: auto;
     }
-
-.footer{
-    
 }
 
+
 #main-container {
+    $main-container-padding: 20px;
     background-color: #ffffff22;
     backdrop-filter: blur(10px);
     border: 1px solid gray;
     border-radius: 5px;
-    padding-top: 70px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 20px;
+    padding-top: $main-container-padding + 50px;
+    padding-left: $main-container-padding;
+    padding-right: $main-container-padding;
+    padding-bottom: $main-container-padding;
 }
 
 .update-on-status-change {
     transition: color 0.5s ease; /* Example: transition the 'color' property over 0.5 seconds */
 }
 
-@font-face {
-    font-family: NotoColorEmojiLimited;
-    unicode-range: U+1F1E6-1F1FF;
-    src: url(https://raw.githack.com/googlefonts/noto-emoji/main/fonts/NotoColorEmoji.ttf);
-}
-/*This is a feature, class modal-open gets added to the HTML body when you show the modal, and removed when you hide it.*/
-
-.modal-input-form{
+.modal-input-form {
     border: none;
     width: 95%
 }
-
-
-#filters {
-}
-
-div {
-}
-/*
-.ui-autocomplete {
-    background-color: red;
-}
-
-.ui-helper-hidden-accessible{
-    visibility: hidden;
-}*/
-
-
-
-/*.shelf {
-    background-color: rgb(91, 91, 91);
-    width: 100%;
-    float: left;
-    border-bottom: 40px solid rgb(198, 196, 196);
-    border-left: 20px solid rgb(125, 125, 125);
-    border-right: 20px solid rgb(125, 125, 125);
-    border-top: 20px solid rgb(75, 75, 75);
-    height: 450px;
-}
-@media (min-width:1000px) {
-    .shelf {
-        border-bottom: 50px solid rgb(198, 196, 196);
-        border-left: 50px solid rgb(125, 125, 125);
-        border-right: 50px solid rgb(125, 125, 125);
-        border-top: 50px solid rgb(75, 75, 75);
-    }
-}
-    .shelf-face {
-        height:20px;
-        border-bottom: 20px solid rgb(125, 125, 125);
-    }*/
 
 
 .shelf {
@@ -121,37 +69,41 @@ div {
     padding: 0;
 }
 
+
+$book-border-radius: 10px;
+$book-margin: 10px;
 .book {
     position: sticky;
     width: 190px;
     height: 280px;
     background-color: #2d514ed6;
     border: 1px solid #495057;
-    border-radius: 10px;
+    border-radius: $book-border-radius;
     display: flex;
     text-align: center;
     cursor: pointer;
     box-shadow: 5px -5px 10px black;
     padding: 5px;
     overflow: hidden;
-    margin:10px;
+    margin: $book-margin;
+
+    
+}
+.book:hover {
+    transition: 0.2s ease-in;
+    transform: scale(1.235);
+    backface-visibility: hidden;
+    box-shadow: 0px 0px 30px black;
+    z-index: 3 !important;
 }
 
-@media(max-width: 462px){
+@media(max-width: 462px) {
     .book {
         width: 48%;
         margin: 1%;
         height: 220px;
     }
 }
-
-    .book:hover {
-        transition: 0.2s ease-in;
-        transform: scale(1.235);
-        backface-visibility: hidden;
-        box-shadow: 0px 0px 30px black;
-        z-index: 3 !important;
-    }
 
 
 .book-number {
@@ -174,7 +126,7 @@ div {
     height: 100%;
     object-fit: cover;
     background-color: white;
-    border-radius: 10px;
+    border-radius: $book-border-radius;
 }
 
 .book-header {
@@ -182,7 +134,7 @@ div {
     width: 100%;
     height: 65px;
     bottom: 10%;
-    margin:-5px;
+    margin: -($book-margin/2);
 }
 
 .book-title {
@@ -233,15 +185,18 @@ div {
     background-color: #eea713c1;
 }
 
+$badge-date-top: 60px;
+$badge-date-color: dodgerblue;
+
 .badge-date {
-    top: 60px;
+    top: $badge-date-top;
     width: 40%;
-    background-color: dodgerblue;
+    background-color: $badge-date-color;
 }
 
 .badge-date-expired {
-    top: 60px;
-    background-color: dodgerblue;
+    top: $badge-date-top;
+    background-color: $badge-date-color;
 }
 
 .expired {
@@ -258,22 +213,23 @@ div {
     object-fit: cover;
 }
 
+
 .star {
-    width: 60px; /* Adjust the size of the star container */
-    height: 60px; /* Adjust the size of the star container */
+    $star-size: 60px;
+
+    width: $star-size;
+    height: $star-size;
     position: absolute;
     bottom: 3px;
     right: 3px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url("../images/static/Gold_Star.svg") ;
+    background-image: url("../images/static/Gold_Star.svg");
     background-size: contain;
     z-index: 2 !important;
     transform: rotate(20deg);
 }
-
-
 .number {
     position: relative;
     z-index: 1 !important;

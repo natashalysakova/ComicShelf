@@ -117,166 +117,181 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddNewVolume" xml:space="preserve">
+  <data name="@AddNewVolume" xml:space="preserve">
     <value>{AddNewVolume}</value>
   </data>
-  <data name="Announced" xml:space="preserve">
+  <data name="@Announced" xml:space="preserve">
     <value>{Announced}</value>
   </data>
-  <data name="Author" xml:space="preserve">
+  <data name="@Author" xml:space="preserve">
     <value>{Author}</value>
   </data>
-  <data name="Authors" xml:space="preserve">
+  <data name="@Authors" xml:space="preserve">
     <value>{Authors}</value>
   </data>
-  <data name="Bought" xml:space="preserve">
+  <data name="@Bought" xml:space="preserve">
     <value>{Bought}</value>
   </data>
-  <data name="ByCreationDate" xml:space="preserve">
+  <data name="@ByCreationDate" xml:space="preserve">
     <value>{ByCreationDate}</value>
   </data>
-  <data name="ByPurchaseDate" xml:space="preserve">
+  <data name="@ByPurchaseDate" xml:space="preserve">
     <value>{ByPurchaseDate}</value>
   </data>
-  <data name="ByTitle" xml:space="preserve">
+  <data name="@ByTitle" xml:space="preserve">
     <value>{ByTitle}</value>
   </data>
-  <data name="Clear" xml:space="preserve">
+  <data name="@Clear" xml:space="preserve">
     <value>{Clear}</value>
   </data>
-  <data name="Close" xml:space="preserve">
+  <data name="@Close" xml:space="preserve">
     <value>{Close}</value>
   </data>
-  <data name="Completed" xml:space="preserve">
+  <data name="@Completed" xml:space="preserve">
     <value>{Completed}</value>
   </data>
-  <data name="Countries" xml:space="preserve">
+  <data name="@Countries" xml:space="preserve">
     <value>{Countries}</value>
   </data>
-  <data name="Cover" xml:space="preserve">
+  <data name="@Cover" xml:space="preserve">
     <value>{Cover}</value>
   </data>
-  <data name="Create" xml:space="preserve">
+  <data name="@Create" xml:space="preserve">
     <value>{Create}</value>
   </data>
-  <data name="Created" xml:space="preserve">
+  <data name="@Created" xml:space="preserve">
     <value>{Created}</value>
   </data>
-  <data name="Delete" xml:space="preserve">
+  <data name="@Delete" xml:space="preserve">
     <value>{Delete}</value>
   </data>
-  <data name="Dropped" xml:space="preserve">
+  <data name="@Dropped" xml:space="preserve">
     <value>{Dropped}</value>
   </data>
-  <data name="Edit" xml:space="preserve">
+  <data name="@Edit" xml:space="preserve">
     <value>{Edit}</value>
   </data>
-  <data name="FilterAll" xml:space="preserve">
+  <data name="@FilterAll" xml:space="preserve">
     <value>{FilterAll}</value>
   </data>
-  <data name="FilterAnnounced" xml:space="preserve">
+  <data name="@FilterAnnounced" xml:space="preserve">
     <value>{FilterAnnounced}</value>
   </data>
-  <data name="FilterAvailable" xml:space="preserve">
+  <data name="@FilterAvailable" xml:space="preserve">
     <value>{FilterAvailable}</value>
   </data>
-  <data name="FilterGone" xml:space="preserve">
+  <data name="@FilterGone" xml:space="preserve">
     <value>{FilterGone}</value>
   </data>
-  <data name="FilterPreorder" xml:space="preserve">
+  <data name="@FilterPreorder" xml:space="preserve">
     <value>{FilterPreorder}</value>
   </data>
-  <data name="FilterWishlist" xml:space="preserve">
+  <data name="@FilterWishlist" xml:space="preserve">
     <value>{FilterWishlist}</value>
   </data>
-  <data name="Gift" xml:space="preserve">
+  <data name="@Gift" xml:space="preserve">
     <value>{Gift}</value>
   </data>
-  <data name="GiftedAway" xml:space="preserve">
+  <data name="@GiftedAway" xml:space="preserve">
     <value>{GiftedAway}</value>
   </data>
-  <data name="InQueue" xml:space="preserve">
+  <data name="@InQueue" xml:space="preserve">
     <value>{InQueue}</value>
   </data>
-  <data name="MainHeader" xml:space="preserve">
+  <data name="@MainHeader" xml:space="preserve">
     <value>{MainHeader}</value>
   </data>
-  <data name="MainPage" xml:space="preserve">
+  <data name="@MainPage" xml:space="preserve">
     <value>{MainPage}</value>
   </data>
-  <data name="Modified" xml:space="preserve">
+  <data name="@Modified" xml:space="preserve">
     <value>{Modified}</value>
   </data>
-  <data name="NotStarted" xml:space="preserve">
+  <data name="@NotStarted" xml:space="preserve">
     <value>{NotStarted}</value>
   </data>
-  <data name="NumberInSeries" xml:space="preserve">
+  <data name="@NumberInSeries" xml:space="preserve">
     <value>{NumberInSeries}</value>
   </data>
-  <data name="Ongoing" xml:space="preserve">
+  <data name="@Ongoing" xml:space="preserve">
     <value>{Ongoing}</value>
   </data>
-  <data name="OriginalTitile" xml:space="preserve">
+  <data name="@OriginalTitile" xml:space="preserve">
     <value>{OriginalTitile}</value>
   </data>
-  <data name="Pirated" xml:space="preserve">
+  <data name="@Pirated" xml:space="preserve">
     <value>{Pirated}</value>
   </data>
-  <data name="Preordered" xml:space="preserve">
+  <data name="@Preordered" xml:space="preserve">
     <value>{Preordered}</value>
   </data>
-  <data name="Privacy" xml:space="preserve">
+  <data name="@Privacy" xml:space="preserve">
     <value>{Privacy}</value>
   </data>
-  <data name="Publishers" xml:space="preserve">
+  <data name="@Publishers" xml:space="preserve">
     <value>{Publishers}</value>
   </data>
-  <data name="PurchaseDate" xml:space="preserve">
+  <data name="@PurchaseDate" xml:space="preserve">
     <value>{PurchaseDate}</value>
   </data>
-  <data name="PurchaseStatus" xml:space="preserve">
+  <data name="@PurchaseStatus" xml:space="preserve">
     <value>{PurchaseStatus}</value>
   </data>
-  <data name="Rating" xml:space="preserve">
+  <data name="@Rating" xml:space="preserve">
     <value>{Rating}</value>
   </data>
-  <data name="Reading" xml:space="preserve">
+  <data name="@Reading" xml:space="preserve">
     <value>{Reading}</value>
   </data>
-  <data name="ReadingStatus" xml:space="preserve">
+  <data name="@ReadingStatus" xml:space="preserve">
     <value>{ReadingStatus}</value>
   </data>
-  <data name="ReleaseDate" xml:space="preserve">
+  <data name="@ReleaseDate" xml:space="preserve">
     <value>{ReleaseDate}</value>
   </data>
-  <data name="Search" xml:space="preserve">
+  <data name="@Search" xml:space="preserve">
     <value>{Search}</value>
   </data>
-  <data name="Series" xml:space="preserve">
+  <data name="@Series" xml:space="preserve">
     <value>{Series}</value>
   </data>
-  <data name="Title" xml:space="preserve">
+  <data name="@Title" xml:space="preserve">
     <value>{Title}</value>
   </data>
-  <data name="TypeForSearch" xml:space="preserve">
+  <data name="@TypeForSearch" xml:space="preserve">
     <value>{TypeForSearch}</value>
   </data>
-  <data name="Update" xml:space="preserve">
+  <data name="@Update" xml:space="preserve">
     <value>{Update}</value>
   </data>
-  <data name="Volume" xml:space="preserve">
+  <data name="@Volume" xml:space="preserve">
     <value>{Volume}</value>
   </data>
-  <data name="Wishlist" xml:space="preserve">
+  <data name="@Wishlist" xml:space="preserve">
     <value>{Wishlist}</value>
   </data>
-  <data name="Digitality" xml:space="preserve">
+  <data name="@Digitality" xml:space="preserve">
     <value>{Digitality}</value>
   </data>
-  <data name="Physical" xml:space="preserve">
+  <data name="@Physical" xml:space="preserve">
     <value>{Physical}</value>
   </data>
-  <data name="Digital" xml:space="preserve">
+  <data name="@Digital" xml:space="preserve">
     <value>{Digital}</value>
+  </data>
+  <data name="@AddOneMore" xml:space="preserve">
+    <value>{AddOneMore}</value>
+  </data>
+  <data name="@DigitalityAll" xml:space="preserve">
+    <value>{DigitalityAll}</value>
+  </data>
+  <data name="@DigitalityPhysical" xml:space="preserve">
+    <value>{DigitalityPhysical}</value>
+  </data>
+  <data name="@DigitalityDigital" xml:space="preserve">
+    <value>{DigitalityDigital}</value>
+  </data>
+  <data name="@Free" xml:space="preserve">
+    <value>{Free}</value>
   </data>
 </root>

@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using ComicShelf.Localization;
 using Microsoft.Extensions.Localization;
 using ComicShelf.Utilities;
+using ComicShelf.ViewModels;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -20,16 +21,18 @@ namespace ComicShelf.Pages.Volumes
         private readonly VolumeService _volumeService;
         private readonly SearchService _searchService;
         private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly EnumUtilities _enumUtilities;
 
-        public CreateModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer)
+        public CreateModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer, EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
             _searchService = searchService;
             _localizer = localizer;
+            _enumUtilities = enumUtilities;
 
-            Statuses.AddRange(VolumeUtilities.GetStatusSelectItemList(_localizer));
-            PurchaseStatuses.AddRange(VolumeUtilities.GetPurchaseStatusSelectItemList(_localizer));
-            Ratings.AddRange(VolumeUtilities.GetRatingsSelectItemList(_localizer));
+            Statuses.AddRange(_enumUtilities.GetStatusSelectItemList());
+            PurchaseStatuses.AddRange(_enumUtilities.GetPurchaseStatusSelectItemList());
+            Ratings.AddRange(_enumUtilities.GetRatingsSelectItemList());
 
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
@@ -48,7 +51,7 @@ namespace ComicShelf.Pages.Volumes
         }
 
         [BindProperty]
-        public VolumeModel Volume { get; set; } = default!;
+        public VolumeCreateModel Volume { get; set; } = default!;
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()

@@ -6,18 +6,25 @@ using System.Net.NetworkInformation;
 
 internal class DbInitializer
 {
-    internal static void Initialize(ComicShelfContext context)
+    private readonly ComicShelfContext _context;
+
+    internal DbInitializer(ComicShelfContext context)
+    {
+        _context = context;
+    }
+
+    internal void Initialize()
     {
         //context.Database.EnsureCreated();
-        context.Database.Migrate();
+        _context.Database.Migrate();
 
-        if (!context.Countries.Any(x => x.Name == "Unknown"))
+        if (!_context.Countries.Any(x => x.Name == "Unknown"))
         {
-            context.Countries.Add(new Country() { FlagPNG = string.Empty, FlagSVG = string.Empty, Name = "Unknown", CountryCode = "Unknown" });
-            context.SaveChanges();
+            _context.Countries.Add(new Country() { FlagPNG = string.Empty, FlagSVG = string.Empty, Name = "Unknown", CountryCode = "Unknown" });
+            _context.SaveChanges();
         }
 
-        if (context.Countries.Count() > 1)
+        if (_context.Countries.Count() > 1)
         {
             return;
         }
@@ -37,12 +44,12 @@ internal class DbInitializer
 
             FileUtility.SaveFlagFromCDN(code, out string png, out string svg);
 
-            context.Countries.Add(new Country() { FlagPNG = png, FlagSVG = svg, Name = country, CountryCode = code });
+            _context.Countries.Add(new Country() { FlagPNG = png, FlagSVG = svg, Name = country, CountryCode = code });
         }
-        context.SaveChanges();
+        _context.SaveChanges();
 
-        var ukraine = context.Countries.Single(x => x.Name == "Ukraine");
-        var us = context.Countries.Single(x => x.Name == "United States");
+        var ukraine = _context.Countries.Single(x => x.Name == "Ukraine");
+        var us = _context.Countries.Single(x => x.Name == "United States");
         var publisers = new Publisher[]
         {
             new Publisher(){ Name = "NashaIdea", Country = ukraine },
@@ -57,13 +64,13 @@ internal class DbInitializer
 
         foreach (var publisher in publisers)
         {
-            context.Publishers.Add(publisher);
+            _context.Publishers.Add(publisher);
         }
 
-        context.SaveChanges();
+        _context.SaveChanges();
     }
 
-    public static string CountryCode(string country)
+    internal string CountryCode(string country)
     {
         var regions = CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(x => new RegionInfo(x.Name)).ToList();
         var englishRegion = regions.FirstOrDefault(region => region.EnglishName.Contains(country));
@@ -75,5 +82,64 @@ internal class DbInitializer
 
         return countryCode.ToLower();
     }
-    public static string IsoCountryCodeToFlagEmoji(string countryCode) => string.Concat(countryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
+    public string IsoCountryCodeToFlagEmoji(string countryCode) => string.Concat(countryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
+
+    internal void FillFlags()
+    {
+        foreach (var item in _context.Countries)
+        {
+            if (String.IsNullOrEmpty(item.FlagPNG) || String.IsNullOrEmpty(item.FlagSVG))
+            {
+                item.CountryCode = item.CountryCode.ToLower();
+                FileUtility.SaveFlagFromCDN(item.CountryCode, out string png, out string svg);
+                item.FlagPNG = png;
+                item.FlagSVG = svg;
+            }
+        }
+
+        _context.SaveChanges();
+    }
+
+    internal void RestoreImagesFromDB()
+    {
+        var volumes = _context.Volumes.Include(x => x.Series).ToList();
+        foreach (var item in volumes)
+        {
+            //if (item.Cover.Cover != null)
+            //{
+            //    item.CoverUrl = FileUtility.RestoreCover(item.Series.Name, item.Number, item.Cover);
+            //}
+
+
+            item.CoverUrl = FileUtility.FindUrl(item.CoverUrl);
+
+
+            if (item.CreationDate == default)
+            {
+                item.CreationDate = DateTime.Now;
+            }
+            _context.SaveChanges();
+        }
+
+    }
+
+
+    internal void FillColors()
+    {
+        foreach (var item in _context.Series)
+        {
+            if (string.IsNullOrEmpty(item.Color) || string.IsNullOrEmpty(item.ComplimentColor))
+            {
+                var color = ColorUtility.GetRandomColor(minSaturation: 60, minValue: 60);
+                var complementary = ColorUtility.GetOppositeColor(color);
+
+                item.Color = ColorUtility.HexConverter(color);
+                item.ComplimentColor = ColorUtility.HexConverter(complementary);
+            }
+        }
+
+        _context.SaveChanges();
+
+
+    }
 }

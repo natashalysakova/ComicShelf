@@ -9,70 +9,104 @@
 }
 
 <div id="main-container">
-
-
-    <div class="row justify-content-between" id="filters">
-        <div class="col">
-            <button class="btn btn-light mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["AddNewVolume"]</button>
-            <div class="btn-group mb-3" role="group" aria-label="purchse status filters">
-
-                <input id="FilterAll" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" checked />
-                <label for="FilterAll" class="btn btn-outline-secondary">
-                    @Localizer["FilterAll"]
-                </label>
-
-                <input id="FilterAvailable" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
-                <label for="FilterAvailable" class="btn btn-outline-secondary">
-                    @Localizer["FilterAvailable"]
-                </label>
-
-                <input id="FilterPreorder" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
-                <label for="FilterPreorder" class="btn btn-outline-secondary">
-                    @Localizer["FilterPreorder"]
-                </label>
-
-                <input id="FilterWishlist" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
-                <label for="FilterWishlist" class="btn btn-outline-secondary">
-                    @Localizer["FilterWishlist"]
-                </label>
-
-                <input id="FilterAnnounced" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
-                <label for="FilterAnnounced" class="btn btn-outline-secondary">
-                    @Localizer["FilterAnnounced"]
-                </label>
-
-                <input id="FilterGone" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" />
-                <label for="FilterGone" class="btn btn-outline-secondary">
-                    @Localizer["FilterGone"]
-                </label>
-            </div>
-
-        </div>
-        <div class="col-lg-5">
+    <div class="row">
+        <div class="col-lg-3 col-xl-2">
             <div class="row">
-                <div class="input-group col-md mb-3 ">
-                    <input id="search-field" type="search" class="form-control search" placeholder="@Localizer["Search"]" aria-label="Search" aria-describedby="button-addon2">
-                </div>
-                <div class="input-group col-md mb-3 ">
-                    <select id="sortType" class="form-select" aria-label="Default select example">
-                        <option value="0">@Localizer["ByCreationDate"]</option>
-                        <option value="1">@Localizer["ByTitle"]</option>
-                        <option value="2" selected>@Localizer["ByPurchaseDate"]</option>
-                    </select>
-                    <button id="sortDirection" class="btn btn-outline-secondary" data-sort="up">
-                        <i class="bi bi-sort-up"></i>
-                    </button>
-                </div>
+                <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["@AddNewVolume"]</button>
             </div>
+            <div class="row" id="filters">
+                <div class="btn-group-vertical mb-3" role="group" aria-label="purchse status filters">
+                    @{
+                        Request.Cookies.TryGetValue("purchase", out string? purchase);
+                    }
+                    @foreach (var item in ViewData["PurchaseFilters"] as IEnumerable<PurchaseFilterEnum>)
+                    {
+                        var purch = purchase == @item.ToString() ? "checked" : string.Empty;
+
+                        <input id="Purchase_@item" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" data-purchase="@item" @purch />
+                        <label for="Purchase_@item" class="btn btn-secondary">
+                            @Localizer["@" + @item]
+                        </label>
+                    }
+                </div>
+                
+                <div class="btn-group-vertical mb-3" role="group" aria-label="digitiality filters">
+
+                    @{
+                        Request.Cookies.TryGetValue("digitality", out string? digitality);
+                    }
+
+                    @foreach (var item in ViewData["DigitalityFilters"] as IEnumerable<DigitalityEnum>)
+                    {
+                        var dig = digitality == @item.ToString() ? "checked" : string.Empty;
+
+                        <input id="Digitality_@item" class="btn-check ps-digitality" type="radio" name="digitality" autocomplete="off" data-digitality="@item" @dig/>
+                        <label for="Digitality_@item" class="btn btn-secondary">
+                            @Localizer["@" + @item]
+                        </label>
+                    }
+
+@*                    <input id="Digitality_All" class="btn-check ps-digitality" type="radio" name="digitality" autocomplete="off" checked />
+                    <label for="Digitality_All" class="btn btn-secondary">
+                       @Localizer["@DigitalityAll"]
+                    </label>
+
+                    <input id="Digitality_Physical" class="btn-check ps-digitality" type="radio" name="digitality" autocomplete="off" />
+                    <label for="Digitality_Physical" class="btn btn-secondary">
+                        @Localizer["@DigitalityPhysical"]
+                    </label>
+
+                    <input id="Digitality_Digital" class="btn-check ps-digitality" type="radio" name="digitality" autocomplete="off" />
+                    <label for="Digitality_Digital" class="btn btn-secondary">
+                        @Localizer["@DigitalityDigital"]
+                    </label>*@
+
+                </div>
+
+
+            </div>
+
         </div>
-    </div>
+        <div class="col-lg-9 col-xl-10">
+            <div class="row mb-3 col-lg-6 offset-lg-6">
+                <div class="col">
+                    <div class="input-group">
+                        <input id="search-field" type="search" class="form-control search bg-secondary" placeholder="@Localizer["@Search"]" aria-label="Search" aria-describedby="button-addon2">
+                    </div>
+                </div>
+                <div class="col">
 
+                    <div class="input-group col">
+                        @{
+                            Request.Cookies.TryGetValue("sort", out string? sort);
+                        }
+                        <select id="sortType" class="form-select" aria-label="Default select example" asp-for="@sort">
+                            @foreach (var item in ViewData["Sort"] as IEnumerable<SortEnum>)
+                            {
+                                <option value="@item" >@Localizer["@" + item]</option>
+                            }
+@*                            <option value="0">@Localizer["@ByCreationDate"]</option>
+                            <option value="1">@Localizer["@ByTitle"]</option>
+                            <option value="2" selected>@Localizer["@ByPurchaseDate"]</option>
+*@                        </select>
+                        <button id="sortDirection" class="btn btn-secondary" data-sort="up">
+                            <i class="bi bi-sort-up"></i>
+                        </button>
+                    </div>
+                </div>
 
+            </div>
+            <div class="row" id="shelves">
+                <partial name="_ShelfPartial" model="@Model.Volumes" view-data="@ViewData" />
+            </div>
 
-    <div class="row" id="shelves">
-        <partial name="_ShelfPartial" model="@Model.Volumes" view-data="@ViewData" />
+        </div>
     </div>
 </div>
+           
+
+
+
 
 
 <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -85,7 +119,6 @@
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <partial name="CreatePartial" />
 </div>
-
 
 @section Scripts {
     <script src="~/js/Volume.js"></script>

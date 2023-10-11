@@ -20,16 +20,18 @@ namespace ComicShelf.Pages.Volumes
         VolumeService _volumeService;
         private readonly AuthorsService _authorsService;
         private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly EnumUtilities _enumUtilities;
 
-        public EditModel(VolumeService volumeService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer)
+        public EditModel(VolumeService volumeService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer, EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
             _authorsService = authorsService;
             _localizer = localizer;
+            _enumUtilities = enumUtilities;
 
-            Statuses.AddRange(VolumeUtilities.GetStatusSelectItemList(_localizer));
-            PurchaseStatuses.AddRange(VolumeUtilities.GetPurchaseStatusSelectItemList(_localizer));
-            Ratings.AddRange(VolumeUtilities.GetRatings());
+            Statuses.AddRange(_enumUtilities.GetStatusSelectItemList());
+            PurchaseStatuses.AddRange(_enumUtilities.GetPurchaseStatusSelectItemList());
+            Ratings.AddRange(_enumUtilities.GetRatings());
 
         }
 

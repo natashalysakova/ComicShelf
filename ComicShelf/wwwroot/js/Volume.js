@@ -15,6 +15,10 @@ $(function () {
         //$(this).prop('checked', true)
         $(this).on('click', filter)
     });
+    $('.ps-digitality').each(function () {
+        //$(this).prop('checked', true)
+        $(this).on('click', filter)
+    });
 
     $('#button-search').on('click', filter)
     $('#sortType').on('change', filter)
@@ -80,16 +84,18 @@ function filter(e) {
     var all = $('#FilterAll')[0];
     var value = e.target.checked
 
-    var filter = $('input[type=radio][name=filter]:checked').attr('id')
+    var filter = $('input[type=radio][name=filter]:checked').attr('data-purchase')
     var sort = $('select[id=sortType]').val()
     var dir = $('button[id=sortDirection').data('sort')
     var search = $('input[id=search-field]').val()
+    var digitality = $('input[type=radio][name=digitality]:checked').attr('data-digitality')
 
     var filters = {
         "filter": filter,
         "sort": sort,
         "direction": dir,
-        "search": search
+        "search": search,
+        "digitality": digitality
     };
 
     $.ajax({
@@ -161,11 +167,27 @@ function switchCover() {
     }
 }
 
+
+
 function createComplete(xnr) {
+
+    console.log("createComplete");
 
     if (xnr.status == 200) {
         $('#createAlert').hide();
-        $('#createModal').modal('hide')
+
+        resetPreview();
+      
+
+        if (document.getElementById("add-more").checked) {
+            $('#NewVolume_Number').val(parseInt($('#NewVolume_Number').val()) + 1).trigger('change');
+            document.getElementById('NewVolume_CoverFile').value = "";
+        }
+        else {           
+            document.getElementById("create-form").reset();
+            $('#createModal').modal('hide')
+        }
+
         var s = $('#shelves')
         s.html(xnr.responseText);
     }
@@ -270,4 +292,8 @@ function showPreview(event) {
         var preview = document.getElementById("volume-cover");
         preview.src = src;
     }
+}
+
+function resetPreview() {
+    document.getElementById("volume-cover").src = "images\\static\\no-cover.png";
 }
