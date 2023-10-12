@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using ComicShelf.Localization;
 using ComicShelf.Utilities;
 using ComicShelf.ViewModels;
+using Newtonsoft.Json;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -26,13 +27,11 @@ namespace ComicShelf.Pages.Volumes
         private readonly VolumeService _volumeService;
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly EnumUtilities _enumUtilities;
-        private readonly SearchService _searchService;
-        public IndexModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer, EnumUtilities enumUtilities)
+        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer, EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
             _localizer = localizer;
             _enumUtilities = enumUtilities;
-            _searchService = searchService;
 
             Statuses.AddRange(_enumUtilities.GetStatusSelectItemList());
             PurchaseStatuses.AddRange(_enumUtilities.GetPurchaseStatusSelectItemList());
@@ -82,36 +81,63 @@ namespace ComicShelf.Pages.Volumes
         public async Task OnGetAsync()
         {
             //Volumes = await volumeService.GetAll().Include(x => x.Series).OrderBy(x => x.Series.Name).ThenBy(x => x.Number).ToListAsync();
-            var filters = new BookshelfParams();
-            FromCookies(filters);
+            var filters = FromCookies();
 
             Volumes = _volumeService.Filter(filters);
             ViewData["DigitalityFilters"] = _enumUtilities.GetListOfValues<DigitalityEnum>();
             ViewData["PurchaseFilters"] = _enumUtilities.GetListOfValues<PurchaseFilterEnum>();
             ViewData["Sort"] = _enumUtilities.GetListOfValues<SortEnum>();
-
+            ViewData["ReadingFilters"] = _enumUtilities.GetListOfValues<ReadingEnum>();
             SetCookies(filters);
         }
 
-        private void FromCookies(BookshelfParams filters)
-        {
-            Enum.TryParse(Request.Cookies["sort"], out SortEnum sort);
-            Enum.TryParse(Request.Cookies["digitality"], out DigitalityEnum digitality);
-            Enum.TryParse(Request.Cookies["purchase"], out PurchaseFilterEnum purchaseFilter);
-            Enum.TryParse(Request.Cookies["dir"], out DirectionEnum direction);
 
-            filters.sort = sort;
-            filters.direction = direction;
-            filters.digitality = digitality;
-            filters.filter = purchaseFilter;
+        internal BookshelfParams FromCookies()
+        {
+            //if (Enum.TryParse(Request.Cookies[nameof(filters.sort)], out SortEnum sort))
+            //{
+            //    filters.sort = sort;
+            //}
+
+            //if (Enum.TryParse(Request.Cookies[nameof(filters.digitality)], out DigitalityEnum digitality))
+            //{
+            //    filters.digitality = digitality;
+            //}
+            //if (Enum.TryParse(Request.Cookies[nameof(filters.filter)], out PurchaseFilterEnum purchaseFilter))
+            //{
+            //    filters.filter = purchaseFilter;
+
+            //}
+            //if (Enum.TryParse(Request.Cookies[nameof(filters.direction)], out DirectionEnum direction))
+            //{
+            //    filters.direction = direction;
+            //}
+            //if (Enum.TryParse(Request.Cookies[nameof(filters.reading)], out ReadingEnum reading))
+            //{
+            //    filters.reading = reading;
+            //}
+            var cookie = Request.Cookies["filters"];
+            if(cookie != null)
+            {
+                var fromCookie = JsonConvert.DeserializeObject<BookshelfParams>(cookie);
+                if(fromCookie != null)
+                {
+                    return fromCookie;
+                }
+            }
+
+            return new BookshelfParams();
         }
 
         private void SetCookies(BookshelfParams filters)
         {
-            Response.Cookies.Append("sort", filters.sort.ToString());
-            Response.Cookies.Append("digitality", filters.digitality.ToString());
-            Response.Cookies.Append("purchase", filters.filter.ToString());
-            Response.Cookies.Append("dir", filters.direction.ToString());
+            //Response.Cookies.Append(nameof(filters.sort), filters.sort.ToString());
+            //Response.Cookies.Append(nameof(filters.digitality), filters.digitality.ToString());
+            //Response.Cookies.Append(nameof(filters.filter), filters.filter.ToString());
+            //Response.Cookies.Append(nameof(filters.direction), filters.direction.ToString());
+            //Response.Cookies.Append(nameof(filters.reading), filters.reading.ToString());
+
+            Response.Cookies.Append("filters", JsonConvert.SerializeObject(filters));
         }
 
         public PartialViewResult OnGetVolumeAsync(int id)
@@ -125,19 +151,18 @@ namespace ComicShelf.Pages.Volumes
             resultVD["ReadingStatuses"] = _enumUtilities.GetStatusSelectItemList();
             resultVD["Ratings"] = _enumUtilities.GetRatings();
             resultVD["Digitality"] = _enumUtilities.GetDigitalitySelectItemList();
-
             return new PartialViewResult()
             {
                 ViewName = "_VolumePartial",
                 ViewData = resultVD
             };
-        }        
+        }
 
         public async Task<IActionResult> OnPostChangeStatus(VolumeUpdateModel volumeToUpdate)
         {
             _volumeService.UpdatePurchaseStatus(volumeToUpdate);
             var item = _volumeService.Get(volumeToUpdate.Id);
-            if(item != null)
+            if (item != null)
             {
                 _volumeService.LoadReference(item, x => x.Series);
                 var partial = Partial("_BookPartial", item);

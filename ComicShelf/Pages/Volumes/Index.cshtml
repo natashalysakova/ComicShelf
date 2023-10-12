@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using ComicShelf.Localization;
 @using Microsoft.AspNetCore.Mvc.Localization;
+@using Newtonsoft.Json;
 @model ComicShelf.Pages.Volumes.IndexModel
 @inject IHtmlLocalizer<SharedResource> Localizer
 
@@ -11,59 +12,59 @@
 <div id="main-container">
     <div class="row">
         <div class="col-lg-3 col-xl-2">
-            <div class="row">
-                <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["@AddNewVolume"]</button>
+            <div class="row single-button">
+                <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["AddNewVolume"]</button>
             </div>
+
+
+
             <div class="row" id="filters">
+
+                @{
+                    var filters = Model.FromCookies();
+                }
+
+                <span class="filter-header">@Localizer["PurchaseStatus"]</span>
+
                 <div class="btn-group-vertical mb-3" role="group" aria-label="purchse status filters">
-                    @{
-                        Request.Cookies.TryGetValue("purchase", out string? purchase);
-                    }
                     @foreach (var item in ViewData["PurchaseFilters"] as IEnumerable<PurchaseFilterEnum>)
                     {
-                        var purch = purchase == @item.ToString() ? "checked" : string.Empty;
+                        var check = filters.filter == @item ? "checked" : string.Empty;
 
-                        <input id="Purchase_@item" class="btn-check ps-filter" type="radio" name="filter" autocomplete="off" data-purchase="@item" @purch />
+                        <input id="Purchase_@item" class="btn-check filter" type="radio" name="filter" autocomplete="off" data="@item" @check />
                         <label for="Purchase_@item" class="btn btn-secondary">
-                            @Localizer["@" + @item]
+                            @Localizer[item.ToString()]
                         </label>
                     }
+
                 </div>
-                
-                <div class="btn-group-vertical mb-3" role="group" aria-label="digitiality filters">
-
-                    @{
-                        Request.Cookies.TryGetValue("digitality", out string? digitality);
-                    }
-
+                <span class="filter-header">@Localizer["Digitality"]</span>
+                <div class="btn-group-vertical mb-3" role="group" aria-la bel="digitiality filters">
                     @foreach (var item in ViewData["DigitalityFilters"] as IEnumerable<DigitalityEnum>)
                     {
-                        var dig = digitality == @item.ToString() ? "checked" : string.Empty;
+                        var check = filters.digitality == @item ? "checked" : string.Empty;
 
-                        <input id="Digitality_@item" class="btn-check ps-digitality" type="radio" name="digitality" autocomplete="off" data-digitality="@item" @dig/>
+                        <input id="Digitality_@item" class="btn-check filter" type="radio" name="digitality" autocomplete="off" data="@item" @check />
                         <label for="Digitality_@item" class="btn btn-secondary">
-                            @Localizer["@" + @item]
+                            @Localizer[item.ToString()]
                         </label>
                     }
-
-@*                    <input id="Digitality_All" class="btn-check ps-digitality" type="radio" name="digitality" autocomplete="off" checked />
-                    <label for="Digitality_All" class="btn btn-secondary">
-                       @Localizer["@DigitalityAll"]
-                    </label>
-
-                    <input id="Digitality_Physical" class="btn-check ps-digitality" type="radio" name="digitality" autocomplete="off" />
-                    <label for="Digitality_Physical" class="btn btn-secondary">
-                        @Localizer["@DigitalityPhysical"]
-                    </label>
-
-                    <input id="Digitality_Digital" class="btn-check ps-digitality" type="radio" name="digitality" autocomplete="off" />
-                    <label for="Digitality_Digital" class="btn btn-secondary">
-                        @Localizer["@DigitalityDigital"]
-                    </label>*@
-
                 </div>
+                <span class="filter-header">@Localizer["ReadingStatus"]</span>
+                <div class="btn-group-vertical mb-3" role="group" aria-la bel="reading filters">
+                    @foreach (var item in ViewData["ReadingFilters"] as IEnumerable<ReadingEnum>)
+                    {
+                        var check = filters.reading == @item ? "checked" : string.Empty;
 
-
+                        <input id="Reading_@item" class="btn-check filter" type="radio" name="reading" autocomplete="off" data="@item" @check />
+                        <label for="Reading_@item" class="btn btn-secondary">
+                            @Localizer[item.ToString()]
+                        </label>
+                    }
+                </div>
+            </div>
+            <div class="row single-button">
+                <button class="btn btn-outline-danger mb-3" onclick="resetFilters()">@Localizer["Reset"]</button>
             </div>
 
         </div>
@@ -71,24 +72,23 @@
             <div class="row mb-3 col-lg-6 offset-lg-6">
                 <div class="col">
                     <div class="input-group">
-                        <input id="search-field" type="search" class="form-control search bg-secondary" placeholder="@Localizer["@Search"]" aria-label="Search" aria-describedby="button-addon2">
+                        <input id="search-field" type="search" class="form-control filter bg-secondary" placeholder="@Localizer["Search"]" aria-label="Search" aria-describedby="button-addon2">
                     </div>
                 </div>
                 <div class="col">
 
                     <div class="input-group col">
-                        @{
-                            Request.Cookies.TryGetValue("sort", out string? sort);
-                        }
-                        <select id="sortType" class="form-select" aria-label="Default select example" asp-for="@sort">
+
+                        <select id="sortType" class="form-select" aria-label="Default select example" asp-for="@filters.sort">
                             @foreach (var item in ViewData["Sort"] as IEnumerable<SortEnum>)
                             {
-                                <option value="@item" >@Localizer["@" + item]</option>
+                                <option value="@item">@Localizer["" + item]</option>
                             }
-@*                            <option value="0">@Localizer["@ByCreationDate"]</option>
-                            <option value="1">@Localizer["@ByTitle"]</option>
-                            <option value="2" selected>@Localizer["@ByPurchaseDate"]</option>
-*@                        </select>
+                            @*                            <option value="0">@Localizer["ByCreationDate"]</option>
+                            <option value="1">@Localizer["ByTitle"]</option>
+                            <option value="2" selected>@Localizer["ByPurchaseDate"]</option>
+                            *@
+                        </select>
                         <button id="sortDirection" class="btn btn-secondary" data-sort="up">
                             <i class="bi bi-sort-up"></i>
                         </button>
@@ -103,7 +103,7 @@
         </div>
     </div>
 </div>
-           
+
 
 
 

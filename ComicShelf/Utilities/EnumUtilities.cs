@@ -100,7 +100,7 @@ namespace ComicShelf.Utilities
             var values = Enum.GetValues(type);
             for (var i = 0; i < values.Length; i++)
             {
-                yield return new SelectListItem { Text = localizer["@" + enums[i]], Value = values.GetValue(i).ToString() };
+                yield return new SelectListItem { Text = localizer["" + enums[i]], Value = values.GetValue(i).ToString() };
             }
         }
 
@@ -116,7 +116,7 @@ namespace ComicShelf.Utilities
             {
                 cached.Add(key, method().Select(x => new SelectListItem()
                 {
-                    Text = localizer["@" + x.ToString()],
+                    Text = localizer["" + x.ToString()],
                     Value = x.ToString()
                 }));
             }
@@ -131,7 +131,7 @@ namespace ComicShelf.Utilities
             {
                 transitionsCached.Add(status, GetPurchaseStatusesEnums(status).Select(x => new SelectListItem()
                 {
-                    Text = localizer["@" + x.ToString()],
+                    Text = localizer["" + x.ToString()],
                     Value = x.ToString()
                 }));
             }

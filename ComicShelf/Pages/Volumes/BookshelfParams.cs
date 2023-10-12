@@ -11,26 +11,15 @@ namespace ComicShelf.Pages.Volumes
 
         public string? search { get; set; }
         public DigitalityEnum digitality { get; set; }
+        public ReadingEnum reading { get; set; }
 
-        public BookshelfParams()
-        {
-            direction = DirectionEnum.up;
-            sort = SortEnum.ByPurchaseDate;
-            digitality = DigitalityEnum.All;
-        }
-
-        internal VolumeType ConvertDigitality()
-        {
-            return (VolumeType)((int)digitality & 0x01);
-        }
     }
 
     public enum DigitalityEnum
     {
-
+        All = 0,
         Physical = 1,
-        Digital = 2,
-        All = 0
+        Digital = 2
     }
 
     public enum DirectionEnum
@@ -51,8 +40,18 @@ namespace ComicShelf.Pages.Volumes
 
     public enum SortEnum
     {
-        ByCreationDate = 0,
+        ByCreationDate = 2,
         BySeriesTitle = 1,
-        ByPurchaseDate = 2
+        ByPurchaseDate = 0
+    }
+
+    public enum ReadingEnum {
+        All = 0,
+        NotStarted = 1,
+        InQueue = 2,
+        Reading = 3,
+        Completed = 4,
+        Dropped = 5
+
     }
 }

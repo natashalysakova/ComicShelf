@@ -11,16 +11,11 @@ $.validator.unobtrusive.adapters.add("reqif", [], function (options) {
 
 $(function () {
 
-    $('.ps-filter').each(function () {
-        //$(this).prop('checked', true)
-        $(this).on('click', filter)
-    });
-    $('.ps-digitality').each(function () {
+    $('.filter').each(function () {
         //$(this).prop('checked', true)
         $(this).on('click', filter)
     });
 
-    $('#button-search').on('click', filter)
     $('#sortType').on('change', filter)
     $('#search-field').on('input', filter)
 
@@ -79,23 +74,42 @@ $(function () {
     newReadingStatusChanged()
 });
 
+function resetFilters(e) {
+
+    $('#Purchase_All').prop("checked", "checked")
+    $('#Digitality_All').prop("checked", "checked")
+    $('#Reading_All').prop("checked", "checked")
+    $('#sortType').val("ByPurchaseDate")
+    $('#search-field').val("")
+    $('#sortDirection').attr('data-sort', "up");
+    $('#sortDirection').data('sort', 'up').find('.bi').attr('class', 'bi bi-sort-up');
+
+    filter(e);
+}
+
 function filter(e) {
 
-    var all = $('#FilterAll')[0];
-    var value = e.target.checked
-
-    var filter = $('input[type=radio][name=filter]:checked').attr('data-purchase')
     var sort = $('select[id=sortType]').val()
     var dir = $('button[id=sortDirection').data('sort')
     var search = $('input[id=search-field]').val()
-    var digitality = $('input[type=radio][name=digitality]:checked').attr('data-digitality')
+    var digitality = $('input[type=radio][name=digitality]:checked').attr('data')
+    var reading = $('input[type=radio][name=reading]:checked').attr('data');
+    //if (reading != "All") {
+    //    console.log(reading)
+    //    var radio = $('#Purchase_Available')
+    //    radio.prop("checked", "checked");
+
+    //}
+    var filter = $('input[type=radio][name=filter]:checked').attr('data')
+
 
     var filters = {
         "filter": filter,
         "sort": sort,
         "direction": dir,
         "search": search,
-        "digitality": digitality
+        "digitality": digitality,
+        "reading": reading
     };
 
     $.ajax({

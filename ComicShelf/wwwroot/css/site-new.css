@@ -1,7 +1,6 @@
 ﻿html {
   font-size: 14px;
   position: relative;
-  font-family: "NotoColorEmojiLimited", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   overflow-y: scroll;
   height: 100%;
   margin: 0;
@@ -14,11 +13,11 @@
   }
 }
 .Production {
-  background-color: #ff6a00;
+  background-color: #198754;
 }
 
 .Development {
-  background-color: darkorange;
+  background-color: #fd7e14;
 }
 
 body {
@@ -219,4 +218,18 @@ body .modal-open {
   font-size: 24px; /* Adjust font size as needed */
   color: #000; /* Text color */
   text-decoration: blink;
+}
+
+.filter-header {
+  font-size: 24px;
+  font-weight: 500;
+  color: #fd7e14;
+}
+
+.btn-group-vertical .btn:hover {
+  background-color: #fd7e14;
+}
+
+.single-button {
+  margin: 0;
 }

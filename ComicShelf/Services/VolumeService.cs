@@ -174,7 +174,7 @@ namespace ComicShelf.Services
                     filterd = filterd.Where(x => x.Digitality == VolumeType.Physical);
                     break;
                 case DigitalityEnum.Digital:
-                    filterd = filterd.Where(x=>x.Digitality == VolumeType.Digital);
+                    filterd = filterd.Where(x => x.Digitality == VolumeType.Digital);
                     break;
                 case DigitalityEnum.All:
                     break;
@@ -195,6 +195,25 @@ namespace ComicShelf.Services
                     x.Authors.Any(y => y.Name.ToLower().Contains(param.search)) ||
                     x.Series.Publishers.Any(y => y.Name.ToLower().Contains(param.search))
                 );
+            }
+
+            switch (param.reading)
+            {
+                case ReadingEnum.NotStarted:
+                    filterd = filterd.Where(x => x.Status == Status.NotStarted);
+                    break;
+                case ReadingEnum.InQueue:
+                    filterd = filterd.Where(x => x.Status == Status.InQueue);
+                    break;
+                case ReadingEnum.Reading:
+                    filterd = filterd.Where(x => x.Status == Status.Reading);
+                    break;
+                case ReadingEnum.Completed:
+                    filterd = filterd.Where(x => x.Status == Status.Completed);
+                    break;
+                case ReadingEnum.Dropped:
+                    filterd = filterd.Where(x => x.Status == Status.Dropped);
+                    break;
             }
 
             ///<option value="0" selected>За датою додавання</option>
@@ -227,30 +246,42 @@ namespace ComicShelf.Services
         internal void UpdatePurchaseStatus(VolumeUpdateModel volumeToUpdate)
         {
             var item = Get(volumeToUpdate.Id);
-            if (item != null)
+            if (item == null)
             {
-                item.PurchaseStatus = volumeToUpdate.PurchaseStatus;
-                item.Status = volumeToUpdate.Status;
+                return;
+            }
 
-                item.Rating = volumeToUpdate.Rating;
+            item.PurchaseStatus = volumeToUpdate.PurchaseStatus;
+            item.Status = volumeToUpdate.Status;
 
-                if (volumeToUpdate.PurchaseDate != default)
+            item.Rating = volumeToUpdate.Rating;
+
+            if (volumeToUpdate.PurchaseDate != default)
+            {
+                item.PurchaseDate = volumeToUpdate.PurchaseDate;
+            }
+
+            if (volumeToUpdate.ReleaseDate != default)
+            {
+                item.ReleaseDate = volumeToUpdate.ReleaseDate;
+            }
+
+            if (volumeToUpdate.CoverFile != null)
+            {
+                LoadReference(item, x => x.Series);
+                item.CoverUrl = FileUtility.SaveOnServer(volumeToUpdate.CoverFile, item.Series.Name, item.Number);
+            }
+
+            Update(item);
+
+            if (item.Status == Status.Completed)
+            {
+                var nextChapter = dbSet.Where(x => x.SeriesId == item.SeriesId && x.Number > item.Number && x.Status == Status.NotStarted).OrderBy(x => x.Number).FirstOrDefault();
+                if (nextChapter != null)
                 {
-                    item.PurchaseDate = volumeToUpdate.PurchaseDate;
+                    nextChapter.Status = Status.InQueue;
+                    Update(nextChapter);
                 }
-
-                if (volumeToUpdate.ReleaseDate != default)
-                {
-                    item.ReleaseDate = volumeToUpdate.ReleaseDate;
-                }
-
-                if (volumeToUpdate.CoverFile != null)
-                {
-                    LoadReference(item, x => x.Series);
-                    item.CoverUrl = FileUtility.SaveOnServer(volumeToUpdate.CoverFile, item.Series.Name, item.Number);
-                }
-
-                Update(item);
             }
         }
 
