@@ -31,9 +31,21 @@ namespace ComicShelf.Services
             var series = _seriesService.GetByName(model.Series);
             if (series == null)
             {
-                series = new Series() { Name = model.Series, Type = ComicType.Comics };
+                series = new Series() { Name = model.Series, Type = ComicType.Comics};
+                if (model.SingleVolume)
+                {
+                    series.TotalVolumes = 1;
+                    series.Ongoing = false;
+
+                    if (model.PurchaseStatus != PurchaseStatus.Announced || model.PurchaseStatus != PurchaseStatus.GiftedAway)
+                    {
+                        series.Completed = true;
+                    }
+                }
                 _seriesService.Add(series);
             }
+
+
 
             var authorList = new List<Author>();
             foreach (var item in model.Authors)
@@ -90,13 +102,33 @@ namespace ComicShelf.Services
                 Rating = model.Rating,
                 Status = model.Status,
                 CoverUrl = urlPath,
-                //Cover = cover,
                 CreationDate = DateTime.Now,
                 ModificationDate = DateTime.Now,
-                ReleaseDate = model.ReleaseDate
+                ReleaseDate = model.ReleaseDate,
+                Digitality = model.Digitality,
+                OneShot = model.SingleVolume
             };
 
+            if (model.SingleVolume)
+            {
+                volume.Number = 1;
+            }
+
+
+            _seriesService.LoadCollection(series, x => x.Volumes);
+
+            if(volume.PurchaseStatus != PurchaseStatus.Announced && volume.PurchaseStatus!= PurchaseStatus.Preordered && volume.PurchaseStatus != PurchaseStatus.GiftedAway && volume.Status == Status.NotStarted && series.Volumes.All(x=>x.Status == Status.Completed))
+            {
+                volume.Status = Status.InQueue;
+            }
+
             this.Add(volume);
+
+            if(!series.Ongoing && series.Volumes.Count == series.TotalVolumes)
+            {
+                series.Completed = true;
+                _seriesService.Update(series);
+            }
         }
 
         private IEnumerable<Issue> GenerateEmptyIssues(int issues, ComicType type)
@@ -133,6 +165,17 @@ namespace ComicShelf.Services
                 item.SeriesId = _seriesService.GetByName(item.Series.Name).Id;
 
             base.Update(item);
+
+            if (item.PurchaseStatus != PurchaseStatus.Announced || item.PurchaseStatus != PurchaseStatus.GiftedAway)
+            {
+                var series = _seriesService.Get(item.SeriesId);
+                if(!series.Ongoing && series.Volumes.Count == series.TotalVolumes)
+                {
+                    series.Completed = true;
+                    _seriesService.Update(series);
+                }
+            }
+
         }
 
         public IList<Volume> Filter(BookshelfParams param)
@@ -224,7 +267,7 @@ namespace ComicShelf.Services
             switch (param.sort)
             {
                 case SortEnum.BySeriesTitle:
-                    filterd = filterd.OrderBy(x => x.Series.Name).ThenBy(x => x.Number);
+                    filterd = filterd.OrderByDescending(x => x.Series.Name).ThenBy(x => x.Number);
                     break;
                 case SortEnum.ByPurchaseDate:
                     filterd = filterd.OrderBy(x => x.PurchaseDate).ThenBy(x => x.Series.Name).ThenBy(x => x.Number);
@@ -272,11 +315,27 @@ namespace ComicShelf.Services
                 item.CoverUrl = FileUtility.SaveOnServer(volumeToUpdate.CoverFile, item.Series.Name, item.Number);
             }
 
+            if(
+                volumeToUpdate.PurchaseStatus is 
+                not PurchaseStatus.Preordered and
+                not PurchaseStatus.Announced and
+                not PurchaseStatus.GiftedAway)
+            {
+                var series = _seriesService.Get(item.SeriesId);
+                _seriesService.LoadCollection(series, x => x.Volumes);
+
+                if (series.Volumes.Except(new[] {item}).All(x=>x.Status == Status.Completed))
+                {
+                    item.Status = Status.InQueue;
+                }
+
+            }
+
             Update(item);
 
             if (item.Status == Status.Completed)
             {
-                var nextChapter = dbSet.Where(x => x.SeriesId == item.SeriesId && x.Number > item.Number && x.Status == Status.NotStarted).OrderBy(x => x.Number).FirstOrDefault();
+                var nextChapter = dbSet.Where(x => x.SeriesId == item.SeriesId && x.Number > item.Number && x.Status == Status.NotStarted && x.PurchaseStatus != PurchaseStatus.Announced && x.PurchaseStatus != PurchaseStatus.Preordered).OrderBy(x => x.Number).FirstOrDefault();
                 if (nextChapter != null)
                 {
                     nextChapter.Status = Status.InQueue;

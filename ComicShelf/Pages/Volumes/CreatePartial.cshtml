@@ -37,9 +37,9 @@
 
                 <div class="row">
                     <div class="col-sm-5">
-                        <img src="~/images/static/no-cover.png" class="img-fluid volume-image" id="volume-cover" />
+                        <img src="~/images/static/no-cover.png" class="img-fluid volume-image" id="new-volume-cover" />
                         <div class="mb-3 input-group">
-                            <input asp-for="NewVolume.CoverFile" type="file" accept="image/*" class="form-control" onchange="showPreview(event);" />
+                            <input asp-for="NewVolume.CoverFile" type="file" accept="image/*" class="form-control" onchange="showNewPreview(event);" />
                         </div>
                         <span asp-validation-for="NewVolume.CoverFile" class="text-danger"></span>
                     </div>
@@ -51,6 +51,12 @@
                             <div class="input-group">
                                 <label asp-for="NewVolume.Title" class="input-group-text">@Localizer["Title"]</label>
                                 <input asp-for="NewVolume.Title" class="form-control" value="@defaultTitle" />
+                                <div class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="@Localizer["SingleVolumeHint"]">
+                                    <input asp-for="NewVolume.SingleVolume" class="form-check-input mt-0" type="checkbox"  />
+                                </div>
+                                <span class="input-group-text">@Localizer["SingleVolume"]</span>
+
+
                             </div>
                             <span asp-validation-for="NewVolume.Title" class="text-danger"></span>
                         </div>
@@ -141,7 +147,7 @@
                     <div class="row">
                         <div class="col">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
-                            <input type="reset" onclick="resetValidation(); resetPreview();" value="@Localizer["Clear"]" class="btn btn-secondary" />
+                            <input type="reset" id="reset-button" onclick="resetValidation(); resetPreview('new-volume-cover');newReadingStatusChanged();purchaseStatusChanged();" value="@Localizer["Clear"]" class="btn btn-secondary" />
                         </div>
                         <div class="col-auto">
                             <div class="row">

@@ -16,23 +16,39 @@
 
 <div class="book-header">
     <div class="book-title @expired"></div>
-    <div class="book-text">@Model.Series.Name<br>@Model.Title</div>
+    <div class="book-text">
+        @Model.Series.Name
+        @{
+            if (!Model.OneShot)
+            {
+                <br>
+                @Model.Title
+            }
+        }
+    </div>
+
 </div>
-<div class="book-number" style="background-color:@Model.Series.Color;">@Model.Number</div>
+@{
+    if (!Model.OneShot)
+    {
+        <div class="book-number" style="background-color:@Model.Series.Color;">@Model.Number</div>
+    }
+}
+
 @if (Model.PurchaseStatus == Models.Enums.PurchaseStatus.Announced || Model.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered || Model.PurchaseStatus == Models.Enums.PurchaseStatus.Wishlist)
 {
     <div class="book-badge book-badge-@Model.PurchaseStatus.ToString().ToLower()">@Localizer[Model.PurchaseStatus.ToString()]</div>
 
-    if (Model.ReleaseDate.HasValue && Model.PurchaseStatus!= Models.Enums.PurchaseStatus.Wishlist)
+    if (Model.ReleaseDate.HasValue && Model.PurchaseStatus != Models.Enums.PurchaseStatus.Wishlist)
     {
         <div class=" book-badge badge-date @expired">@Model.ReleaseDate.Value.ToShortDateString()</div>
     }
 }
 @if (Model.Rating != 0)
 {
-        <div class="star">
-            <span class="number">@Model.Rating</span>
-        </div>
+    <div class="star">
+        <span class="number">@Model.Rating</span>
+    </div>
 }
 
 

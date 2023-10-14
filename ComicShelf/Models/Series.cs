@@ -24,5 +24,6 @@ namespace ComicShelf.Models
 
         public virtual ICollection<Publisher> Publishers { get; set; } = new List<Publisher>();
         public virtual ICollection<Volume> Volumes { get; set; } = new List<Volume>();
+
     }
 }

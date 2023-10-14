@@ -88,7 +88,6 @@ namespace ComicShelf.Services
             original.Ongoing = model.Ongoing;
             original.Completed = model.Completed;
             original.TotalVolumes = model.TotalVolumes.HasValue ? model.TotalVolumes.Value : 0;
-
             original.Publishers.Clear();
 
             var splited = model.Publishers.Split(',');
@@ -102,7 +101,7 @@ namespace ComicShelf.Services
                 var publisher = _publishersService.GetByName(trimmedItem);
                 if (publisher == null)
                 {
-                    publisher = new Publisher() { Country = _countryService.UnknownCountry, Name = trimmedItem };
+                    publisher = new Models.Publisher() { Country = _countryService.UnknownCountry, Name = trimmedItem };
                     _publishersService.Add(publisher);
                 }
 
@@ -121,8 +120,8 @@ namespace ComicShelf.Services
         {
             StringBuilder builder = new StringBuilder();
 
-            if (dbSet.Any(x => !x.Publishers.Any()  
-            || !x.Volumes.Any()  
+            if (dbSet.Any(x => !x.Publishers.Any()
+            || !x.Volumes.Any()
             || (!x.Ongoing && x.TotalVolumes == 0)))
             {
                 return "You have not filled data for series";

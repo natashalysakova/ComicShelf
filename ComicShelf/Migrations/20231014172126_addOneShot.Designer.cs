@@ -3,6 +3,7 @@ using System;
 using ComicShelf.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComicShelf.Migrations
 {
     [DbContext(typeof(ComicShelfContext))]
-    partial class ComicShelfContextModelSnapshot : ModelSnapshot
+    [Migration("20231014172126_addOneShot")]
+    partial class addOneShot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

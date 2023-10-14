@@ -33,10 +33,10 @@ namespace ComicShelf.Pages.Volumes
             _localizer = localizer;
             _enumUtilities = enumUtilities;
 
-            Statuses.AddRange(_enumUtilities.GetStatusSelectItemList());
-            PurchaseStatuses.AddRange(_enumUtilities.GetPurchaseStatusSelectItemList());
+            Statuses.AddRange(_enumUtilities.GetSelectItemList<Status>());
+            PurchaseStatuses.AddRange(_enumUtilities.GetSelectItemList<PurchaseStatus>());
             Ratings.AddRange(_enumUtilities.GetRatings());
-            Digitalities.AddRange(_enumUtilities.GetDigitalitySelectItemList());
+            Digitalities.AddRange(_enumUtilities.GetSelectItemList<VolumeType>());
 
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
@@ -148,9 +148,9 @@ namespace ComicShelf.Pages.Volumes
 
             var resultVD = new ViewDataDictionary<Volume>(ViewData, volume);
             resultVD["PurchaseStatuses"] = _enumUtilities.GetPurchaseStatusesSelectItemList(volume.PurchaseStatus);
-            resultVD["ReadingStatuses"] = _enumUtilities.GetStatusSelectItemList();
+            resultVD["ReadingStatuses"] = _enumUtilities.GetSelectItemList<Status>();
             resultVD["Ratings"] = _enumUtilities.GetRatings();
-            resultVD["Digitality"] = _enumUtilities.GetDigitalitySelectItemList();
+            resultVD["Digitality"] = _enumUtilities.GetSelectItemList<VolumeType>();
             return new PartialViewResult()
             {
                 ViewName = "_VolumePartial",
@@ -186,7 +186,7 @@ namespace ComicShelf.Pages.Volumes
 
             _volumeService.Add(NewVolume);
 
-            Volumes = _volumeService.Filter(new BookshelfParams());
+            Volumes = _volumeService.Filter(FromCookies());
             return Partial("_ShelfPartial", Volumes);
         }
 

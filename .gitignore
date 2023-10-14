@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /ComicShelf/Properties/connectionString.json
 /ComicShelf/wwwroot/images/Series/
 /ComicShelf/Properties/PublishProfiles/deployOnSynyak.sh
+/ComicShelf/connectionString.json

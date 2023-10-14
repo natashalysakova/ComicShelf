@@ -28,9 +28,11 @@ html {
 
 
 body {
-    background-image: url(/images/static/00001-2935888061.png);
+/*    background-image: url(/images/static/00001-2935888061.png);
     background-attachment: fixed;
     background-size: auto;
+    background-blend-mode:darken;*/
+    background-color: pink;
     padding-right: 0px !important;
     margin-right: 0px !important;
     min-height: 100%;
