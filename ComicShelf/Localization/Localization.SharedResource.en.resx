@@ -138,7 +138,7 @@
   <data name="ByPurchaseDate" xml:space="preserve">
     <value>By purchase date</value>
   </data>
-  <data name="ByTitle" xml:space="preserve">
+  <data name="BySeriesTitle" xml:space="preserve">
     <value>By title</value>
   </data>
   <data name="Clear" xml:space="preserve">
@@ -296,5 +296,11 @@
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset filters</value>
+  </data>
+  <data name="SingleVolume" xml:space="preserve">
+    <value>One Shot</value>
+  </data>
+  <data name="SingleVolumeHint" xml:space="preserve">
+    <value>Select this if volume is finished story</value>
   </data>
 </root>

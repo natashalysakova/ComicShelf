@@ -26,6 +26,7 @@ namespace ComicShelf.ViewModels
         public string[] Authors { get; set; }
         public int Issues { get; set; }
         public VolumeType Digitality { get; set; }
+        public bool SingleVolume { get; set; }
 
     }
 }

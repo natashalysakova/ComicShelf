@@ -30,8 +30,8 @@ namespace ComicShelf.Pages.Volumes
             _localizer = localizer;
             _enumUtilities = enumUtilities;
 
-            Statuses.AddRange(_enumUtilities.GetStatusSelectItemList());
-            PurchaseStatuses.AddRange(_enumUtilities.GetPurchaseStatusSelectItemList());
+            Statuses.AddRange(_enumUtilities.GetSelectItemList<Status>());
+            PurchaseStatuses.AddRange(_enumUtilities.GetSelectItemList<PurchaseStatus>());
             Ratings.AddRange(_enumUtilities.GetRatingsSelectItemList());
 
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));

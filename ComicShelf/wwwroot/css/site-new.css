@@ -21,9 +21,13 @@
 }
 
 body {
-  background-image: url(/images/static/00001-2935888061.png);
+  background-size: 100% 100%;
+  background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+  background-image: radial-gradient(18% 28% at 34% 41%, rgba(253, 253, 113, 0.2117647059) 7%, rgba(7, 58, 255, 0) 100%), radial-gradient(18% 28% at 26% 69%, rgba(127, 89, 131, 0.3490196078) 6%, rgba(7, 58, 255, 0) 100%), radial-gradient(70% 53% at 36% 76%, #102c36 0%, rgba(7, 58, 255, 0) 100%), radial-gradient(42% 53% at 15% 94%, #050101 7%, rgba(7, 58, 255, 0) 100%), radial-gradient(42% 53% at 34% 72%, #06041d 7%, rgba(7, 58, 255, 0) 100%), radial-gradient(18% 28% at 35% 87%, #1ed879 7%, rgba(7, 58, 255, 0) 100%), radial-gradient(31% 43% at 7% 98%, #611717 24%, rgba(7, 58, 255, 0) 100%), radial-gradient(21% 37% at 72% 23%, rgba(255, 191, 109, 0.4392156863) 24%, rgba(7, 58, 255, 0) 100%), radial-gradient(35% 56% at 91% 74%, rgba(8, 1, 20, 0.9607843137) 0%, rgba(7, 58, 255, 0) 100%), radial-gradient(74% 86% at 67% 38%, rgba(109, 245, 255, 0.6509803922) 24%, rgba(7, 58, 255, 0) 100%), linear-gradient(125deg, #000812 1%, #020d0f 100%);
   background-attachment: fixed;
-  background-size: auto;
+  /*    background-size: auto;
+      background-blend-mode: color;
+  */
   padding-right: 0px !important;
   margin-right: 0px !important;
   min-height: 100%;
@@ -41,6 +45,7 @@ body .modal-open {
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 20px;
+  min-height: 100vh;
 }
 
 .update-on-status-change {
@@ -68,7 +73,7 @@ body .modal-open {
   height: 280px;
   background-color: rgba(45, 81, 78, 0.8392156863);
   border: 1px solid #495057;
-  border-radius: 10px;
+  border-radius: 0.5rem;
   display: flex;
   text-align: center;
   cursor: pointer;
@@ -113,15 +118,14 @@ body .modal-open {
   height: 100%;
   object-fit: cover;
   background-color: white;
-  border-radius: 10px;
+  border-radius: 0.5rem;
 }
 
 .book-header {
   position: absolute;
-  width: 100%;
+  width: calc(100% - 10px);
   height: 65px;
-  bottom: 10%;
-  margin: -5px;
+  bottom: 5%;
 }
 
 .book-title {
@@ -195,6 +199,7 @@ body .modal-open {
   height: 400px;
   width: 100%;
   object-fit: cover;
+  border-radius: 0.5rem;
 }
 
 .star {

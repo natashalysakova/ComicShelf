@@ -156,6 +156,7 @@ function changeStatusSuccess(e) {
             // Remove the "text-success" class after a delay
             setTimeout(function () {
                 element.classList.remove('text-success');
+                $('#detailModal').modal('hide');
             }, 1000);
         });
 
@@ -190,20 +191,24 @@ function createComplete(xnr) {
     if (xnr.status == 200) {
         $('#createAlert').hide();
 
-        resetPreview();
-      
+        resetPreview("new-volume-cover");
+
 
         if (document.getElementById("add-more").checked) {
             $('#NewVolume_Number').val(parseInt($('#NewVolume_Number').val()) + 1).trigger('change');
             document.getElementById('NewVolume_CoverFile').value = "";
+            $('input[name="NewVolume.Rating"]').prop('checked', false);
         }
         else {           
             document.getElementById("create-form").reset();
+            resetValidation();
+            resetPreview("new-volume-cover");
             $('#createModal').modal('hide')
         }
 
         var s = $('#shelves')
         s.html(xnr.responseText);
+
     }
     else {
         var al = $('#createAlert');
@@ -300,6 +305,14 @@ function newReadingStatusChanged() {
     }
 }
 
+function showNewPreview(event) {
+    if (event.target.files.length > 0) {
+        var src = URL.createObjectURL(event.target.files[0]);
+        var preview = document.getElementById("new-volume-cover");
+        preview.src = src;
+    }
+}
+
 function showPreview(event) {
     if (event.target.files.length > 0) {
         var src = URL.createObjectURL(event.target.files[0]);
@@ -308,6 +321,7 @@ function showPreview(event) {
     }
 }
 
-function resetPreview() {
-    document.getElementById("volume-cover").src = "images\\static\\no-cover.png";
+function resetPreview(previewId) {
+    document.getElementById(previewId).src = "images\\static\\no-cover.png";
+    
 }

@@ -97,11 +97,13 @@
     </header>
     <div class="container""> 
         <main role="main" class="pb-3">
-            @RenderBody()
+            <div id="main-container">
+                @RenderBody()
+            </div>
         </main>
     </div>
 
-    <footer class="border-top footer text-muted bg-body-secondary">
+    <footer class="footer text-muted">
         <div class="container">
             &copy; @DateTime.Today.Year - @Localizer["MainHeader"] - <a asp-area="" asp-page="/Privacy">@Localizer["Privacy"]</a>
         </div>

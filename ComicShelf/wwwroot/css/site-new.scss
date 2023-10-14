@@ -30,12 +30,18 @@ $myPrimaryColor: #ff6a00;
 
 
 body {
-    background-image: url(/images/static/00001-2935888061.png);
+    //background-image: url(/images/static/00001-2935888061.png);
+    background-size: 100% 100%;
+    background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
+    background-image: radial-gradient(18% 28% at 34% 41%, #FDFD7136 7%, #073AFF00 100%),radial-gradient(18% 28% at 26% 69%, #7F598359 6%, #073AFF00 100%),radial-gradient(70% 53% at 36% 76%, #102C36FF 0%, #073AFF00 100%),radial-gradient(42% 53% at 15% 94%, #050101FF 7%, #073AFF00 100%),radial-gradient(42% 53% at 34% 72%, #06041DFF 7%, #073AFF00 100%),radial-gradient(18% 28% at 35% 87%, #1ED879FF 7%, #073AFF00 100%),radial-gradient(31% 43% at 7% 98%, #611717FF 24%, #073AFF00 100%),radial-gradient(21% 37% at 72% 23%, #FFBF6D70 24%, #073AFF00 100%),radial-gradient(35% 56% at 91% 74%, #080114F5 0%, #073AFF00 100%),radial-gradient(74% 86% at 67% 38%, #6DF5FFA6 24%, #073AFF00 100%),linear-gradient(125deg, #000812FF 1%, #020D0FFF 100%);
+
     background-attachment: fixed;
-    background-size: auto;
-    padding-right: 0px !important;
+/*    background-size: auto;
+    background-blend-mode: color;
+*/    padding-right: 0px !important;
     margin-right: 0px !important;
     min-height: 100%;
+
 
     .modal-open {
         overflow: auto;
@@ -53,6 +59,7 @@ body {
     padding-left: $main-container-padding;
     padding-right: $main-container-padding;
     padding-bottom: $main-container-padding;
+    min-height: 100vh;
 }
 
 .update-on-status-change {
@@ -76,7 +83,7 @@ body {
 }
 
 
-$book-border-radius: 10px;
+$book-border-radius: 0.5rem;
 $book-margin: 10px;
 .book {
     position: sticky;
@@ -137,10 +144,9 @@ $book-margin: 10px;
 
 .book-header {
     position: absolute;
-    width: 100%;
+    width: calc(100% - $book-margin);
     height: 65px;
-    bottom: 10%;
-    margin: -($book-margin/2);
+    bottom: 5%;
 }
 
 .book-title {
@@ -217,6 +223,7 @@ $badge-date-color: dodgerblue;
     height: 400px;
     width: 100%;
     object-fit: cover;
+    border-radius: $book-border-radius;
 }
 
 

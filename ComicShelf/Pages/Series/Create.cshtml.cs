@@ -32,7 +32,7 @@ namespace ComicShelf.Pages.SeriesNs
 
             AvailablePublishers = publishersController.GetAll().OrderBy(x => x.Name).Select(x => new SelectListItem(x.Name, x.Id.ToString()));
 
-            Types.AddRange(_utilities.GetTypesSelectItemList());   
+            Types.AddRange(_utilities.GetSelectItemList<Models.Enums.Type>());   
         }
 
         public IActionResult OnGet()

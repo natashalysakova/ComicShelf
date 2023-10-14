@@ -1,80 +1,102 @@
 ﻿@page
+@using ComicShelf.Localization;
+@using Microsoft.AspNetCore.Mvc.Localization;
 @model ComicShelf.Pages.SeriesNs.IndexModel
+@inject IHtmlLocalizer<SharedResource> Localizer
 
 @{
     ViewData["Title"] = "Series";
 }
 
-<h1>Series</h1>
-
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-@*<table class="table table-striped table-dark table-hover">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Series[0].Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Series[0].OriginalName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Series[0].Ongoing)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Series[0].Publishers)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Series[0].Type)
-            </th>
-            <th>
-                @Html.DisplayName("My info")
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Series)
-        {
+<h1>@Localizer["Series"]</h1>
+<div class="row">
+    <table class="table table-hover">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OriginalName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ongoing)
-                </td>
-                <td>
-                    @(string.Join(", ", item.Publishers.Select(x => $"{x.Country.Flag} {x.Name}")))
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Type)
-                </td>
-                <td>
-                    @{
-                        var total = item.Ongoing ? "?" : item.TotalIssues.ToString();
-                        var expr = $"{item.HasIssues}/{total}";
-                    }
-                    @Html.Raw(expr)
-                    @if (item.Completed)
-                    {
-                        @Html.Raw("✔️")
-                    }
-                </td>
-
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                                        <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                <th scope="col">
+                    @Localizer["Name"]
+                </th>
+                <th scope="col">
+                    @Localizer["Type"]
+                </th>
+                <th scope="col">
+                    @Localizer["Volumes"] / @Localizer["TotalVolumes"]
+                </th>
+                <th scope="col">
+                    @Localizer["Ongoing"]
+                </th>
+                <th scope="col">
+                    @Localizer["Publisher"]
+                </th>
+                <th scope="col">
+                    @Localizer["Color"]
+                </th>
+                <th scope="col"></th>
             </tr>
-        }
-    </tbody>
-</table>*@
+        </thead>
+        <tbody>
+            @foreach (var series in Model.Series)
+            {
+                @*            <tr>
+            <td>
+            @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Roles)
+            </td>
+            <td>
+            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+            </tr>*@
+                <form data-ajax="true" method="post" data-ajax-method="post" asp-page-handler="Update">
+                <tr>
+                    <input asp-for="@series.Id" hidden />
+                    <td>
+                        <div class="input-group mb-1">
+                            <span class="input-group-text">@Localizer["Name"]</span>
+                            <input type="text" asp-for="@series.Name" class="form-control" />
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">@Localizer["OriginalName"]</span>
+                            <input type="text" asp-for="@series.OriginalName" class="form-control">
+                        </div>
+                    </td>
+                    <td><select asp-items="(IEnumerable<SelectListItem>)@ViewData["Types"]" class="form-select" asp-for="@series.Type"></select></td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" asp-for="@series.Volumes.Count" readonly class="form-control" />
+                            <span class="input-group-text">/</span>
+                            <input type="text" asp-for="@series.TotalVolumes" class="form-control" />
 
+                        </div>
+                    </td>
+                    <td>
+                        <input type="checkbox" asp-for="@series.Ongoing" class="form-check"/>
+                    </td>
+                    <td>
+                        <select class="form-select" asp-for="@series.Publishers" multiple asp-items="@Model.Publishers" autocomplete="off"></select>
+
+                    </td>
+                    <td>
+                        <input type="color" asp-for="@series.Color" class="form-control-color"/>
+                    </td>
+                    <td><button type="submit" class="btn btn-secondary btn-success">@Localizer["Update"]</button></td>
+
+                </tr>
+                </form>
+
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+@*
 <div class="row">
     @foreach (var item in Model.Series)
     {
@@ -110,9 +132,9 @@
                 }
                 <img src="~/@url" class="card-img-top" alt="..." height="400px">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">                        
+                    <li class="list-group-item">
                         @{
-                            
+
                         }
                     </li>
                     <li class="list-group-item">
@@ -172,4 +194,4 @@
             </a>
         </li>
     </ul>
-</nav>
+</nav>*@

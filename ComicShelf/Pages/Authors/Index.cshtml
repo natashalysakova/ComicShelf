@@ -1,43 +1,57 @@
 ﻿@page
+@using ComicShelf.Localization;
+@using Microsoft.AspNetCore.Mvc.Localization;
 @model ComicShelf.Pages.Authors.IndexModel
+@inject IHtmlLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = Localizer["Authors"];
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Author[0].Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author[0].Roles)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Author)
-        {
+
+<h1>@Localizer["Authors"]</h1>
+<div class="row">
+    <table class="table table-hover">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Roles)
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                <th scope="col">
+                    @Localizer["Name"]
+                </th>
+                <th scope="col">
+                    @Localizer["Role"]
+                </th>
+                <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var author in Model.Author)
+            {
+                @*            <tr>
+            <td>
+            @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Roles)
+            </td>
+            <td>
+            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+            </tr>*@
+                <form data-ajax="true" method="post" data-ajax-method="post" asp-page-handler="Update">
+                <tr>
+                    <input asp-for="@author.Id" hidden />
+                    <td><input type="text" asp-for="@author.Name" class="form-control" /></td>
+                    <td><select asp-items="(IEnumerable<SelectListItem>)@ViewData["AvailableRoles"]" class="form-select" asp-for="@author.Roles"></select></td>
+                    <td><button type="submit" class="btn btn-secondary btn-success">@Localizer["Update"]</button></td>
+                    <td><span>@string.Join(", ", author.Volumes.Select(x=>x.Series.Name).Distinct())</span></td>
+                </tr>
+                </form>
+
+            }
+        </tbody>
+    </table>
+</div>

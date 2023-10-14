@@ -138,7 +138,7 @@
   <data name="ByPurchaseDate" xml:space="preserve">
     <value>За датою покупки</value>
   </data>
-  <data name="ByTitle" xml:space="preserve">
+  <data name="BySeriesTitle" xml:space="preserve">
     <value>За назвою</value>
   </data>
   <data name="Clear" xml:space="preserve">
@@ -296,5 +296,11 @@
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Скинути фільтри</value>
+  </data>
+  <data name="SingleVolume" xml:space="preserve">
+    <value>Ваншот</value>
+  </data>
+  <data name="SingleVolumeHint" xml:space="preserve">
+    <value>Оберіть це, якщо том є закінченою історією</value>
   </data>
 </root>
