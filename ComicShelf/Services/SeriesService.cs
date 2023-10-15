@@ -19,10 +19,14 @@ namespace ComicShelf.Services
             _countryService = countryService;
         }
 
+        public override IQueryable<Series> GetAll()
+        {
+            return base.GetAll().Include(x=>x.Volumes).Include(x=>x.Publisher);
+        }
 
         public Series? GetWithPublishers(int? id)
         {
-            return dbSet.Include(x => x.Publishers).SingleOrDefault(x => x.Id == id);
+            return dbSet.Include(x => x.Publisher).SingleOrDefault(x => x.Id == id);
         }
 
         public override void Add(Series item)
@@ -31,32 +35,15 @@ namespace ComicShelf.Services
             var complementary = ColorUtility.GetOppositeColor(color);
             item.Color = ColorUtility.HexConverter(color);
             item.ComplimentColor = ColorUtility.HexConverter(complementary);
-
+            if (item.Publisher == null)
+            {
+                item.Publisher = _publishersService.GetByName("Unknown");
+            }
             base.Add(item);
         }
 
         public void Add(SeriesModel model)
         {
-            var splited = model.Publishers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            List<Publisher> publisherList = new List<Publisher>();
-            foreach (var item in splited)
-            {
-                var trimmedItem = item.Trim();
-                if (string.IsNullOrEmpty(trimmedItem))
-                {
-                    continue;
-                }
-
-                var publisher = _publishersService.GetByName(trimmedItem);
-                if (publisher == null)
-                {
-                    publisher = new Publisher() { Country = _countryService.UnknownCountry, Name = trimmedItem };
-                    _publishersService.Add(publisher);
-                }
-
-                publisherList.Add(publisher);
-            }
-
             var color = ColorUtility.GetRandomColor(minSaturation: 50, minValue: 50);
             var complementary = ColorUtility.GetOppositeColor(color);
 
@@ -67,7 +54,7 @@ namespace ComicShelf.Services
                 Type = model.Type,
                 Id = model.Id,
                 Ongoing = model.Ongoing,
-                Publishers = publisherList,
+                Publisher = _publishersService.Get(model.Publisher),
                 Completed = model.Completed,
                 TotalVolumes = model.TotalVolumes.HasValue ? model.TotalVolumes.Value : 0,
                 Color = ColorUtility.HexConverter(color),
@@ -79,7 +66,7 @@ namespace ComicShelf.Services
 
         public void Update(SeriesModel model)
         {
-            var original = dbSet.Include(x => x.Publishers).Single(x => x.Id == model.Id);
+            var original = dbSet.Include(x => x.Publisher).Single(x => x.Id == model.Id);
 
             original.Name = model.Name;
             original.OriginalName = model.OriginalName;
@@ -88,25 +75,35 @@ namespace ComicShelf.Services
             original.Ongoing = model.Ongoing;
             original.Completed = model.Completed;
             original.TotalVolumes = model.TotalVolumes.HasValue ? model.TotalVolumes.Value : 0;
-            original.Publishers.Clear();
+            original.Publisher = _publishersService.Get(model.Publisher);
+            original.Color = model.Color;
 
-            var splited = model.Publishers.Split(',');
-            foreach (var item in splited.Distinct())
-            {
-                var trimmedItem = item.Trim();
+            LoadCollection(original, x => x.Volumes);
 
-                if (string.IsNullOrEmpty(trimmedItem))
-                    continue;
+            if (original.Volumes.Count == original.TotalVolumes)
+                original.Completed = true;
+            else
+                original.Completed = false;
 
-                var publisher = _publishersService.GetByName(trimmedItem);
-                if (publisher == null)
-                {
-                    publisher = new Models.Publisher() { Country = _countryService.UnknownCountry, Name = trimmedItem };
-                    _publishersService.Add(publisher);
-                }
+            //original.Publishers.Clear();
 
-                original.Publishers.Add(publisher);
-            }
+            //var splited = model.Publishers.Split(',');
+            //foreach (var item in splited.Distinct())
+            //{
+            //    var trimmedItem = item.Trim();
+
+            //    if (string.IsNullOrEmpty(trimmedItem))
+            //        continue;
+
+            //    var publisher = _publishersService.GetByName(trimmedItem);
+            //    if (publisher == null)
+            //    {
+            //        publisher = new Models.Publisher() { Country = _countryService.UnknownCountry, Name = trimmedItem };
+            //        _publishersService.Add(publisher);
+            //    }
+
+            //    original.Publishers.Add(publisher);
+            //}
 
             this.Update(original);
         }
@@ -120,7 +117,7 @@ namespace ComicShelf.Services
         {
             StringBuilder builder = new StringBuilder();
 
-            if (dbSet.Any(x => !x.Publishers.Any()
+            if (dbSet.Any(x => x.Publisher.Id == 0 
             || !x.Volumes.Any()
             || (!x.Ongoing && x.TotalVolumes == 0)))
             {

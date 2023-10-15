@@ -229,7 +229,7 @@
     <value>Положення про приватність</value>
   </data>
   <data name="Publishers" xml:space="preserve">
-    <value>Видавці</value>
+    <value>Видавництва</value>
   </data>
   <data name="PurchaseDate" xml:space="preserve">
     <value>Дата покупки</value>
@@ -302,5 +302,8 @@
   </data>
   <data name="SingleVolumeHint" xml:space="preserve">
     <value>Оберіть це, якщо том є закінченою історією</value>
+  </data>
+  <data name="Publisher" xml:space="preserve">
+    <value>Видавництво</value>
   </data>
 </root>

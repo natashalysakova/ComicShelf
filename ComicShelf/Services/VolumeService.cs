@@ -19,6 +19,7 @@ namespace ComicShelf.Services
     {
         private readonly SeriesService _seriesService;
         private readonly AuthorsService _authorService;
+        private readonly PublishersService _publishersService;
 
         public VolumeService(ComicShelfContext context, SeriesService seriesService, AuthorsService authorService) : base(context)
         {
@@ -236,7 +237,7 @@ namespace ComicShelf.Services
                     x.Series.Name.ToLower().Contains(param.search) ||
                     x.Series.OriginalName.ToLower().Contains(param.search) ||
                     x.Authors.Any(y => y.Name.ToLower().Contains(param.search)) ||
-                    x.Series.Publishers.Any(y => y.Name.ToLower().Contains(param.search))
+                    x.Series.Publisher.Name.ToLower().Contains(param.search)
                 );
             }
 
@@ -267,7 +268,7 @@ namespace ComicShelf.Services
             switch (param.sort)
             {
                 case SortEnum.BySeriesTitle:
-                    filterd = filterd.OrderByDescending(x => x.Series.Name).ThenBy(x => x.Number);
+                    filterd = filterd.OrderByDescending(x => x.Series.Name).ThenByDescending(x => x.Number);
                     break;
                 case SortEnum.ByPurchaseDate:
                     filterd = filterd.OrderBy(x => x.PurchaseDate).ThenBy(x => x.Series.Name).ThenBy(x => x.Number);

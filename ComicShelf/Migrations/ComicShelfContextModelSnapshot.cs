@@ -31,7 +31,7 @@ namespace ComicShelf.Migrations
 
                     b.HasIndex("VolumesId");
 
-                    b.ToTable("AuthorVolume");
+                    b.ToTable("AuthorVolume", (string)null);
                 });
 
             modelBuilder.Entity("ComicShelf.Models.Author", b =>
@@ -108,7 +108,7 @@ namespace ComicShelf.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("CountryId")
+                    b.Property<int>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -147,6 +147,9 @@ namespace ComicShelf.Migrations
                     b.Property<string>("OriginalName")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("PublisherId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TotalVolumes")
                         .HasColumnType("int");
 
@@ -154,6 +157,8 @@ namespace ComicShelf.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PublisherId");
 
                     b.ToTable("Series", (string)null);
                 });
@@ -212,21 +217,6 @@ namespace ComicShelf.Migrations
                     b.ToTable("Volume", (string)null);
                 });
 
-            modelBuilder.Entity("PublisherSeries", b =>
-                {
-                    b.Property<int>("PublishersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SeriesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PublishersId", "SeriesId");
-
-                    b.HasIndex("SeriesId");
-
-                    b.ToTable("PublisherSeries");
-                });
-
             modelBuilder.Entity("AuthorVolume", b =>
                 {
                     b.HasOne("ComicShelf.Models.Author", null)
@@ -257,9 +247,22 @@ namespace ComicShelf.Migrations
                 {
                     b.HasOne("ComicShelf.Models.Country", "Country")
                         .WithMany("Publishers")
-                        .HasForeignKey("CountryId");
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("ComicShelf.Models.Series", b =>
+                {
+                    b.HasOne("ComicShelf.Models.Publisher", "Publisher")
+                        .WithMany("Series")
+                        .HasForeignKey("PublisherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Publisher");
                 });
 
             modelBuilder.Entity("ComicShelf.Models.Volume", b =>
@@ -273,24 +276,14 @@ namespace ComicShelf.Migrations
                     b.Navigation("Series");
                 });
 
-            modelBuilder.Entity("PublisherSeries", b =>
-                {
-                    b.HasOne("ComicShelf.Models.Publisher", null)
-                        .WithMany()
-                        .HasForeignKey("PublishersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComicShelf.Models.Series", null)
-                        .WithMany()
-                        .HasForeignKey("SeriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ComicShelf.Models.Country", b =>
                 {
                     b.Navigation("Publishers");
+                });
+
+            modelBuilder.Entity("ComicShelf.Models.Publisher", b =>
+                {
+                    b.Navigation("Series");
                 });
 
             modelBuilder.Entity("ComicShelf.Models.Series", b =>

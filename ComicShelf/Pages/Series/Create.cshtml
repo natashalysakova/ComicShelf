@@ -24,12 +24,12 @@
                 <span asp-validation-for="Series.OriginalName" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Series.Publishers" class="form-control" type="text" placeholder="Input your keyword" />
-                <label asp-for="Series.Publishers" class="control-label"></label>
+                <input asp-for="Series.Publisher" class="form-control" type="text" placeholder="Input your keyword" />
+                <label asp-for="Series.Publisher" class="control-label"></label>
                 <div class="form-text">
                     Each publisher must be separated by coma (,)
                 </div>
-                <span asp-validation-for="Series.Publishers" class="text-danger"></span>
+                <span asp-validation-for="Series.Publisher" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <select asp-for="Series.Type" class="form-select" asp-items="@Model.Types"></select>

@@ -28,7 +28,7 @@ namespace ComicShelf.Pages.Authors
         public async Task OnGetAsync()
         {
             ViewData["AvailableRoles"] = _enumUtilities.GetSelectItemList<Roles>();
-            Author = _service.GetAll().Include(x=>x.Volumes).Include("Volumes.Series").OrderBy(x => x.Name).ToList(); ;
+            Author = _service.GetAll().Include(x=>x.Volumes).ThenInclude(x=>x.Series).OrderBy(x => x.Name).ToList(); ;
         }
 
         public async Task<IActionResult> OnPostUpdate(Author author)
@@ -38,7 +38,7 @@ namespace ComicShelf.Pages.Authors
                 return NotFound(author);
             }
 
-            //_service.Update(author);
+            _service.Update(author);
 
             return StatusCode(200);
         }

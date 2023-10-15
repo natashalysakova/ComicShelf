@@ -107,18 +107,21 @@
 
 
 
-<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content" id="detail-modal-content">
-        </div>
-    </div>
-</div>
 
-<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <partial name="CreatePartial" />
-</div>
 
 @section Scripts {
+
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" id="detail-modal-content">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <partial name="CreatePartial" />
+    </div>
+
     <script src="~/js/Volume.js"></script>
     <script>
         completed = (res) => {

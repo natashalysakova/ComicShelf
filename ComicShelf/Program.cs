@@ -156,7 +156,7 @@ internal class Program
                 var dbInitializer = new DbInitializer(context);
 
                 dbInitializer.Initialize();
-                dbInitializer.RestoreImagesFromDB();
+                //dbInitializer.RestoreImagesFromDB();
                 dbInitializer.FillFlags();
                 dbInitializer.FillColors();
             }
@@ -164,6 +164,7 @@ internal class Program
             {
                 var logger = services.GetRequiredService<ILogger<Program>>();
                 logger.LogError(ex, "An error occurred creating the DB.");
+                throw;
             }
         }
 

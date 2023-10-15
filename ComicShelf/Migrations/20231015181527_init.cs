@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ComicShelf.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +53,28 @@ namespace ComicShelf.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Publisher",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CountryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Publisher", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Publisher_Country_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Country",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Series",
                 columns: table => new
                 {
@@ -64,38 +86,23 @@ namespace ComicShelf.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Ongoing = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    TotalIssues = table.Column<int>(type: "int", nullable: false),
-                    HasIssues = table.Column<int>(type: "int", nullable: false),
+                    TotalVolumes = table.Column<int>(type: "int", nullable: false),
                     Completed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Color = table.Column<string>(type: "longtext", nullable: false)
+                    Color = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ComplimentColor = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    ComplimentColor = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PublisherId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Series", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Publisher",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CountryId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Publisher", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Publisher_Country_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Country",
-                        principalColumn: "Id");
+                        name: "FK_Series_Publisher_PublisherId",
+                        column: x => x.PublisherId,
+                        principalTable: "Publisher",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -109,45 +116,23 @@ namespace ComicShelf.Migrations
                     Title = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    Raiting = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
                     PurchaseStatus = table.Column<int>(type: "int", nullable: false),
-                    PurchaseDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Digitality = table.Column<int>(type: "int", nullable: false),
+                    PurchaseDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CoverUrl = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    SeriesId = table.Column<int>(type: "int", nullable: false),
-                    CoverId = table.Column<int>(type: "int", nullable: false)
+                    ModificationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ReleaseDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    OneShot = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    SeriesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Volume", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Volume_Series_SeriesId",
-                        column: x => x.SeriesId,
-                        principalTable: "Series",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "PublisherSeries",
-                columns: table => new
-                {
-                    PublishersId = table.Column<int>(type: "int", nullable: false),
-                    SeriesId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PublisherSeries", x => new { x.PublishersId, x.SeriesId });
-                    table.ForeignKey(
-                        name: "FK_PublisherSeries_Publisher_PublishersId",
-                        column: x => x.PublishersId,
-                        principalTable: "Publisher",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PublisherSeries_Series_SeriesId",
                         column: x => x.SeriesId,
                         principalTable: "Series",
                         principalColumn: "Id",
@@ -203,27 +188,6 @@ namespace ComicShelf.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "VolumeCovers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Cover = table.Column<byte[]>(type: "longblob", nullable: false),
-                    Extention = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VolumeCovers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_VolumeCovers_Volume_Id",
-                        column: x => x.Id,
-                        principalTable: "Volume",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
             migrationBuilder.CreateIndex(
                 name: "IX_AuthorVolume_VolumesId",
                 table: "AuthorVolume",
@@ -240,9 +204,9 @@ namespace ComicShelf.Migrations
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PublisherSeries_SeriesId",
-                table: "PublisherSeries",
-                column: "SeriesId");
+                name: "IX_Series_PublisherId",
+                table: "Series",
+                column: "PublisherId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Volume_SeriesId",
@@ -260,25 +224,19 @@ namespace ComicShelf.Migrations
                 name: "Issue");
 
             migrationBuilder.DropTable(
-                name: "PublisherSeries");
-
-            migrationBuilder.DropTable(
-                name: "VolumeCovers");
-
-            migrationBuilder.DropTable(
                 name: "Author");
-
-            migrationBuilder.DropTable(
-                name: "Publisher");
 
             migrationBuilder.DropTable(
                 name: "Volume");
 
             migrationBuilder.DropTable(
-                name: "Country");
+                name: "Series");
 
             migrationBuilder.DropTable(
-                name: "Series");
+                name: "Publisher");
+
+            migrationBuilder.DropTable(
+                name: "Country");
         }
     }
 }

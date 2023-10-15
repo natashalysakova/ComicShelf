@@ -53,3 +53,18 @@ $(function () {
 
 
 })
+
+
+function changeSeriesComplete(e) {
+
+    if (e.status == 200) {
+        console.log(e)
+    }
+    else {
+        console.log(e)
+    }
+}
+
+function OngoingChanged(cb) {
+    console.log(cb);
+}
