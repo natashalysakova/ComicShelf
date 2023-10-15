@@ -10,6 +10,7 @@ html {
     margin: 0;
     padding: 0;
 }
+
 @media (min-width: 768px) {
     html {
         font-size: 16px;
@@ -18,6 +19,7 @@ html {
 
 
 $myPrimaryColor: #ff6a00;
+
 .Production {
     background-color: $green-500;
 }
@@ -33,14 +35,22 @@ body {
     //background-image: url(/images/static/00001-2935888061.png);
     background-size: 100% 100%;
     background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
-    background-image: radial-gradient(18% 28% at 34% 41%, #FDFD7136 7%, #073AFF00 100%),radial-gradient(18% 28% at 26% 69%, #7F598359 6%, #073AFF00 100%),radial-gradient(70% 53% at 36% 76%, #102C36FF 0%, #073AFF00 100%),radial-gradient(42% 53% at 15% 94%, #050101FF 7%, #073AFF00 100%),radial-gradient(42% 53% at 34% 72%, #06041DFF 7%, #073AFF00 100%),radial-gradient(18% 28% at 35% 87%, #1ED879FF 7%, #073AFF00 100%),radial-gradient(31% 43% at 7% 98%, #611717FF 24%, #073AFF00 100%),radial-gradient(21% 37% at 72% 23%, #FFBF6D70 24%, #073AFF00 100%),radial-gradient(35% 56% at 91% 74%, #080114F5 0%, #073AFF00 100%),radial-gradient(74% 86% at 67% 38%, #6DF5FFA6 24%, #073AFF00 100%),linear-gradient(125deg, #000812FF 1%, #020D0FFF 100%);
-
+    background-image: radial-gradient(18% 28% at 34% 41%, #FDFD7136 7%, #073AFF00 100%),
+        radial-gradient(18% 28% at 26% 69%, #7F598359 6%, #073AFF00 100%),
+        radial-gradient(70% 53% at 36% 76%, #102C36FF 0%, #073AFF00 100%),
+        radial-gradient(42% 53% at 15% 94%, #050101FF 7%, #073AFF00 100%),
+        radial-gradient(42% 53% at 34% 72%, #06041DFF 7%, #073AFF00 100%),
+        radial-gradient(18% 28% at 35% 87%, #1ED879FF 7%, #073AFF00 100%),
+        radial-gradient(31% 43% at 7% 98%, #611717FF 24%, #073AFF00 100%),
+        radial-gradient(21% 37% at 72% 23%, #041e439d 24%, #073AFF00 100%),
+        radial-gradient(35% 56% at 91% 74%, #080114F5 0%, #073AFF00 100%),
+        radial-gradient(74% 86% at 67% 38%, #6DF5FFA6 24%, #073AFF00 100%),
+        linear-gradient(125deg, #000812FF 1%, #020D0FFF 100%);
     background-attachment: fixed;
-/*    background-size: auto;
+    /*    background-size: auto;
     background-blend-mode: color;
-*/    padding-right: 0px !important;
+*/ padding-right: 0px !important;
     margin-right: 0px !important;
-    min-height: 100%;
 
 
     .modal-open {
@@ -59,7 +69,7 @@ body {
     padding-left: $main-container-padding;
     padding-right: $main-container-padding;
     padding-bottom: $main-container-padding;
-    min-height: 100vh;
+    min-height: 90vh;
 }
 
 .update-on-status-change {
@@ -85,6 +95,7 @@ body {
 
 $book-border-radius: 0.5rem;
 $book-margin: 10px;
+
 .book {
     position: sticky;
     width: 190px;
@@ -99,9 +110,8 @@ $book-margin: 10px;
     padding: 5px;
     overflow: hidden;
     margin: $book-margin;
-
-    
 }
+
 .book:hover {
     transition: 0.2s ease-in;
     transform: scale(1.235);
@@ -243,6 +253,7 @@ $badge-date-color: dodgerblue;
     z-index: 2 !important;
     transform: rotate(20deg);
 }
+
 .number {
     position: relative;
     z-index: 1 !important;
@@ -251,7 +262,7 @@ $badge-date-color: dodgerblue;
     text-decoration: blink;
 }
 
-.filter-header{
+.filter-header {
     font-size: 24px;
     font-weight: 500;
     color: $orange-500;
@@ -263,6 +274,19 @@ $badge-date-color: dodgerblue;
     }
 }
 
-.single-button{
+.single-button {
     margin: 0;
+}
+
+.custom-table {
+    background-color: transparent;
+
+    form > .row {
+        padding: 10px;
+        border-bottom: 1px solid $border-color-dark;
+    }
+
+    form > .row:hover {
+        background-color: $orange-500;
+    }
 }

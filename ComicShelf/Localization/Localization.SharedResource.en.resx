@@ -303,4 +303,7 @@
   <data name="SingleVolumeHint" xml:space="preserve">
     <value>Select this if volume is finished story</value>
   </data>
+  <data name="Publisher" xml:space="preserve">
+    <value>Publisher</value>
+  </data>
 </root>

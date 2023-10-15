@@ -10,6 +10,8 @@ namespace ComicShelf.Models
 
         [Required]
         public string Name { get; set; }
+
+        public int CountryId { get; set; }
         public virtual Country? Country { get; set; }
         public virtual ICollection<Series> Series { get; set; } = new List<Series>();
 

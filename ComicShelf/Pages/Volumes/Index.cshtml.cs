@@ -19,17 +19,24 @@ using ComicShelf.Localization;
 using ComicShelf.Utilities;
 using ComicShelf.ViewModels;
 using Newtonsoft.Json;
+using ComicShelf.Pages.Publishers;
 
 namespace ComicShelf.Pages.Volumes
 {
     public class IndexModel : PageModel
     {
         private readonly VolumeService _volumeService;
+        private readonly SeriesService _seriesService;
+        private readonly CountryService _countryService;
+        private readonly PublishersService _publishersService;
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly EnumUtilities _enumUtilities;
-        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer, EnumUtilities enumUtilities)
+        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, CountryService countryService, PublishersService publishersService, IStringLocalizer<SharedResource> localizer, EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
+            _seriesService = seriesService;
+            _countryService = countryService;
+            _publishersService = publishersService;
             _localizer = localizer;
             _enumUtilities = enumUtilities;
 
@@ -94,28 +101,6 @@ namespace ComicShelf.Pages.Volumes
 
         internal BookshelfParams FromCookies()
         {
-            //if (Enum.TryParse(Request.Cookies[nameof(filters.sort)], out SortEnum sort))
-            //{
-            //    filters.sort = sort;
-            //}
-
-            //if (Enum.TryParse(Request.Cookies[nameof(filters.digitality)], out DigitalityEnum digitality))
-            //{
-            //    filters.digitality = digitality;
-            //}
-            //if (Enum.TryParse(Request.Cookies[nameof(filters.filter)], out PurchaseFilterEnum purchaseFilter))
-            //{
-            //    filters.filter = purchaseFilter;
-
-            //}
-            //if (Enum.TryParse(Request.Cookies[nameof(filters.direction)], out DirectionEnum direction))
-            //{
-            //    filters.direction = direction;
-            //}
-            //if (Enum.TryParse(Request.Cookies[nameof(filters.reading)], out ReadingEnum reading))
-            //{
-            //    filters.reading = reading;
-            //}
             var cookie = Request.Cookies["filters"];
             if(cookie != null)
             {
@@ -131,12 +116,6 @@ namespace ComicShelf.Pages.Volumes
 
         private void SetCookies(BookshelfParams filters)
         {
-            //Response.Cookies.Append(nameof(filters.sort), filters.sort.ToString());
-            //Response.Cookies.Append(nameof(filters.digitality), filters.digitality.ToString());
-            //Response.Cookies.Append(nameof(filters.filter), filters.filter.ToString());
-            //Response.Cookies.Append(nameof(filters.direction), filters.direction.ToString());
-            //Response.Cookies.Append(nameof(filters.reading), filters.reading.ToString());
-
             Response.Cookies.Append("filters", JsonConvert.SerializeObject(filters));
         }
 
@@ -145,6 +124,8 @@ namespace ComicShelf.Pages.Volumes
             var volume = _volumeService.Get(id);
             _volumeService.LoadReference(volume, x => x.Series);
             _volumeService.LoadCollection(volume, x => x.Authors);
+            _seriesService.LoadReference(volume.Series, x => x.Publisher);
+            _publishersService.LoadReference(volume.Series.Publisher, x => x.Country);
 
             var resultVD = new ViewDataDictionary<Volume>(ViewData, volume);
             resultVD["PurchaseStatuses"] = _enumUtilities.GetPurchaseStatusesSelectItemList(volume.PurchaseStatus);

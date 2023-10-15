@@ -10,6 +10,8 @@ using ComicShelf.Services;
 using ComicShelf.Utilities;
 using ComicType = ComicShelf.Models.Enums.Type;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SeriesM = ComicShelf.Models.Series;
+using NuGet.Packaging;
 
 namespace ComicShelf.Pages.SeriesNs
 {
@@ -24,27 +26,49 @@ namespace ComicShelf.Pages.SeriesNs
             _service = service;
             _enumUtilities = enumUtilities;
             _publishersService = publishersService;
-            Publishers.AddRange(_publishersService.GetAll().Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }));
+
+
+            //Publishers.AddRange(_publishersService.GetAll().Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }));
+
+            Publishers = new SelectList(_publishersService.GetAll(), nameof(Publisher.Id), nameof(Publisher.Name));
         }
 
-        public List<SelectListItem> Publishers { get; set; } = new List<SelectListItem>();
-        public IList<Models.Series> Series { get; set; } = default!;
+        public SelectList Publishers { get; set; }
+        public IList<SeriesModel> Series { get; set; } = default!;
 
         public void OnGetAsync()
         {
             ViewData["Types"] = _enumUtilities.GetSelectItemList<ComicType>();
-
-            Series = _service.GetAll().Include("Publishers").Include("Publishers.Country").Include("Volumes").ToList();
+            ViewData["Publishers"] = Publishers;
+            var tmp = _service.GetAll(); 
+            foreach (var item in tmp) {
+                if(item.Publisher != null)
+                {
+                    Console.WriteLine(item.Name);
+                }
+            }   
+            Series = tmp.Select(x => new SeriesModel(x)).ToList() ;
         }
 
-        public IActionResult OnPostUpdate(Models.Series series)
+        public IActionResult OnPostUpdate(SeriesModel series)
         {
+            if (series is null)
+                return BadRequest("Nothing to update");
+
             if (!_service.Exists(series.Id))
             {
                 return NotFound(series);
             }
 
             _service.Update(series);
+
+            var newSeries = new SeriesModel(_service.Get(series.Id));
+
+            return Partial("_SeriesRowPartial", newSeries);
+        }
+
+        public IActionResult OnDelete(int id)
+        {
 
             return StatusCode(200);
         }

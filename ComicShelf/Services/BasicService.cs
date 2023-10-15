@@ -24,7 +24,6 @@ namespace ComicShelf.Services
         {
             return dbSet.AsNoTracking();
         }
-
         public virtual T? Get(int? id)
         {
             if (id == null)

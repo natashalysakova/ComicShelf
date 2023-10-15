@@ -303,4 +303,7 @@
   <data name="SingleVolumeHint" xml:space="preserve">
     <value>SingleVolumeHint</value>
   </data>
+  <data name="Publisher" xml:space="preserve">
+    <value>Publisher</value>
+  </data>
 </root>

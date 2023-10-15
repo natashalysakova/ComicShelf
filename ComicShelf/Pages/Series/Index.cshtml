@@ -9,7 +9,20 @@
 }
 
 <h1>@Localizer["Series"]</h1>
+
 <div class="row">
+    <div class="custom-table">
+
+        @foreach (var series in Model.Series)
+        {
+            <partial name="_SeriesRowPartial" model="series" view-data="@ViewData" />
+        }
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/Series.js"></script>
+}
+@*<div class="row">
     <table class="table table-hover">
         <thead>
             <tr>
@@ -37,19 +50,6 @@
         <tbody>
             @foreach (var series in Model.Series)
             {
-                @*            <tr>
-            <td>
-            @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.Roles)
-            </td>
-            <td>
-            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-            <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-            <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-            </tr>*@
                 <form data-ajax="true" method="post" data-ajax-method="post" asp-page-handler="Update">
                 <tr>
                     <input asp-for="@series.Id" hidden />
@@ -66,21 +66,22 @@
                     <td><select asp-items="(IEnumerable<SelectListItem>)@ViewData["Types"]" class="form-select" asp-for="@series.Type"></select></td>
                     <td>
                         <div class="input-group">
-                            <input type="text" asp-for="@series.Volumes.Count" readonly class="form-control" />
+                            <input type="text" asp-for="@series.VolumeCount" readonly class="form-control" />
                             <span class="input-group-text">/</span>
                             <input type="text" asp-for="@series.TotalVolumes" class="form-control" />
 
                         </div>
                     </td>
                     <td>
-                        <input type="checkbox" asp-for="@series.Ongoing" class="form-check"/>
+                        <input type="checkbox" asp-for="@series.Ongoing" class="form-check" />
                     </td>
                     <td>
-                        <select class="form-select" asp-for="@series.Publishers" multiple asp-items="@Model.Publishers" autocomplete="off"></select>
+                        <select class="form-select" asp-for="@series.Publisher" asp-items="@Model.Publishers"  autocomplete="off">
+                        </select>
 
                     </td>
                     <td>
-                        <input type="color" asp-for="@series.Color" class="form-control-color"/>
+                        <input type="color" asp-for="@series.Color" class="form-control-color" />
                     </td>
                     <td><button type="submit" class="btn btn-secondary btn-success">@Localizer["Update"]</button></td>
 
@@ -91,7 +92,7 @@
         </tbody>
     </table>
 </div>
-
+*@
 
 
 

@@ -22,7 +22,9 @@ namespace ComicShelf.Models
         public string? Color { get; set; }
         public string? ComplimentColor { get; set; }
 
-        public virtual ICollection<Publisher> Publishers { get; set; } = new List<Publisher>();
+        public int PublisherId { get; set; }
+        public virtual Publisher? Publisher { get; set; }
+
         public virtual ICollection<Volume> Volumes { get; set; } = new List<Volume>();
 
     }

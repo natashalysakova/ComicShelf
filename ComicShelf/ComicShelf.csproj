@@ -23,8 +23,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Series\Create.cshtml.cs" />
+    <Compile Remove="Pages\Series\Details.cshtml.cs" />
+    <Compile Remove="Pages\Series\Edit.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="compilerconfig.json" />
     <Content Remove="Pages\Publishers\PublisherInputView.cshtml" />
+    <Content Remove="Pages\Series\Create.cshtml" />
+    <Content Remove="Pages\Series\Details.cshtml" />
+    <Content Remove="Pages\Series\Edit.cshtml" />
+    <Content Remove="wwwroot\css\bookshelf.scss" />
+    <Content Remove="wwwroot\css\site.css" />
   </ItemGroup>
 
   <ItemGroup>

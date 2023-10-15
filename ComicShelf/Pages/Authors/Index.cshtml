@@ -12,46 +12,35 @@
 
 <h1>@Localizer["Authors"]</h1>
 <div class="row">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">
-                    @Localizer["Name"]
-                </th>
-                <th scope="col">
-                    @Localizer["Role"]
-                </th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var author in Model.Author)
-            {
-                @*            <tr>
-            <td>
-            @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.Roles)
-            </td>
-            <td>
-            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-            <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-            <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-            </tr>*@
-                <form data-ajax="true" method="post" data-ajax-method="post" asp-page-handler="Update">
-                <tr>
-                    <input asp-for="@author.Id" hidden />
-                    <td><input type="text" asp-for="@author.Name" class="form-control" /></td>
-                    <td><select asp-items="(IEnumerable<SelectListItem>)@ViewData["AvailableRoles"]" class="form-select" asp-for="@author.Roles"></select></td>
-                    <td><button type="submit" class="btn btn-secondary btn-success">@Localizer["Update"]</button></td>
-                    <td><span>@string.Join(", ", author.Volumes.Select(x=>x.Series.Name).Distinct())</span></td>
-                </tr>
-                </form>
 
-            }
-        </tbody>
-    </table>
+    <div class="custom-table">
+        @foreach (var author in Model.Author)
+        {
+            <form data-ajax="true" method="post" data-ajax-method="post" asp-page-handler="Update" data-ajax-complete="changeAuthorComplete">
+                <div class="row">
+                    <div class="col">
+                        <input asp-for="@author.Id" hidden />
+                        <input type="text" asp-for="@author.Name" class="form-control update-on-status-change" />
+                    </div>
+                    <div class="col-auto">
+                        <select asp-items="(IEnumerable<SelectListItem>)@ViewData["AvailableRoles"]" class="form-select update-on-status-change" asp-for="@author.Roles"></select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-secondary btn-success">@Localizer["Update"]</button>
+                    </div>
+                    <div class="col-6">
+                        <span class="input-group-text">@string.Join(", ", author.Volumes.Select(x=>x.Series.Name).Distinct())</span>
+                    </div>
+
+                </div>
+            </form>
+        }
+    </div>
 </div>
+
+
+
+
+@section Scripts {
+    <script src="~/js/Authors.js"></script>
+}

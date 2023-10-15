@@ -12,15 +12,23 @@ internal class DbInitializer
     {
         _context = context;
     }
+    private const string unknown = "Unknown";
 
     internal void Initialize()
     {
         //context.Database.EnsureCreated();
         _context.Database.Migrate();
 
-        if (!_context.Countries.Any(x => x.Name == "Unknown"))
+        if (!_context.Countries.Any(x => x.Name == unknown))
         {
-            _context.Countries.Add(new Country() { FlagPNG = string.Empty, FlagSVG = string.Empty, Name = "Unknown", CountryCode = "Unknown" });
+            _context.Countries.Add(new Country() { FlagPNG = string.Empty, FlagSVG = string.Empty, Name = unknown, CountryCode = unknown });
+            _context.SaveChanges();
+        }
+
+        var unknownCountry = _context.Countries.Single(x => x.Name == unknown);
+        if (!_context.Publishers.Any(x=>x.Name == unknown))
+        {
+            _context.Publishers.Add(new Publisher() { Country = unknownCountry, Name = unknown });
             _context.SaveChanges();
         }
 
