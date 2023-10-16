@@ -12,8 +12,7 @@
     var expired = Model.Expired() ? "expired" : string.Empty;
 }
 
-<img class="book-cover" src="@Model.CoverUrl" alt="">
-
+<img class="book-cover" src="@Model.CoverUrl" onerror="if (this.src != '/images/static/no-cover.png') this.src = '/images/static/no-cover.png';" alt="">
 <div class="book-header">
     <div class="book-title @expired"></div>
     <div class="book-text">

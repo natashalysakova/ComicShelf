@@ -71,17 +71,17 @@
         <div class="row mb-3 col-lg-6 offset-lg-6">
             <div class="col">
                 <div class="input-group">
-                    <input id="search-field" type="search" class="form-control filter bg-secondary" placeholder="@Localizer["Search"]" aria-label="Search" aria-describedby="button-addon2">
+                    <input id="search-field" type="search" class="form-control filter half-transparent" placeholder="@Localizer["Search"]" aria-label="Search" aria-describedby="button-addon2">
                 </div>
             </div>
             <div class="col">
 
                 <div class="input-group col">
 
-                    <select id="sortType" class="form-select" aria-label="Default select example" asp-for="@filters.sort">
+                    <select id="sortType" class="form-select half-transparent" aria-label="Default select example" asp-for="@filters.sort">
                         @foreach (var item in ViewData["Sort"] as IEnumerable<SortEnum>)
                         {
-                            <option value="@item">@Localizer["" + item]</option>
+                            <option value="@item" class="bg-secondary">@Localizer["" + item]</option>
                         }
                         @*                            <option value="0">@Localizer["ByCreationDate"]</option>
                         <option value="1">@Localizer["ByTitle"]</option>

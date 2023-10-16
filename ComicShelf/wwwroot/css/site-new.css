@@ -248,3 +248,7 @@ body .modal-open {
 .custom-table form > .row:hover {
   background-color: #fd7e14;
 }
+
+.half-transparent {
+  background-color: rgba(0, 0, 0, 0.2509803922) !important;
+}

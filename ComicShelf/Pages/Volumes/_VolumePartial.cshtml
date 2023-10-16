@@ -39,7 +39,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-5 mb-3">
-                    <img src="@Model.CoverUrl" class="img-fluid volume-image" id="volume-cover" />
+                    <img src="@Model.CoverUrl" class="img-fluid volume-image" id="volume-cover" onerror="if (this.src != '/images/static/no-cover.png') this.src = '/images/static/no-cover.png';" alt="add alternative text here" />
                     <div class="input-group mb-3" id="new-cover">
                         <input id="CoverFile" name="CoverFile" class="form-control update-on-status-change" type="file" accept="image/*" onchange="showPreview(event);" />
 @*                        <label for="CoverFile" class="input-group-text">@Localizer["Cover"]</label>
@@ -63,7 +63,7 @@
                         <span type="text" class="form-control">@string.Join(", ", Model.Authors.Select(x=>x.Name))</span>
 
                     </div>
-                    @if (Model.Series.Publisher != null)
+                    @if (Model.Series.Publisher.Name != "Unknown")
                     {
                         <div class="input-group mb-3">
                             <span class="input-group-text">@Localizer["Publisher"]</span>
