@@ -46,8 +46,6 @@ namespace ComicShelf.Services
                 _seriesService.Add(series);
             }
 
-
-
             var authorList = new List<Author>();
             foreach (var item in model.Authors)
             {
@@ -98,27 +96,48 @@ namespace ComicShelf.Services
                 Series = series,
                 Authors = authorList,
                 Number = model.Number,
-                PurchaseDate = model.PurchaseDate,
                 PurchaseStatus = model.PurchaseStatus,
-                Rating = model.Rating,
                 Status = model.Status,
                 CoverUrl = urlPath,
                 CreationDate = DateTime.Now,
                 ModificationDate = DateTime.Now,
-                ReleaseDate = model.ReleaseDate,
                 Digitality = model.Digitality,
-                OneShot = model.SingleVolume
+                OneShot = model.SingleVolume,
             };
+
+
+            switch (model.PurchaseStatus)
+            {
+                case PurchaseStatus.Announced:
+                    volume.ReleaseDate = model.ReleaseDate;
+                    break;
+                case PurchaseStatus.Preordered:
+                    volume.ReleaseDate = model.ReleaseDate;
+                    volume.PreorderDate = model.PreorderDate;
+                    break;
+                case PurchaseStatus.Wishlist:
+                    break;
+                default:
+                    volume.PurchaseDate = model.PurchaseDate;
+                    break;
+            }
+
+            if(model.Status is Status.Dropped or Status.Completed)
+            {
+                volume.Rating = model.Rating;
+            }
 
             if (model.SingleVolume)
             {
                 volume.Number = 1;
             }
 
-
             _seriesService.LoadCollection(series, x => x.Volumes);
 
-            if(volume.PurchaseStatus != PurchaseStatus.Announced && volume.PurchaseStatus!= PurchaseStatus.Preordered && volume.PurchaseStatus != PurchaseStatus.GiftedAway && volume.Status == Status.NotStarted && series.Volumes.All(x=>x.Status == Status.Completed))
+            if((volume.PurchaseStatus is PurchaseStatus.Bought 
+                or PurchaseStatus.Pirated 
+                or  PurchaseStatus.Gift 
+                or PurchaseStatus.Free) && series.Volumes.Count > 0 && series.Volumes.All(x=>x.Status == Status.Completed))
             {
                 volume.Status = Status.InQueue;
             }
@@ -246,6 +265,9 @@ namespace ComicShelf.Services
                 case ReadingEnum.NotStarted:
                     filterd = filterd.Where(x => x.Status == Status.NotStarted);
                     break;
+                case ReadingEnum.NewSeries:
+                    filterd = filterd.Where(x => x.Status == Status.NotStarted && x.Number < 2);
+                    break;
                 case ReadingEnum.InQueue:
                     filterd = filterd.Where(x => x.Status == Status.InQueue);
                     break;
@@ -271,7 +293,11 @@ namespace ComicShelf.Services
                     filterd = filterd.OrderByDescending(x => x.Series.Name).ThenByDescending(x => x.Number);
                     break;
                 case SortEnum.ByPurchaseDate:
-                    filterd = filterd.OrderBy(x => x.PurchaseDate).ThenBy(x => x.Series.Name).ThenBy(x => x.Number);
+                    filterd = filterd.OrderBy(item => item.PurchaseDate)
+                                    .ThenBy(item => item.PreorderDate)
+                                    .ThenBy(item => item.ReleaseDate)
+                                    .ThenBy(x => x.Series.Name)
+                                    .ThenBy(x => x.Number);
                     break;
                 default:
                     filterd = filterd.OrderBy(x => x.CreationDate);
@@ -298,16 +324,24 @@ namespace ComicShelf.Services
             item.PurchaseStatus = volumeToUpdate.PurchaseStatus;
             item.Status = volumeToUpdate.Status;
 
-            item.Rating = volumeToUpdate.Rating;
+            if(volumeToUpdate.Status is Status.Completed or Status.Dropped)
+            {
+                item.Rating = volumeToUpdate.Rating;
+            }
 
-            if (volumeToUpdate.PurchaseDate != default)
+            if (volumeToUpdate.PurchaseStatus is not PurchaseStatus.Announced or PurchaseStatus.Preordered or PurchaseStatus.Wishlist && volumeToUpdate.PurchaseDate != default)
             {
                 item.PurchaseDate = volumeToUpdate.PurchaseDate;
             }
 
-            if (volumeToUpdate.ReleaseDate != default)
+            if (volumeToUpdate.PurchaseStatus is PurchaseStatus.Announced or PurchaseStatus.Preordered && volumeToUpdate.ReleaseDate != default)
             {
                 item.ReleaseDate = volumeToUpdate.ReleaseDate;
+            }
+
+            if (volumeToUpdate.PurchaseStatus is PurchaseStatus.Preordered && volumeToUpdate.PreorderDate != default)
+            {
+                item.PreorderDate = volumeToUpdate.PreorderDate;
             }
 
             if (volumeToUpdate.CoverFile != null)
@@ -316,16 +350,17 @@ namespace ComicShelf.Services
                 item.CoverUrl = FileUtility.SaveOnServer(volumeToUpdate.CoverFile, item.Series.Name, item.Number);
             }
 
-            if(
-                volumeToUpdate.PurchaseStatus is 
-                not PurchaseStatus.Preordered and
-                not PurchaseStatus.Announced and
-                not PurchaseStatus.GiftedAway)
+            if (volumeToUpdate.PurchaseStatus is PurchaseStatus.Bought
+                or PurchaseStatus.Pirated
+                or PurchaseStatus.Gift
+                or PurchaseStatus.Free)
             {
                 var series = _seriesService.Get(item.SeriesId);
                 _seriesService.LoadCollection(series, x => x.Volumes);
 
-                if (series.Volumes.Except(new[] {item}).All(x=>x.Status == Status.Completed))
+                var volumesExceptCurrent = series.Volumes.Except(new[] { item });
+
+                if (volumesExceptCurrent.Count() > 0 && volumesExceptCurrent.All(x=>x.Status == Status.Completed))
                 {
                     item.Status = Status.InQueue;
                 }

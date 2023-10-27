@@ -26,6 +26,7 @@
 
 
 
+
                 </div>
                 @if (!string.IsNullOrEmpty(Model.Series.OriginalName))
             {
@@ -42,8 +43,9 @@
                     <img src="@Model.CoverUrl" class="img-fluid volume-image" id="volume-cover" onerror="if (this.src != '/images/static/no-cover.png') this.src = '/images/static/no-cover.png';" alt="add alternative text here" />
                     <div class="input-group mb-3" id="new-cover">
                         <input id="CoverFile" name="CoverFile" class="form-control update-on-status-change" type="file" accept="image/*" onchange="showPreview(event);" />
-@*                        <label for="CoverFile" class="input-group-text">@Localizer["Cover"]</label>
-*@                    </div>
+                        @*                        <label for="CoverFile" class="input-group-text">@Localizer["Cover"]</label>
+                        *@
+                    </div>
                 </div>
                 <div class="col-lg-7">
                     <div class="input-group mb-3">
@@ -101,15 +103,19 @@
                         <label asp-for="@Model.PurchaseStatus" class="input-group-text"><span class="bi bi-coin"></span></label>
                         <label asp-for="@Model.PurchaseStatus" class="input-group-text">@Localizer["PurchaseStatus"]</label>
                         <input type="hidden" value="@Model.Id" asp-for="@Model.Id" />
-                        <select asp-for="@Model.PurchaseStatus" asp-items="(IEnumerable<SelectListItem>)@ViewData["PurchaseStatuses"]" class="form-select update-on-status-change" onchange="existhigPurchaseStatusChanged()"></select>
+                        <select asp-for="@Model.PurchaseStatus" asp-items="(IEnumerable<SelectListItem>)@ViewData["PurchaseStatuses"]" class="form-select update-on-status-change" onchange="purchaseStatusChanged(this)"></select>
                     </div>
 
-                    <div class="input-group mb-3" id="new-purchase-date">
+                    <div class="input-group mb-3" id="purchase-date">
                         <label asp-for="@Model.PurchaseDate" class="input-group-text">@Localizer["PurchaseDate"]</label>
                         <input asp-for="@Model.PurchaseDate" class="form-control update-on-status-change" type="date" />
                     </div>
 
-                    <div class="input-group mb-3" id="new-release-date">
+                    <div class="input-group mb-3" id="preorder-date">
+                        <label asp-for="@Model.PreorderDate" class="input-group-text">@Localizer["PreorderDate"]</label>
+                        <input asp-for="@Model.PreorderDate" class="form-control update-on-status-change" type="date" />
+                    </div>
+                    <div class="input-group mb-3" id="release-date">
                         <label asp-for="@Model.ReleaseDate" class="input-group-text">@Localizer["ReleaseDate"]</label>
                         <input asp-for="@Model.ReleaseDate" class="form-control update-on-status-change" type="date" />
                     </div>
@@ -134,25 +140,30 @@
 
                         <label asp-for="@Model.Status" class="input-group-text"><i class="bi @iconRead"></i></label>
                         <label asp-for="@Model.Status" class="input-group-text">@Localizer["ReadingStatus"]</label>
-                        <select asp-for="@Model.Status" asp-items="(IEnumerable<SelectListItem>)@ViewData["ReadingStatuses"]" class="form-select update-on-status-change" onchange="existhigReadingStatusChanged()"></select>
+                        <select asp-for="@Model.Status" asp-items="(IEnumerable<SelectListItem>)@ViewData["ReadingStatuses"]" class="form-select update-on-status-change" onchange="readingStatusChanged(this)"></select>
                     </div>
 
                     <div class="input-group mb-3" id="rating-select">
                         <span class="input-group-text">@Localizer["Raiting"]</span>
                         <div class="form-control">
 
-                            @foreach (var rating in (IEnumerable<int>)@ViewData["Ratings"])
-                            {
-                                var isChecked = false;
-                                if (rating == Model.Rating)
-                                {
-                                    isChecked = true;
-                                }
+                            @{
+                                var ratings = (IEnumerable<int>)ViewData["Ratings"];
 
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input update-on-status-change" type="radio" value="@rating" asp-for="@Model.Rating" checked="@isChecked">
-                                    <label class="form-check-label" asp-for="@Model.Rating">@rating</label>
-                                </div>
+                                for (int i = 0; i < ratings.Count(); i++)
+                                {
+                                    var rating = ratings.ElementAt(i);
+                                    var isChecked = false;
+                                    if (rating == Model.Rating)
+                                    {
+                                        isChecked = true;
+                                    }
+                                    var id = "Ratings_" + i;
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input update-on-status-change" type="radio" value="@rating" asp-for="@Model.Rating" id="@id" checked="@isChecked">
+                                        <label class="form-check-label" for="@id">@rating</label>
+                                    </div>
+                                }
                             }
                         </div>
                     </div>

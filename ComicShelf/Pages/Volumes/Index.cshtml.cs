@@ -29,14 +29,16 @@ namespace ComicShelf.Pages.Volumes
         private readonly SeriesService _seriesService;
         private readonly CountryService _countryService;
         private readonly PublishersService _publishersService;
+        private readonly FilterService _filterService;
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly EnumUtilities _enumUtilities;
-        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, CountryService countryService, PublishersService publishersService, IStringLocalizer<SharedResource> localizer, EnumUtilities enumUtilities)
+        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, CountryService countryService, PublishersService publishersService, FilterService filterService, IStringLocalizer<SharedResource> localizer, EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
             _seriesService = seriesService;
             _countryService = countryService;
             _publishersService = publishersService;
+            _filterService = filterService;
             _localizer = localizer;
             _enumUtilities = enumUtilities;
 
@@ -47,7 +49,7 @@ namespace ComicShelf.Pages.Volumes
 
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
-
+            Filters.AddRange(filterService.GetAll().OrderBy(x => x.Name).Select(x => new { id = x.Id, name = x.Name, selected = false, json = x.Json }).ToList());
         }
 
         [BindProperty]
@@ -59,6 +61,7 @@ namespace ComicShelf.Pages.Volumes
         public List<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Series { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Digitalities { get; set; } = new List<SelectListItem>();
+        public List<dynamic> Filters { get; set; } = new List<dynamic>();
 
         public IList<Volume> Volumes { get; set; } = default!;
         public IList<Volume> AnnouncedAndPreordered
@@ -102,10 +105,10 @@ namespace ComicShelf.Pages.Volumes
         internal BookshelfParams FromCookies()
         {
             var cookie = Request.Cookies["filters"];
-            if(cookie != null)
+            if (cookie != null)
             {
                 var fromCookie = JsonConvert.DeserializeObject<BookshelfParams>(cookie);
-                if(fromCookie != null)
+                if (fromCookie != null)
                 {
                     return fromCookie;
                 }
@@ -176,6 +179,15 @@ namespace ComicShelf.Pages.Volumes
             Volumes = _volumeService.Filter(filters);
             SetCookies(filters);
             return Partial("_ShelfPartial", Volumes);
+        }
+
+        public IActionResult OnPostSaveFilter(string filterName)
+        {
+            var filters = FromCookies();
+
+            _filterService.Add(new Filter() { Name = filterName, Json = JsonConvert.SerializeObject(filters)});
+
+            return new JsonResult( _filterService.GetAll().OrderBy(x=>x.Name).Select(x=> new { id= x.Id, name= x.Name, selected = x.Name == filterName, json=x.Json }).ToList());
         }
 
     }

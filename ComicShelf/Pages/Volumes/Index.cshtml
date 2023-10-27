@@ -14,9 +14,17 @@
         <div class="row single-button">
             <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["AddNewVolume"]</button>
         </div>
-
-
-
+        <div class="row single-button">
+            <span class="filter-header">@Localizer["Filters"]</span>
+            <select class="form-select half-transparent" id="filter-presets" onchange="filter(event)">
+                <option class="bg-secondary" value="0">@Localizer["None"]</option>
+                @foreach (var item in Model.Filters)
+                {
+                    <option class="bg-secondary" value="@item.id" data-json="@item.json">@item.name</option>
+                }
+            </select>
+        </div>
+       
         <div class="row" id="filters">
 
             @{
@@ -30,7 +38,7 @@
                 {
                     var check = filters.filter == @item ? "checked" : string.Empty;
 
-                    <input id="Purchase_@item" class="btn-check filter" type="radio" name="filter" autocomplete="off" data="@item" @check />
+                    <input id="Purchase_@item" class="btn-check filter" type="radio" name="filter" value="@((int)item)" autocomplete="off" data="@item" @check />
                     <label for="Purchase_@item" class="btn btn-secondary">
                         @Localizer[item.ToString()]
                     </label>
@@ -43,7 +51,7 @@
                 {
                     var check = filters.digitality == @item ? "checked" : string.Empty;
 
-                    <input id="Digitality_@item" class="btn-check filter" type="radio" name="digitality" autocomplete="off" data="@item" @check />
+                    <input id="Digitality_@item" class="btn-check filter" type="radio" name="digitality" value="@((int)item)" autocomplete="off" data="@item" @check />
                     <label for="Digitality_@item" class="btn btn-secondary">
                         @Localizer[item.ToString()]
                     </label>
@@ -55,13 +63,22 @@
                 {
                     var check = filters.reading == @item ? "checked" : string.Empty;
 
-                    <input id="Reading_@item" class="btn-check filter" type="radio" name="reading" autocomplete="off" data="@item" @check />
+                    <input id="Reading_@item" class="btn-check filter" type="radio" name="reading" autocomplete="off" value="@((int)item)" data="@item" @check />
                     <label for="Reading_@item" class="btn btn-secondary">
                         @Localizer[item.ToString()]
                     </label>
                 }
             </div>
         </div>
+
+        <form asp-page-handler="SaveFilter" data-ajax-method="post" data-ajax="true" data-ajax-complete="refillFilterDropdown">
+            <div class="row single-button mb-3">
+                <input type="text" class="form-control half-transparent" name="filterName" id="filterName" autocomplete="off" placeholder="@Localizer["FilterName"]" />
+            </div>
+            <div class="row single-button">
+                <button type="submit" class="btn btn-outline-info mb-3">@Localizer["Save"]</button>
+            </div>
+        </form>
         <div class="row single-button">
             <button class="btn btn-outline-danger mb-3" onclick="resetFilters()">@Localizer["Reset"]</button>
         </div>

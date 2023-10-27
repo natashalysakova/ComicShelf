@@ -306,4 +306,10 @@
   <data name="Publisher" xml:space="preserve">
     <value>Publisher</value>
   </data>
+  <data name="NewSeries" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="PreorderDate" xml:space="preserve">
+    <value></value>
+  </data>
 </root>

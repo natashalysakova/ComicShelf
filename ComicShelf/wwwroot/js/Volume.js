@@ -70,8 +70,12 @@ $(function () {
     $(".multple-datalist").focusin(function () { $(this).attr("type", "email"); });
     $(".multple-datalist").focusout(function () { $(this).attr("type", "textbox"); });
 
-    purchaseStatusChanged()
-    newReadingStatusChanged()
+    $('#createModal').on('show.bs.modal', function (e) {
+        // do something...    
+        purchaseStatusChanged('PurchaseStatus', 'new');
+        readingStatusChanged('Status', 'new')
+    })
+
 });
 
 function resetFilters(e) {
@@ -87,23 +91,16 @@ function resetFilters(e) {
     filter(e);
 }
 
-function filter(e) {
-
+function fillFilters() {
     var sort = $('select[id=sortType]').val()
     var dir = $('button[id=sortDirection').data('sort')
     var search = $('input[id=search-field]').val()
     var digitality = $('input[type=radio][name=digitality]:checked').attr('data')
     var reading = $('input[type=radio][name=reading]:checked').attr('data');
-    //if (reading != "All") {
-    //    console.log(reading)
-    //    var radio = $('#Purchase_Available')
-    //    radio.prop("checked", "checked");
-
-    //}
     var filter = $('input[type=radio][name=filter]:checked').attr('data')
 
 
-    var filters = {
+    return {
         "filter": filter,
         "sort": sort,
         "direction": dir,
@@ -111,6 +108,54 @@ function filter(e) {
         "digitality": digitality,
         "reading": reading
     };
+}
+
+function selectRadioButtonByValue(name, value) {
+    var radioButtons = document.querySelectorAll('input[type=radio][name='+name+']');
+
+    radioButtons.forEach(function (radio) {
+        if (radio.value == value) {
+            radio.checked = true; // Select the radio button if the value matches
+        }
+    });
+}
+
+function fillFields(filters) {
+    $('select[id=sortType]').val(filters.sort)
+    $('button[id=sortDirection').data('sort', filters.dir)
+    $('input[id=search-field]').val(filters.search)
+    selectRadioButtonByValue('digitality', filters.digitality)
+    selectRadioButtonByValue('reading', filters.reading)
+    selectRadioButtonByValue('filter', filters.filter)
+}
+
+function filter(e) {
+
+    var filters;
+
+    if (e != undefined && e.target.selectedOptions != undefined) {
+        filters = JSON.parse(e.target.selectedOptions[0].dataset.json);
+
+        if (filters == undefined) {
+            filters = fillFilters();
+        }
+        else {
+            fillFields(filters);
+        }
+    }
+    else {
+        filters = fillFilters();
+    }
+
+
+    ////var existing = _.isEqual(selFilter, filters)
+    //if (existing) {
+    //    //selectfilter in Dropdown
+
+    //}
+    //else {
+    //    $("#filter-presets").val(0);
+    //}
 
     $.ajax({
         url: "?handler=Filtered",
@@ -123,7 +168,6 @@ function filter(e) {
 };
 
 function bookClick(id) {
-    console.log("clicked");
     $.ajax({
         url: "?handler=Volume",
         type: 'GET',
@@ -132,14 +176,32 @@ function bookClick(id) {
 
     }).done(function (result) {
         $('#detail-modal-content').html(result);
-        existhigPurchaseStatusChanged()
-        existhigReadingStatusChanged()
+        purchaseStatusChanged('PurchaseStatus')
+        readingStatusChanged('Status')
     });
 }
 
 
 
+function refillFilterDropdown(e) {
+    if (e.status == 200) {
 
+        $("#filterName").val('');
+
+        $ddl = $("#filter-presets");
+        $ddl.find('option').not(':first').remove();
+
+
+        for (var i = 0; i < e.responseJSON.length; i++) {
+            var item = e.responseJSON[i];
+            $ddl.append($("<option/>").val(item.id).html(item.name).attr('class', 'bg-secondary').attr('data-json', item.json));
+            if (item.selected) {
+                $ddl.val(item.id);
+            }
+        }
+
+    }
+}
 
 function changeStatusSuccess(e) {
     $('#PurchaseStatus').removeClass("text-danger");
@@ -199,7 +261,7 @@ function createComplete(xnr) {
             document.getElementById('NewVolume_CoverFile').value = "";
             $('input[name="NewVolume.Rating"]').prop('checked', false);
         }
-        else {           
+        else {
             document.getElementById("create-form").reset();
             resetValidation();
             resetPreview("new-volume-cover");
@@ -241,68 +303,101 @@ function resetValidation() {
     return $form;
 };
 
-function purchaseStatusChanged() {
-    var value = $("#NewVolume_PurchaseStatus").find(":selected").val();
-
-    if (value == "Preordered" || value == "Announced") {
-        $('#release-date').removeClass("collapse");
+function fieldVisibility(fieldId, visibility, prefix) {
+    if (prefix != undefined) {
+        fieldId = '#' + prefix + '-' + fieldId;
     }
     else {
-        $('#release-date').addClass("collapse");
+        fieldId = '#' + fieldId;
     }
 
-    if (value == "Announced" || value == "Wishlist") {
-
-        $('#purchase-date').addClass("collapse");
+    if (visibility) {
+        $(fieldId).removeClass("collapse");
     }
     else {
-        $('#purchase-date').removeClass("collapse");
+        $(fieldId).addClass("collapse");
     }
 }
 
-function existhigPurchaseStatusChanged() {
-    var value = $("#PurchaseStatus").find(":selected").val();
-
-    if (value == "Preordered" || value == "Announced") {
-        $('#new-release-date').removeClass("collapse");
-        $('#reading-status').addClass("collapse");
-    }
-    else {
-        $('#new-release-date').addClass("collapse");
-        $('#reading-status').removeClass("collapse");
-    }
-
-    //new-purchase-date
-    if (value == "Announced" || value == "Wishlist") {
-
-        $('#new-purchase-date').addClass("collapse");
-    }
-    else {
-        $('#new-purchase-date').removeClass("collapse");
+function attachPrefix(input, prefix) {
+    if (prefix != undefined) {
+        return '#' + prefix + '-' + input;
+    } else {
+        return '#' + input;
     }
 }
 
-function existhigReadingStatusChanged() {
+function purchaseStatusChanged(purchseStatus, prefix) {
 
-    var value = $("#Status").find(":selected").val();
-
-    if (value == "Completed" || value == "Dropped") {
-        $('#rating-select').removeClass("collapse");
+    if ($.type(purchseStatus) === "string") {
+        purchseStatus = attachPrefix(purchseStatus, prefix);
     }
-    else {
-        $('#rating-select').addClass("collapse");
+
+    var value = $(purchseStatus).find(":selected").val();
+    switch (value) {
+        case "Announced":
+            fieldVisibility("release-date", true, prefix);
+            fieldVisibility("preorder-date", false, prefix);
+            fieldVisibility("purchase-date", false, prefix);
+            fieldVisibility("reading-status", false, prefix);
+            fieldVisibility('rating-select', false, prefix);
+            break;
+        case "Preordered":
+            fieldVisibility("release-date", true, prefix);
+            fieldVisibility("preorder-date", true, prefix);
+            fieldVisibility("purchase-date", false, prefix);
+            fieldVisibility("reading-status", false, prefix);
+            fieldVisibility('rating-select', false, prefix);
+            break;
+        case "Wishlist":
+            fieldVisibility("release-date", false, prefix);
+            fieldVisibility("preorder-date", false, prefix);
+            fieldVisibility("purchase-date", false, prefix);
+            fieldVisibility("reading-status", false, prefix);
+            fieldVisibility('rating-select', false, prefix);
+            break;
+        default:
+            fieldVisibility("release-date", false, prefix);
+            fieldVisibility("preorder-date", false, prefix);
+            fieldVisibility("purchase-date", true, prefix);
+            fieldVisibility("reading-status", true, prefix);
+            break;
     }
 }
-function newReadingStatusChanged() {
 
-    var value = $("#NewVolume_Status").find(":selected").val();
 
-    if (value == "Completed" || value == "Dropped") {
-        $('#new-rating-select').removeClass("collapse");
+function readingStatusChanged(list, prefix) {
+
+    if ($.type(list) === "string") {
+        list = attachPrefix(list, prefix);
     }
-    else {
-        $('#new-rating-select').addClass("collapse");
+
+    var value = $(list).find(":selected").val();
+
+    switch (value) {
+        case "Completed":
+            fieldVisibility('rating-select', true, prefix);
+            break;
+        case "Dropped":
+            fieldVisibility('rating-select', true, prefix);
+            break;
+        default:
+            fieldVisibility('rating-select', false, prefix);
+            break;
+
     }
+}
+
+
+function resetCreateForm() {
+    setTimeout(function () {
+        resetValidation();
+        resetPreview('new-volume-cover');
+        purchaseStatusChanged('PurchaseStatus', 'new');
+        readingStatusChanged('Status', 'new');
+
+    }, 10);
+
 }
 
 function showNewPreview(event) {
@@ -323,5 +418,5 @@ function showPreview(event) {
 
 function resetPreview(previewId) {
     document.getElementById(previewId).src = "images\\static\\no-cover.png";
-    
+
 }

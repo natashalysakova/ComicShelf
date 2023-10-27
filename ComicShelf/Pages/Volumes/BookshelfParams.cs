@@ -51,7 +51,8 @@ namespace ComicShelf.Pages.Volumes
         InQueue = 2,
         Reading = 3,
         Completed = 4,
-        Dropped = 5
+        Dropped = 5,
+        NewSeries = 6,
 
     }
 }

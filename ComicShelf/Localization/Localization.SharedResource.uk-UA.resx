@@ -306,4 +306,10 @@
   <data name="Publisher" xml:space="preserve">
     <value>Видавництво</value>
   </data>
+  <data name="NewSeries" xml:space="preserve">
+    <value>Щось новеньке</value>
+  </data>
+  <data name="PreorderDate" xml:space="preserve">
+    <value>Дата передзамовлення</value>
+  </data>
 </root>

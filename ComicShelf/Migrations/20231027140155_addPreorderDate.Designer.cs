@@ -3,6 +3,7 @@ using System;
 using ComicShelf.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComicShelf.Migrations
 {
     [DbContext(typeof(ComicShelfContext))]
-    partial class ComicShelfContextModelSnapshot : ModelSnapshot
+    [Migration("20231027140155_addPreorderDate")]
+    partial class addPreorderDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,25 +80,6 @@ namespace ComicShelf.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Country", (string)null);
-                });
-
-            modelBuilder.Entity("ComicShelf.Models.Filter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Json")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Filter", (string)null);
                 });
 
             modelBuilder.Entity("ComicShelf.Models.Issue", b =>
@@ -206,9 +190,6 @@ namespace ComicShelf.Migrations
 
                     b.Property<bool>("OneShot")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime?>("PreorderDate")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("PurchaseDate")
                         .HasColumnType("datetime(6)");

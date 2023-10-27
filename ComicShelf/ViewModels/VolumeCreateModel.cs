@@ -22,6 +22,7 @@ namespace ComicShelf.ViewModels
 
         [DisplayName("Release")]
         public DateTime? ReleaseDate { get; set; }
+        public DateTime? PreorderDate { get; set; }
         public IFormFile? CoverFile { get; set; }
         public string[] Authors { get; set; }
         public int Issues { get; set; }

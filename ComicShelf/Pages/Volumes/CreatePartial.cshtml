@@ -9,7 +9,7 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-        <form method="post" id="create-form" asp-page-handler="Add" data-ajax-method="post" data-ajax="true" enctype="multipart/form-data" data-ajax-complete="createComplete">
+        <form method="post" id="create-form" asp-page-handler="Add" data-ajax-method="post" data-ajax="true" enctype="multipart/form-data" data-ajax-complete="createComplete" onreset="resetCreateForm()">
             <div class="modal-header">
 
                 <div class="modal-title display-6 col-9">
@@ -83,15 +83,25 @@
 
                         <div class="row mb-3">
                             <div class="input-group">
-                                <label asp-for="NewVolume.PurchaseStatus" class="input-group-text">@Localizer["PurchaseStatus"]</label>
-                                <select asp-for="NewVolume.PurchaseStatus" class="form-select" asp-items="@Model.PurchaseStatuses" onchange="purchaseStatusChanged()"></select>
+                                <label for="new-PurchaseStatus" class="input-group-text">@Localizer["PurchaseStatus"]</label>
+                                <select asp-for="NewVolume.PurchaseStatus" class="form-select" asp-items="@Model.PurchaseStatuses" id="new-PurchaseStatus" onchange="purchaseStatusChanged(this, 'new')"></select>
                             </div>
                             <span asp-validation-for="NewVolume.PurchaseStatus" class="text-danger"></span>
 
                         </div>
 
 
-                        <div class="row mb-3" id="purchase-date">
+                        <div class="row mb-3" id="new-preorder-date">
+
+                            <div class="input-group">
+                                <label asp-for="NewVolume.PreorderDate" class="input-group-text">@Localizer["PreorderDate"]</label>
+                                <input asp-for="NewVolume.PreorderDate" class="form-control" type="date" asp-validation-for="NewVolume.PreorderDate" />
+                            </div>
+                            <span asp-validation-for="NewVolume.PreorderDate" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="row mb-3" id="new-purchase-date">
                             <div class="input-group">
                                 <label asp-for="NewVolume.PurchaseDate" class="input-group-text">@Localizer["PurchaseDate"]</label>
                                 <input asp-for="NewVolume.PurchaseDate" class="form-control" type="date" />
@@ -101,7 +111,7 @@
                         </div>
 
 
-                        <div class="row mb-3" id="release-date">
+                        <div class="row mb-3" id="new-release-date">
 
                             <div class="input-group">
                                 <label asp-for="NewVolume.ReleaseDate" class="input-group-text">@Localizer["ReleaseDate"]</label>
@@ -112,10 +122,10 @@
                         </div>
 
 
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="new-reading-status">
                             <div class="input-group">
-                                <label asp-for="NewVolume.Status" class="input-group-text">@Localizer["ReadingStatus"]</label>
-                                <select asp-for="NewVolume.Status" class="form-select" asp-items="@Model.Statuses" onchange="newReadingStatusChanged()"></select>
+                                <label for="new-Status" class="input-group-text">@Localizer["ReadingStatus"]</label>
+                                <select asp-for="NewVolume.Status" class="form-select" asp-items="@Model.Statuses" onchange="readingStatusChanged(this, 'new')" id="new-Status"></select>
                             </div>
                             <span asp-validation-for="NewVolume.Status" class="text-danger"></span>
                         </div>
@@ -147,7 +157,7 @@
                     <div class="row">
                         <div class="col">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
-                            <input type="reset" id="reset-button" onclick="resetValidation(); resetPreview('new-volume-cover');newReadingStatusChanged();purchaseStatusChanged();" value="@Localizer["Clear"]" class="btn btn-secondary" />
+                            <input type="reset" id="reset-button" value="@Localizer["Clear"]" class="btn btn-secondary" />
                         </div>
                         <div class="col-auto">
                             <div class="row">

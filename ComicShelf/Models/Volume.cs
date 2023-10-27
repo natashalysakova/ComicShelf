@@ -24,6 +24,8 @@ namespace ComicShelf.Models
         public DateTime CreationDate { get; set; }
         public DateTime ModificationDate{ get; set; }
         public DateTime? ReleaseDate{ get; set; }
+        public DateTime? PreorderDate { get; set; }
+
         public bool OneShot { get; set; }
 
         public int SeriesId { get; set; }
