@@ -312,4 +312,31 @@
   <data name="PreorderDate" xml:space="preserve">
     <value>Дата передзамовлення</value>
   </data>
+  <data name="FilterName" xml:space="preserve">
+    <value>Назва фільтру</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Зберегти</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>Фільтри</value>
+  </data>
+  <data name="AllAvailable" xml:space="preserve">
+    <value>Вся поличка</value>
+  </data>
+  <data name="Finished" xml:space="preserve">
+    <value>Прочитані</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Не вибрано</value>
+  </data>
+  <data name="SaveFilter" xml:space="preserve">
+    <value>Зберегти фільтр</value>
+  </data>
+  <data name="standart" xml:space="preserve">
+    <value>Загальні фільтри</value>
+  </data>
+  <data name="custom" xml:space="preserve">
+    <value>Користувацькі фільтри</value>
+  </data>
 </root>

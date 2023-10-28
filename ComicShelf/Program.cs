@@ -19,12 +19,18 @@ using Microsoft.AspNetCore.Builder;
 using MySqlConnector;
 using ComicShelf.Services;
 using ComicShelf.Utilities;
+using ComicShelf.Localization;
+using Microsoft.Extensions.Localization;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
+
 
         if (builder.Environment.IsDevelopment())
         {
@@ -117,8 +123,9 @@ internal class Program
             options.Filters.Add<ViewBagActionFilter>();
         });
 
-        builder.Services.AddSingleton(typeof(EnumUtilities));
 
+        builder.Services.AddSingleton(typeof(LocalizationService));
+        builder.Services.AddSingleton(typeof(EnumUtilities));
 
         builder.Services.AddSession(option =>
         {

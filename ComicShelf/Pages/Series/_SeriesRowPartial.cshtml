@@ -1,11 +1,11 @@
 ﻿@using ComicShelf.Localization;
 @using ComicShelf.Pages.SeriesNs;
-@using Microsoft.AspNetCore.Mvc.Localization;
+@using ComicShelf.Services;
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model SeriesModel
-@inject IHtmlLocalizer<SharedResource> Localizer
+@inject LocalizationService Localizer
 
 
 <form data-ajax="true" method="post" data-ajax-method="post" asp-page-handler="Update"

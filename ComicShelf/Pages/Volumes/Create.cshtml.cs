@@ -20,10 +20,10 @@ namespace ComicShelf.Pages.Volumes
     {
         private readonly VolumeService _volumeService;
         private readonly SearchService _searchService;
-        private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly LocalizationService _localizer;
         private readonly EnumUtilities _enumUtilities;
 
-        public CreateModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService, IStringLocalizer<SharedResource> localizer, EnumUtilities enumUtilities)
+        public CreateModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService, LocalizationService localizer, EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
             _searchService = searchService;

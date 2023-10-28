@@ -1,5 +1,8 @@
 ﻿using ComicShelf.Models;
+using ComicShelf.Pages.Volumes;
+using ComicShelf.Services;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Net.NetworkInformation;
@@ -13,7 +16,6 @@ internal class DbInitializer
         _context = context;
     }
     private const string unknown = "Unknown";
-
     internal void Initialize()
     {
         //context.Database.EnsureCreated();
@@ -31,6 +33,54 @@ internal class DbInitializer
             _context.Publishers.Add(new Publisher() { Country = unknownCountry, Name = unknown });
             _context.SaveChanges();
         }
+
+
+        var standartFilters = new Filter[]
+            {
+                new Filter()
+                {
+                    Name = "AllAvailable",
+                    DisplayOrder = 0,
+                    Group = FilterService.STANDART,
+                    Json = JsonConvert.SerializeObject(new BookshelfParams(){ filter = PurchaseFilterEnum.Available, sort = SortEnum.ByPurchaseDate})
+                },
+                new Filter()
+                {
+                    Name = "Finished",
+                    DisplayOrder = 1,
+                    Group = FilterService.STANDART,
+                    Json = JsonConvert.SerializeObject(new BookshelfParams(){ filter = PurchaseFilterEnum.Available, sort = SortEnum.ByPurchaseDate, reading = ReadingEnum.Completed })
+                },
+                new Filter()
+                {
+                    Name = "NewSeries",
+                    DisplayOrder = 2,
+                    Group = FilterService.STANDART,
+                    Json = JsonConvert.SerializeObject(new BookshelfParams(){ filter = PurchaseFilterEnum.Available, sort = SortEnum.ByPurchaseDate, reading = ReadingEnum.NewSeries})
+                },
+            };
+
+        if (_context.Filters.Count(x=>x.Group == FilterService.STANDART) !=  standartFilters.Length)
+        {
+            foreach (var item in standartFilters)
+            {
+                if(_context.Filters.SingleOrDefault(x=>x.Name == item.Name) == default)
+                {
+                    _context.Filters.Add(item);
+                }
+            }
+
+            _context.SaveChanges();
+        }
+
+        foreach (var item in _context.Filters)
+        {
+            if (string.IsNullOrEmpty(item.Group))
+            {
+                item.Group = FilterService.CUSTOM;
+            }
+        }
+        _context.SaveChanges();
 
         if (_context.Countries.Count() > 1)
         {

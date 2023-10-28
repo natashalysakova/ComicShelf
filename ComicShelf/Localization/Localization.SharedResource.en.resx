@@ -312,4 +312,31 @@
   <data name="PreorderDate" xml:space="preserve">
     <value>Preorder date</value>
   </data>
+  <data name="FilterName" xml:space="preserve">
+    <value>Filter name</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="AllAvailable" xml:space="preserve">
+    <value>On the shelf</value>
+  </data>
+  <data name="custom" xml:space="preserve">
+    <value>Custom filters</value>
+  </data>
+  <data name="Finished" xml:space="preserve">
+    <value>Finished</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="SaveFilter" xml:space="preserve">
+    <value>Custom filters</value>
+  </data>
+  <data name="standart" xml:space="preserve">
+    <value>Standart filters</value>
+  </data>
 </root>

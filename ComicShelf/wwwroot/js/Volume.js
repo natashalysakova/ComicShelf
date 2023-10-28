@@ -9,6 +9,8 @@ $.validator.unobtrusive.adapters.add("reqif", [], function (options) {
     options.messages["reqif"] = options.message;
 });
 
+var createPopover
+
 $(function () {
 
     $('.filter').each(function () {
@@ -32,7 +34,6 @@ $(function () {
         $this.data('sort', sortDir).find('.bi').attr('class', 'bi bi-sort-' + sortDir);
 
         filter(event);
-
     });
 
     function split(val) {
@@ -49,22 +50,7 @@ $(function () {
             $.getJSON("?handler=SearchSeries", {
                 term: request.term
             }, response);
-        },
-        //focus: function () {
-        //    // prevent value inserted on focus
-        //    return false;
-        //},
-        //select: function (event, ui) {
-        //    var terms = split(this.value);
-        //    // remove the current input
-        //    terms.pop();
-        //    // add the selected item
-        //    terms.push(ui.item.label);
-        //    // add placeholder to get the comma-and-space at the end
-        //    terms.push("");
-        //    this.value = terms.join(", ");
-        //    return false;
-        //}
+        }
     })
 
     $(".multple-datalist").focusin(function () { $(this).attr("type", "email"); });
@@ -76,6 +62,23 @@ $(function () {
         readingStatusChanged('Status', 'new')
     })
 
+    var options = {
+        html: true,
+        //html element
+        //content: $("#popover-content")
+        content: $('[data-name="save-filter-form"]')
+        //Doing below won't work. Shows title only
+        //content: $("#popover-content").html()
+
+    }
+    var exampleEl = document.getElementById('save-popover')
+    createPopover = new bootstrap.Popover(exampleEl, options)
+
+
+    //read current filters from cookies and fill calues on the page
+    const filters = getJSONFromCookie('filters');
+    fillFields(filters);
+    findMatch(filters);
 });
 
 function resetFilters(e) {
@@ -83,21 +86,27 @@ function resetFilters(e) {
     $('#Purchase_All').prop("checked", "checked")
     $('#Digitality_All').prop("checked", "checked")
     $('#Reading_All').prop("checked", "checked")
-    $('#sortType').val("ByPurchaseDate")
+    $('#sortType').val(0)
     $('#search-field').val("")
     $('#sortDirection').attr('data-sort', "up");
     $('#sortDirection').data('sort', 'up').find('.bi').attr('class', 'bi bi-sort-up');
+    $('#filter-presets').val(0)
 
     filter(e);
 }
 
 function fillFilters() {
-    var sort = $('select[id=sortType]').val()
+    var sort = parseInt($('select[id=sortType]').val())
     var dir = $('button[id=sortDirection').data('sort')
-    var search = $('input[id=search-field]').val()
-    var digitality = $('input[type=radio][name=digitality]:checked').attr('data')
-    var reading = $('input[type=radio][name=reading]:checked').attr('data');
-    var filter = $('input[type=radio][name=filter]:checked').attr('data')
+    if (dir == 'up') {
+        dir = 0;
+    } else {
+        dir = 1;
+    }
+    var search = replaceEmptyStringWithNull($('input[id=search-field]').val())
+    var digitality = parseInt($('input[type=radio][name=digitality]:checked').val())
+    var reading = parseInt($('input[type=radio][name=reading]:checked').val())
+    var filter = parseInt($('input[type=radio][name=filter]:checked').val())
 
 
     return {
@@ -111,7 +120,7 @@ function fillFilters() {
 }
 
 function selectRadioButtonByValue(name, value) {
-    var radioButtons = document.querySelectorAll('input[type=radio][name='+name+']');
+    var radioButtons = document.querySelectorAll('input[type=radio][name=' + name + ']');
 
     radioButtons.forEach(function (radio) {
         if (radio.value == value) {
@@ -122,18 +131,79 @@ function selectRadioButtonByValue(name, value) {
 
 function fillFields(filters) {
     $('select[id=sortType]').val(filters.sort)
-    $('button[id=sortDirection').data('sort', filters.dir)
+
+    var direct = 'up';
+    if (filters.direction == 1) {
+        direct = 'down'
+    }
+
+
+    $('#sortDirection').attr('data-sort', direct);
+    $('#sortDirection').data('sort', direct).find('.bi').attr('class', 'bi bi-sort-' + direct);
+
     $('input[id=search-field]').val(filters.search)
     selectRadioButtonByValue('digitality', filters.digitality)
     selectRadioButtonByValue('reading', filters.reading)
     selectRadioButtonByValue('filter', filters.filter)
 }
 
+// Function to compare JSON objects
+function areEqual(obj1, obj2) {
+    // Convert objects to strings after sorting keys to ensure consistent ordering
+    const stringified1 = JSON.stringify(obj1, Object.keys(obj1).sort());
+    const stringified2 = JSON.stringify(obj2, Object.keys(obj2).sort());
+    return stringified1 === stringified2;
+}
+function replaceEmptyStringWithNull(inputString) {
+    // Trim whitespace and check if the string is empty
+    if (inputString.trim() === '') {
+        return null;
+    }
+    return inputString;
+}
+
+function findMatch(filters) {
+    const selectElement = document.getElementById('filter-presets');
+    const options = selectElement.getElementsByTagName('option');
+    for (let i = 0; i < options.length; i++) {
+        const option = options[i];
+        const jsonAttribute = JSON.parse(option.getAttribute('data-json'));
+
+        if (jsonAttribute == undefined) {
+            continue;
+        }
+        // Compare the JSON data
+        if (areEqual(jsonAttribute, filters)) {
+            console.log('Match found:', option.textContent);
+            selectElement.value = option.value;
+            // Do something with the matched option
+            return; // If you only want the first match
+        }
+    }
+    selectElement.value = 0;
+}
+
+let previousSearch;
 function filter(e) {
 
     var filters;
 
-    if (e != undefined && e.target.selectedOptions != undefined) {
+    if (e != undefined && e.target.id == 'search-field') {
+        const currentValue = e.target.value;
+
+        if (currentValue == previousSearch) {
+            return;
+        } else {
+            previousSearch = currentValue;
+        }
+    }
+
+    if (e != undefined && e.target.id == 'filter-presets') {
+        if (e.target.value == 0) {
+            resetFilters();
+            return;
+        }
+
         filters = JSON.parse(e.target.selectedOptions[0].dataset.json);
 
         if (filters == undefined) {
@@ -146,16 +216,8 @@ function filter(e) {
     else {
         filters = fillFilters();
     }
+    findMatch(filters);
 
-
-    ////var existing = _.isEqual(selFilter, filters)
-    //if (existing) {
-    //    //selectfilter in Dropdown
-
-    //}
-    //else {
-    //    $("#filter-presets").val(0);
-    //}
 
     $.ajax({
         url: "?handler=Filtered",
@@ -185,6 +247,10 @@ function bookClick(id) {
 
 function refillFilterDropdown(e) {
     if (e.status == 200) {
+
+        if (createPopover != undefined) {
+            createPopover.hide();
+        }
 
         $("#filterName").val('');
 
@@ -419,4 +485,22 @@ function showPreview(event) {
 function resetPreview(previewId) {
     document.getElementById(previewId).src = "images\\static\\no-cover.png";
 
+}
+
+function getJSONFromCookie(cookieName) {
+    const name = cookieName + '=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(';');
+
+    for (let i = 0; i < cookieArray.length; i++) {
+        let cookie = cookieArray[i];
+        while (cookie.charAt(0) === ' ') {
+            cookie = cookie.substring(1);
+        }
+        if (cookie.indexOf(name) === 0) {
+            const jsonStr = cookie.substring(name.length, cookie.length);
+            return JSON.parse(jsonStr);
+        }
+    }
+    return null; // Return null if the cookie isn't found or doesn't contain valid JSON
 }

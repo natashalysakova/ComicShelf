@@ -1,9 +1,10 @@
 ﻿@page "/"
 @using ComicShelf.Localization;
+@using ComicShelf.Services;
 @using Microsoft.AspNetCore.Mvc.Localization;
 @using Newtonsoft.Json;
 @model ComicShelf.Pages.Volumes.IndexModel
-@inject IHtmlLocalizer<SharedResource> Localizer
+@inject LocalizationService Localizer
 
 @{
     ViewData["Title"] = Localizer["MainPage"];
@@ -14,17 +15,48 @@
         <div class="row single-button">
             <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["AddNewVolume"]</button>
         </div>
-        <div class="row single-button">
-            <span class="filter-header">@Localizer["Filters"]</span>
-            <select class="form-select half-transparent" id="filter-presets" onchange="filter(event)">
-                <option class="bg-secondary" value="0">@Localizer["None"]</option>
-                @foreach (var item in Model.Filters)
-                {
-                    <option class="bg-secondary" value="@item.id" data-json="@item.json">@item.name</option>
-                }
-            </select>
+        <div class="row single-button mb-3">
+            <div class="col" style="
+                                    padding-left: 0;
+                                    padding-right: 0;">
+
+                <select class="form-select half-transparent" id="filter-presets" onchange="filter(event)">
+                    <option class="bg-secondary" value="0">@Localizer["None"]</option>
+                    @foreach (var group in Model.Filters)
+                    {
+                        <optgroup class="bg-secondary" label="@Localizer[group.name]">
+                            @foreach (var item in group.items)
+                            {
+                                var text = group.name == "standart" ? @Localizer[item.name] : item.name;
+                                <option class="bg-secondary" value="@item.id" data-json="@item.json">@text</option>
+                            }
+                        </optgroup>
+                    }
+                </select>
+            </div>
+            <div class="col-auto" style="
+                                    padding-right: 0;">
+
+                <button type="button" class="btn btn-success" id="save-popover"
+                        data-bs-toggle="popover" data-bs-title="@Localizer["SaveFilter"]">
+                    +
+                </button>
+                <div hidden>
+                    <form asp-page-handler="SaveFilter" data-ajax-method="post" data-ajax="true" data-ajax-complete="refillFilterDropdown" data-name="save-filter-form">
+                        <input type="text" class="form-control half-transparent mb-3" name="filterName" id="filterName" autocomplete="off" placeholder="@Localizer["FilterName"]" />
+                        <div class="row single-button">
+                            <button type="submit" class="btn btn-info" data-bs-title="@Localizer["SaveFilter"]">@Localizer["Save"]</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
         </div>
-       
+
+        <div class="row single-button">
+            <button class="btn btn-outline-danger mb-3" onclick="resetFilters()">@Localizer["Reset"]</button>
+        </div>
+
         <div class="row" id="filters">
 
             @{
@@ -71,17 +103,6 @@
             </div>
         </div>
 
-        <form asp-page-handler="SaveFilter" data-ajax-method="post" data-ajax="true" data-ajax-complete="refillFilterDropdown">
-            <div class="row single-button mb-3">
-                <input type="text" class="form-control half-transparent" name="filterName" id="filterName" autocomplete="off" placeholder="@Localizer["FilterName"]" />
-            </div>
-            <div class="row single-button">
-                <button type="submit" class="btn btn-outline-info mb-3">@Localizer["Save"]</button>
-            </div>
-        </form>
-        <div class="row single-button">
-            <button class="btn btn-outline-danger mb-3" onclick="resetFilters()">@Localizer["Reset"]</button>
-        </div>
 
     </div>
     <div class="col-lg-9 col-xl-10">
@@ -93,12 +114,12 @@
             </div>
             <div class="col">
 
-                <div class="input-group col">
+                <div class="input-group col-auto">
 
                     <select id="sortType" class="form-select half-transparent" aria-label="Default select example" asp-for="@filters.sort">
                         @foreach (var item in ViewData["Sort"] as IEnumerable<SortEnum>)
                         {
-                            <option value="@item" class="bg-secondary">@Localizer["" + item]</option>
+                            <option value="@((int)item)" class="bg-secondary" data="@item">@Localizer[item.ToString()]</option>
                         }
                         @*                            <option value="0">@Localizer["ByCreationDate"]</option>
                         <option value="1">@Localizer["ByTitle"]</option>

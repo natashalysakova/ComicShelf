@@ -30,9 +30,9 @@ namespace ComicShelf.Pages.Volumes
         private readonly CountryService _countryService;
         private readonly PublishersService _publishersService;
         private readonly FilterService _filterService;
-        private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly LocalizationService _localizer;
         private readonly EnumUtilities _enumUtilities;
-        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, CountryService countryService, PublishersService publishersService, FilterService filterService, IStringLocalizer<SharedResource> localizer, EnumUtilities enumUtilities)
+        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, CountryService countryService, PublishersService publishersService, FilterService filterService, LocalizationService localizer, EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
             _seriesService = seriesService;
@@ -49,7 +49,9 @@ namespace ComicShelf.Pages.Volumes
 
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
-            Filters.AddRange(filterService.GetAll().OrderBy(x => x.Name).Select(x => new { id = x.Id, name = x.Name, selected = false, json = x.Json }).ToList());
+            Filters.AddRange(filterService.GetAllForView());
+
+            var test = _localizer["test"].ResourceNotFound; 
         }
 
         [BindProperty]
@@ -185,9 +187,9 @@ namespace ComicShelf.Pages.Volumes
         {
             var filters = FromCookies();
 
-            _filterService.Add(new Filter() { Name = filterName, Json = JsonConvert.SerializeObject(filters)});
+            _filterService.Add(new Filter() { Name = filterName, Json = JsonConvert.SerializeObject(filters) });
 
-            return new JsonResult( _filterService.GetAll().OrderBy(x=>x.Name).Select(x=> new { id= x.Id, name= x.Name, selected = x.Name == filterName, json=x.Json }).ToList());
+            return new JsonResult(_filterService.GetAllForView());
         }
 
     }
