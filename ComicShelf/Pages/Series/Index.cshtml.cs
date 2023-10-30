@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using ComicShelf.Models;
-using ComicShelf.Services;
-using ComicShelf.Utilities;
-using ComicType = ComicShelf.Models.Enums.Type;
+using ComicType = Backend.Models.Enums.Type;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using SeriesM = ComicShelf.Models.Series;
-using NuGet.Packaging;
+using Services.Services;
+using ComicShelf.Utilities;
+using Backend.Models;
+using Services.ViewModels;
 
-namespace ComicShelf.Pages.SeriesNs
+namespace ComicShelf.Pages.Series
 {
     public class IndexModel : PageModel
     {
@@ -27,30 +21,21 @@ namespace ComicShelf.Pages.SeriesNs
             _enumUtilities = enumUtilities;
             _publishersService = publishersService;
 
-
-            //Publishers.AddRange(_publishersService.GetAll().Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }));
-
             Publishers = new SelectList(_publishersService.GetAll(), nameof(Publisher.Id), nameof(Publisher.Name));
         }
 
         public SelectList Publishers { get; set; }
-        public IList<SeriesModel> Series { get; set; } = default!;
+        public IList<SeriesViewModel> Series { get; set; } = default!;
 
         public void OnGetAsync()
         {
             ViewData["Types"] = _enumUtilities.GetSelectItemList<ComicType>();
             ViewData["Publishers"] = Publishers;
-            var tmp = _service.GetAll(); 
-            foreach (var item in tmp) {
-                if(item.Publisher != null)
-                {
-                    Console.WriteLine(item.Name);
-                }
-            }   
-            Series = tmp.Select(x => new SeriesModel(x)).ToList() ;
+
+            Series = _service.GetAll().ToList();
         }
 
-        public IActionResult OnPostUpdate(SeriesModel series)
+        public IActionResult OnPostUpdate(SeriesUpdateModel series)
         {
             if (series is null)
                 return BadRequest("Nothing to update");
@@ -62,7 +47,7 @@ namespace ComicShelf.Pages.SeriesNs
 
             _service.Update(series);
 
-            var newSeries = new SeriesModel(_service.Get(series.Id));
+            var newSeries = _service.Get(series.Id);
 
             return Partial("_SeriesRowPartial", newSeries);
         }

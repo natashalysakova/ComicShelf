@@ -1,59 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using ComicShelf.Models;
+using Services.Services;
+using Services.ViewModels;
 
-namespace ComicShelf.Pages.SeriesNs
+namespace ComicShelf.Pages.Series
 {
     public class DeleteModel : PageModel
     {
-        private readonly ComicShelfContext _context;
+        private readonly SeriesService _seriesService;
 
-        public DeleteModel(ComicShelfContext context)
+        public DeleteModel(SeriesService seriesService)
         {
-            _context = context;
+            _seriesService = seriesService;
         }
 
         [BindProperty]
-      public Models.Series Series { get; set; } = default!;
+        public SeriesViewModel Series { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGetAsync(int? id)
         {
-            if (id == null || _context.Series == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var series = await _context.Series.FirstOrDefaultAsync(m => m.Id == id);
+            var series = _seriesService.Get(id.Value);
 
             if (series == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Series = series;
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public IActionResult OnPostAsync(int? id)
         {
-            if (id == null || _context.Series == null)
+            if (id == null)
             {
                 return NotFound();
             }
-            var series = await _context.Series.FindAsync(id);
+            var series = _seriesService.Get(id.Value);
 
             if (series != null)
             {
                 Series = series;
-                _context.Series.Remove(Series);
-                await _context.SaveChangesAsync();
+                _seriesService.Remove(id);
             }
 
             return RedirectToPage("./Index");

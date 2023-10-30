@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using NuGet.Configuration;
-using System.Security.Policy;
-using ComicShelf.Services;
+using Services.Services;
 
 namespace ComicShelf
 {

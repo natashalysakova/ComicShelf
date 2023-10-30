@@ -1,32 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ComicShelf.Models;
-using ComicShelf.Services;
-using ComicShelf.Models.Enums;
-using System.ComponentModel.DataAnnotations;
 using ComicShelf.Localization;
-using Microsoft.Extensions.Localization;
+using Services.Services;
+using Backend.Models.Enums;
+using Services.ViewModels;
 using ComicShelf.Utilities;
-using ComicShelf.ViewModels;
 
 namespace ComicShelf.Pages.Volumes
 {
     public class CreateModel : PageModel
     {
         private readonly VolumeService _volumeService;
-        private readonly SearchService _searchService;
         private readonly LocalizationService _localizer;
         private readonly EnumUtilities _enumUtilities;
 
-        public CreateModel(VolumeService volumeService, SearchService searchService, SeriesService seriesService, AuthorsService authorsService, LocalizationService localizer, EnumUtilities enumUtilities)
+        public CreateModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, LocalizationService localizer, EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
-            _searchService = searchService;
             _localizer = localizer;
             _enumUtilities = enumUtilities;
 
@@ -34,8 +25,8 @@ namespace ComicShelf.Pages.Volumes
             PurchaseStatuses.AddRange(_enumUtilities.GetSelectItemList<PurchaseStatus>());
             Ratings.AddRange(_enumUtilities.GetRatingsSelectItemList());
 
-            Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
-            Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+            Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id }));
+            Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id }));
         }
 
         public List<SelectListItem> Statuses { get; set; } = new List<SelectListItem>();
@@ -63,17 +54,6 @@ namespace ComicShelf.Pages.Volumes
             
             _volumeService.Add(Volume);
             return RedirectToPage("./Index");
-        }
-
-        public IActionResult OnGetSearchSeries(string term)
-        {
-            var res = _searchService.FindSeriesByTerm(term);
-            return new JsonResult(res);
-        }
-        public IActionResult OnGetSearchAutors(string term)
-        {
-            var res = _searchService.FindAutorByTerm(term);
-            return new JsonResult(res);
         }
     }
 }

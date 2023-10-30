@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Backend.Models.Enums;
+using ComicShelf.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using ComicShelf.Models;
-using ComicShelf.Services;
-using ComicShelf.Utilities;
-using ComicShelf.Models.Enums;
+using Services.Services;
+using Services.ViewModels;
 
 namespace ComicShelf.Pages.Authors
 {
@@ -23,15 +19,15 @@ namespace ComicShelf.Pages.Authors
             _enumUtilities = enumUtilities;
         }
 
-        public IList<Author> Author { get; set; } = default!;
+        public IList<AuthorViewModel> Author { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
             ViewData["AvailableRoles"] = _enumUtilities.GetSelectItemList<Roles>();
-            Author = _service.GetAll().Include(x=>x.Volumes).ThenInclude(x=>x.Series).OrderBy(x => x.Name).ToList(); ;
+            Author = _service.GetAll().OrderBy(x => x.Name).ToList(); ;
         }
 
-        public async Task<IActionResult> OnPostUpdate(Author author)
+        public async Task<IActionResult> OnPostUpdate(AuthorUpdateModel author)
         {
             if(!_service.Exists(author.Id))
             {

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ComicShelf.Models;
-using ComicShelf.Services;
+using Services.Services;
+using Services.ViewModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace ComicShelf.Pages.Publishers
@@ -26,7 +22,7 @@ namespace ComicShelf.Pages.Publishers
         }
 
         [BindProperty]
-        public Publisher Publisher { get; set; } = default!;
+        public PublisherUpdateModel Publisher { get; set; } = default!;
 
         public IEnumerable<SelectListItem> CountriesList { get; set; }
 
@@ -42,13 +38,13 @@ namespace ComicShelf.Pages.Publishers
                 return NotFound();
             }
 
-            var publisher = _publisherService.GetWithCountry(id);
+            var publisher = _publisherService.Get(id);
             if (publisher == null)
             {
                 return NotFound();
             }
-            Publisher = publisher;
-            SelectedCountry = publisher.Country.Id.ToString();
+            //Publisher = publisher;
+            SelectedCountry = publisher.CountryId;
             return Page();
         }
 

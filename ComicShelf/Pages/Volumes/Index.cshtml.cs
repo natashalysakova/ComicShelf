@@ -1,25 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using ComicShelf.Models;
-using ComicShelf.Services;
-using Microsoft.Extensions.Localization;
-using ComicShelf.Models.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Net;
-using Org.BouncyCastle.Crypto.Engines;
 using NuGet.Packaging;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.Localization;
 using ComicShelf.Localization;
-using ComicShelf.Utilities;
-using ComicShelf.ViewModels;
 using Newtonsoft.Json;
-using ComicShelf.Pages.Publishers;
+using Services.Services;
+using Backend.Models.Enums;
+using Services.Services.Enums;
+using Services.ViewModels;
+using ComicShelf.Utilities;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -48,7 +39,7 @@ namespace ComicShelf.Pages.Volumes
             Digitalities.AddRange(_enumUtilities.GetSelectItemList<VolumeType>());
 
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
-            Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+            Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id}));
             Filters.AddRange(filterService.GetAllForView());
 
             var test = _localizer["test"].ResourceNotFound; 
@@ -65,22 +56,22 @@ namespace ComicShelf.Pages.Volumes
         public List<SelectListItem> Digitalities { get; set; } = new List<SelectListItem>();
         public List<dynamic> Filters { get; set; } = new List<dynamic>();
 
-        public IList<Volume> Volumes { get; set; } = default!;
-        public IList<Volume> AnnouncedAndPreordered
+        public IList<VolumeViewModel> Volumes { get; set; } = default!;
+        public IList<VolumeViewModel> AnnouncedAndPreordered
         {
             get
             {
-                return Volumes.Where(x => x.PurchaseStatus == Models.Enums.PurchaseStatus.Announced || x.PurchaseStatus == Models.Enums.PurchaseStatus.Preordered).ToList();
+                return Volumes.Where(x => x.PurchaseStatus == PurchaseStatus.Announced || x.PurchaseStatus == Backend.Models.Enums.PurchaseStatus.Preordered).ToList();
             }
         }
-        public IList<Volume> WishList
+        public IList<VolumeViewModel> WishList
         {
             get
             {
-                return Volumes.Where(x => x.PurchaseStatus == Models.Enums.PurchaseStatus.Wishlist).ToList();
+                return Volumes.Where(x => x.PurchaseStatus == Backend.Models.Enums.PurchaseStatus.Wishlist).ToList();
             }
         }
-        public IList<Volume> Purchased
+        public IList<VolumeViewModel> Purchased
         {
             get
             {
@@ -127,12 +118,12 @@ namespace ComicShelf.Pages.Volumes
         public PartialViewResult OnGetVolumeAsync(int id)
         {
             var volume = _volumeService.Get(id);
-            _volumeService.LoadReference(volume, x => x.Series);
-            _volumeService.LoadCollection(volume, x => x.Authors);
-            _seriesService.LoadReference(volume.Series, x => x.Publisher);
-            _publishersService.LoadReference(volume.Series.Publisher, x => x.Country);
+            //_volumeService.LoadReference(volume, x => x.Series);
+            //_volumeService.LoadCollection(volume, x => x.Authors);
+            //_seriesService.LoadReference(volume.Series, x => x.Publisher);
+            //_publishersService.LoadReference(volume.Series.Publisher, x => x.Country);
 
-            var resultVD = new ViewDataDictionary<Volume>(ViewData, volume);
+            var resultVD = new ViewDataDictionary<VolumeViewModel>(ViewData, volume);
             resultVD["PurchaseStatuses"] = _enumUtilities.GetPurchaseStatusesSelectItemList(volume.PurchaseStatus);
             resultVD["ReadingStatuses"] = _enumUtilities.GetSelectItemList<Status>();
             resultVD["Ratings"] = _enumUtilities.GetRatings();
@@ -146,11 +137,11 @@ namespace ComicShelf.Pages.Volumes
 
         public async Task<IActionResult> OnPostChangeStatus(VolumeUpdateModel volumeToUpdate)
         {
-            _volumeService.UpdatePurchaseStatus(volumeToUpdate);
+            _volumeService.Update(volumeToUpdate);
             var item = _volumeService.Get(volumeToUpdate.Id);
             if (item != null)
             {
-                _volumeService.LoadReference(item, x => x.Series);
+                //_volumeService.LoadReference(item, x => x.Series);
                 var partial = Partial("_BookPartial", item);
                 return partial;
             }
@@ -187,7 +178,7 @@ namespace ComicShelf.Pages.Volumes
         {
             var filters = FromCookies();
 
-            _filterService.Add(new Filter() { Name = filterName, Json = JsonConvert.SerializeObject(filters) });
+            _filterService.Add(new FilterCreateModel() { Name = filterName, Json = JsonConvert.SerializeObject(filters) });
 
             return new JsonResult(_filterService.GetAllForView());
         }

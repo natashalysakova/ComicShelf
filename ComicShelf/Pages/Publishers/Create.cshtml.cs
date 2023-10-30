@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ComicShelf.Models;
-using ComicShelf.Services;
+using Services.Services;
+using Services.ViewModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace ComicShelf.Pages.Publishers
@@ -35,7 +31,7 @@ namespace ComicShelf.Pages.Publishers
         }
 
         [BindProperty]
-        public Publisher Publisher { get; set; }
+        public PublisherCreateModel Publisher { get; set; }
 
         [BindProperty]
         [Required]
@@ -51,7 +47,7 @@ namespace ComicShelf.Pages.Publishers
             var country = _countryService.Get(int.Parse(SelectedCountry));
             if (country != null)
             {
-                Publisher.Country = country;
+                Publisher.Country = country.Id;
             }
 
             if (!ModelState.IsValid || Publisher == null)

@@ -1,13 +1,12 @@
-﻿@using ComicShelf.Localization;
-@using ComicShelf.Models;
-@using ComicShelf.Utilities;
-@using ComicShelf.Services;
+﻿@using Backend.Models.Enums;
+@using ComicShelf.Localization;
+@using Services.ViewModels;
 
 @inject LocalizationService Localizer
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model Volume
+@model VolumeViewModel
 
 <form method="post"
       asp-page-handler="ChangeStatus" enctype="multipart/form-data" data-ajax-method="post" data-ajax="true"
@@ -20,7 +19,7 @@
     <div class="modal-header">
         <div class="row">
             <div class="modal-title display-6" id="exampleModalLabel">
-                @Model.Series.Name
+                @Model.SeriesName
                 @if (!Model.OneShot)
                     @Model.Number
 
@@ -28,9 +27,9 @@
 
 
                 </div>
-                @if (!string.IsNullOrEmpty(Model.Series.OriginalName))
+                @if (!string.IsNullOrEmpty(Model.SeriesOriginalName))
             {
-                <div class="modal-title" id="exampleModalLabel">@Model.Series.OriginalName</div>
+                <div class="modal-title" id="exampleModalLabel">@Model.SeriesOriginalName</div>
             }
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -53,7 +52,7 @@
                         <span type="text" class="form-control">@Model.Title</span>
                     </div>
                     <div class="input-group mb-3">
-                        @if (Model.Authors.Count < 2)
+                        @if (Model.Authors.Count() < 2)
                         {
                             <span class="input-group-text">@Localizer["Author"]</span>
                         }
@@ -62,15 +61,15 @@
                             <span class="input-group-text">@Localizer["Authors"]</span>
                         }
 
-                        <span type="text" class="form-control">@string.Join(", ", Model.Authors.Select(x=>x.Name))</span>
+                        <span type="text" class="form-control">@string.Join(", ", Model.Authors)</span>
 
                     </div>
-                    @if (Model.Series.Publisher.Name != "Unknown")
+                    @if (Model.SeriesPublisherName != "Unknown")
                     {
                         <div class="input-group mb-3">
                             <span class="input-group-text">@Localizer["Publisher"]</span>
-                            <span type="text" class="form-control">@Model.Series.Publisher.Name</span>
-                            <span class="input-group-text"> <img class="flag" src="@Model.Series.Publisher.Country.FlagPNG" /></span>
+                            <span type="text" class="form-control">@Model.SeriesPublisherName</span>
+                            <span class="input-group-text"> <img class="flag" src="@Model.SeriesPublisherCountryFlag" /></span>
                         </div>
 
                     }
@@ -79,13 +78,13 @@
                         <span type="text" class="form-control">@Model.Number</span>
                         <span class="input-group-text">/</span>
                         @{
-                            if (@Model.Series.Ongoing)
+                            if (@Model.SeriesOngoing)
                             {
                                 <span class="form-control text-bg-success">@Localizer["Ongoing"]</span>
                             }
                             else
                             {
-                                <span type="text" class="form-control">@Model.Series.TotalVolumes</span>
+                                <span type="text" class="form-control">@Model.SeriesTotalVolumes</span>
                             }
 
                             if (Model.OneShot)
@@ -126,10 +125,10 @@
 
                             switch (Model.Status)
                             {
-                                case Models.Enums.Status.Completed:
+                                case Status.Completed:
                                     iconRead = "bi-book-fill";
                                     break;
-                                case Models.Enums.Status.Reading:
+                                case Status.Reading:
                                     iconRead = "bi-book-half";
                                     break;
                                 default:

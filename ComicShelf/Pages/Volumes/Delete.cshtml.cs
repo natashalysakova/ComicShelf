@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using ComicShelf.Models;
 
 namespace ComicShelf.Pages.Volumes
 {
     public class DeleteModel : PageModel
     {
-        private readonly ComicShelf.Models.ComicShelfContext _context;
+        private readonly ComicShelfContext _context;
 
-        public DeleteModel(ComicShelf.Models.ComicShelfContext context)
+        public DeleteModel(ComicShelfContext context)
         {
             _context = context;
         }

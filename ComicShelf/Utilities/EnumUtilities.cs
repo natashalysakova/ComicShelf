@@ -1,11 +1,8 @@
-﻿using ComicShelf.Localization;
-using ComicShelf.Models;
-using ComicShelf.Models.Enums;
-using ComicShelf.Services;
+﻿
+using Backend.Models.Enums;
+using ComicShelf.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Localization;
-using Org.BouncyCastle.Asn1.Ocsp;
+
 
 namespace ComicShelf.Utilities
 {
@@ -120,7 +117,7 @@ namespace ComicShelf.Utilities
             var values = Enum.GetValues(type);
             for (var i = 0; i < values.Length; i++)
             {
-                yield return new SelectListItem { Text = localizer["" + enums[i]], Value = values.GetValue(i).ToString() };
+                yield return new SelectListItem { Text = localizer[enums[i]], Value = values.GetValue(i).ToString() };
             }
         }
 

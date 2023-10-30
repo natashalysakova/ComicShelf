@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Backend.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using ComicShelf.Models;
-using ComicShelf.Services;
-using System.Globalization;
-using System.Diagnostics.Metrics;
-using System.Drawing;
+using Services.Services;
+using Services.ViewModels;
 
 namespace ComicShelf.Pages.Countries
 {
@@ -22,11 +15,11 @@ namespace ComicShelf.Pages.Countries
             _service = service;
         }
 
-        public List<Country> Countries { get;set; } = default!;
+        public List<CountryViewModel> Countries { get;set; } = default!;
 
         public void OnGet()
         {
-            Countries = _service.GetAll().Include(x => x.Publishers).Where(x => x.Publishers.Any()).ToList();
+            Countries = _service.GetAll().Where(x => x.Publishers.Any()).ToList();
         }
     }
 }

@@ -1,26 +1,17 @@
 using ComicShelf;
-using ComicShelf.Models;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using System;
-using System.IO;
-using System.Reflection;
-using System.Security.Policy;
-using Microsoft.AspNetCore.DataProtection;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Builder;
 using MySqlConnector;
-using ComicShelf.Services;
-using ComicShelf.Utilities;
+
+using Backend.Models;
+using Services.Services;
 using ComicShelf.Localization;
-using Microsoft.Extensions.Localization;
+using ComicShelf.Utilities;
+using System.Reflection;
+using AutoMapper;
 
 internal class Program
 {
@@ -131,14 +122,13 @@ internal class Program
         {
             option.Cookie.Name = "VolumeFilters";
         });
-        
 
-        //builder.Services.AddDataProtection().UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
-        //        {
-        //            EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
-        //            ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
-        //        });
+        var c = new MapperConfiguration(cfg =>
+        {
+            cfg.AddMaps(Assembly.GetExecutingAssembly());
+        });
 
+        c.AssertConfigurationIsValid();
 
         var app = builder.Build();
 

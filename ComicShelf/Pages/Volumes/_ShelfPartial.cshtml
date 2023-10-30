@@ -1,33 +1,10 @@
-﻿@using ComicShelf.Models;
+﻿@using Services.ViewModels;
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model IEnumerable<Volume>
+@model IEnumerable<VolumeViewModel>
 
 
-@*@{
-    const int perRow = 5;
-    var rows = Math.Ceiling(Model.Count() / (double)perRow);
-
-    if (rows == 0)
-        rows = 1;
-
-    for (int i = 0; i < rows; i++)
-    {
-        <div class="shelf">
-
-            @foreach (var item in Model.Skip(i * perRow).Take(perRow))
-            {
-                <div class="book" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="bookClick(@item.Id)" id="book-@item.Id">
-                    <partial name="_BookPartial" model="item" />
-                </div>
-            }
-
-        </div>
-        <div class="shelf-face"></div>
-
-    }
-}*@
 
 
 
