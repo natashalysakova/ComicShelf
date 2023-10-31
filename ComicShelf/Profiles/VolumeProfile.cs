@@ -8,61 +8,32 @@ namespace ComicShelf.Profiles
     {
         public VolumeProfile()
         {
-            CreateMap<VolumeCreateModel, Volume>().ReverseMap();
-            CreateMap<VolumeUpdateModel, Volume>().ReverseMap();
-            CreateMap<VolumeViewModel, Volume>().ReverseMap();
-        }
-    }
+            CreateMap<VolumeCreateModel, Volume>(MemberList.Source)
+                .ForSourceMember(x => x.CoverFile, act => act.DoNotValidate())
+                .ForSourceMember(x => x.SeriesName, act => act.DoNotValidate())
+                .ForSourceMember(x => x.Authors, act => act.DoNotValidate())
+                .ForMember(x => x.OneShot, act => act.MapFrom(x => x.SingleVolume))
+                .ForMember(x => x.Authors, act => act.Ignore());
 
-    class AuthorsProfile : Profile
-    {
-        public AuthorsProfile()
-        {
-            CreateMap<AuthorCreateModel, Author>().ReverseMap();
-            CreateMap<AuthorUpdateModel, Author>().ReverseMap();
-            CreateMap<AuthorViewModel, Author>().ReverseMap();
 
-        }
-    }
-    class PublisherProfile : Profile
-    {
-        public PublisherProfile()
-        {
-            CreateMap<PublisherCreateModel, Publisher>().ReverseMap();
-            CreateMap<PublisherUpdateModel, Publisher>().ReverseMap();
-            CreateMap<PublisherViewModel, Publisher>().ReverseMap();
+            CreateMap<VolumeUpdateModel, Volume>(MemberList.Source)
+                .ForSourceMember(x => x.CoverFile, act => { act.DoNotValidate(); });
 
-        }
-    }
-    class CountryProfile : Profile
-    {
-        public CountryProfile()
-        {
-            CreateMap<CountryCreateModel, Country>().ReverseMap();
-            CreateMap<CountryUpdateModel, Country>().ReverseMap();
-            CreateMap<CountryViewModel, Country>().ReverseMap();
+            CreateMap<Volume, VolumeUpdateModel>()
+                .ForMember(x => x.CoverFile, act => { act.Ignore(); });
 
-        }
-    }
 
-    class SeriesProfile : Profile
-    {
-        public SeriesProfile()
-        {
-            CreateMap<SeriesCreateModel, Series>().ReverseMap();
-            CreateMap<SeriesUpdateModel, Series>().ReverseMap();
-            CreateMap<SeriesViewModel, Series>().ReverseMap();
-
-        }
-    }
-    class FiltersProfile : Profile
-    {
-        public FiltersProfile()
-        {
-            CreateMap<FilterCreateModel, Filter>().ReverseMap();
-            CreateMap<FilterUpdateModel, Filter>().ReverseMap();
-            CreateMap<FilterViewModel, Filter>().ReverseMap();
-
+            CreateMap<Volume, VolumeViewModel>()
+                .ForMember(x => x.SeriesPublisherCountryFlag, act =>
+                {
+                    act.MapFrom(x => x.Series.Publisher.Country.FlagPNG);
+                })
+                .ForMember(x => x.SeriesName, act =>
+                {
+                    act.MapFrom(x => x.Series.Name);
+                })
+                .ForMember(x=>x.Authors, act=> act.MapFrom(x=>x.Authors.Select(x=>x.Name)))
+                ;
         }
     }
 }

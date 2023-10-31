@@ -15,9 +15,9 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating mb-3">
-                <select asp-for="Volume.Series" class="selectpicker form-control" placeholder="Series" data-live-search="true" data-style="btn-dark" asp-items="@Model.Series"></select>
-                <label asp-for="Volume.Series" class="control-label"></label>
-                <span asp-validation-for="Volume.Series" class="text-danger"></span>
+                <select asp-for="Volume.SeriesId" class="selectpicker form-control" placeholder="Series" data-live-search="true" data-style="btn-dark" asp-items="@Model.Series"></select>
+                <label asp-for="Volume.SeriesName" class="control-label"></label>
+                <span asp-validation-for="Volume.SeriesName" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">                
                 <select asp-for="Volume.Authors" class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" data-style="btn-dark" asp-items="@Model.Authors"></select>
@@ -34,13 +34,13 @@
                 <label asp-for="Volume.Title" class="control-label"></label>
                 <span asp-validation-for="Volume.Title" class="text-danger"></span>
             </div>
-            <div class="mb-3 row">
+@*            <div class="mb-3 row">
                 <label asp-for="Volume.Issues" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
                     <input asp-for="Volume.Issues" class="form-control" placeholder="Issues in volume" />
                 </div>
                 <span asp-validation-for="Volume.Issues" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-floating mb-3">
                 <select asp-for="Volume.Status" class="form-control" asp-items="@Model.Statuses"></select>
                 <label asp-for="Volume.Status" class="control-label"></label>

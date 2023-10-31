@@ -115,6 +115,7 @@ namespace ComicShelf.Utilities
 
             var enums = Enum.GetNames(type);
             var values = Enum.GetValues(type);
+
             for (var i = 0; i < values.Length; i++)
             {
                 yield return new SelectListItem { Text = localizer[enums[i]], Value = values.GetValue(i).ToString() };

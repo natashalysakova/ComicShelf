@@ -3,8 +3,9 @@
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model SeriesUpdateModel
+@model PartialRowView
 @inject LocalizationService Localizer
+
 
 
 <form data-ajax="true" method="post" data-ajax-method="post" asp-page-handler="Update"
@@ -12,25 +13,25 @@
     <div class="row" id="#series">
 
 
-        <input asp-for="@Model.Id" hidden />
+        <input asp-for="@Model.UpdateItem.Id" hidden />
         <div class="col">
             <div class="input-group mb-1">
                 <span class="input-group-text">@Localizer["Name"]</span>
-                <input type="text" asp-for="@Model.Name" class="form-control" />
+                <input type="text" asp-for="@Model.UpdateItem.Name" class="form-control" />
             </div>
             <div class="input-group">
                 <span class="input-group-text">@Localizer["OriginalName"]</span>
-                <input type="text" asp-for="@Model.OriginalName" class="form-control">
+                <input type="text" asp-for="@Model.UpdateItem.OriginalName" class="form-control">
             </div>
         </div>
         <div class="col-auto">
-            <select asp-items="(IEnumerable<SelectListItem>)@ViewData["Types"]" class="form-select" asp-for="@Model.Type"></select>
-            <select class="form-select" asp-for="@Model.Publisher" asp-items="(IEnumerable<SelectListItem>)@ViewData["Publishers"]" autocomplete="off"></select>
+            <select asp-items="@Model.Types" class="form-select" asp-for="@Model.Types"></select>
+            <select class="form-select" asp-for="@Model.UpdateItem.PublisherId" asp-items="@Model.Publishers" autocomplete="off"></select>
         </div>
         <div class="col-4">
             <div class="input-group">
                 <span class="input-group-text">@Localizer["Volumes"]</span>
-                <input type="text" asp-for="@Model.VolumeCount" readonly class="form-control" />
+                <input type="text" asp-for="@Model.UpdateItem.VolumeCount" readonly class="form-control" />
                 <span class="input-group-text">/</span>
 
                 @*                @{
@@ -38,24 +39,24 @@
                 var total = Model.Ongoing ? "hidden" : "";
                 }*@
                 @*                <input type="text" id="ong-@Model.Id" class="form-control bg-success" value="@Localizer["Ongoing"]" @ong />
-                *@                <input type="text" asp-for="@Model.TotalVolumes" class="form-control" />
+                *@                <input type="text" asp-for="@Model.UpdateItem.TotalVolumes" class="form-control" />
 
                 <span class="input-group-text">@Localizer["TotalVolumes"]</span>
             </div>
             <div class="row">
                 <div class="col-3">
-                    <input type="color" asp-for="@Model.Color" class="form-control form-control-color" />
+                    <input type="color" asp-for="@Model.UpdateItem.Color" class="form-control form-control-color" />
                 </div>
                 <div class="col-3">
                     <div class="form-check form-switch">
-                        <input type="checkbox" asp-for="@Model.Ongoing" class="form-check-input" />
-                        <label asp-for="@Model.Ongoing" class="form-check-label"></label>
+                        <input type="checkbox" asp-for="@Model.UpdateItem.Ongoing" class="form-check-input" />
+                        <label asp-for="@Model.UpdateItem.Ongoing" class="form-check-label"></label>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-check">
-                        <input type="checkbox" asp-for="@Model.Completed" class="form-check-input" disabled />
-                        <label asp-for="@Model.Completed" class="form-check-label"></label>
+                        <input type="checkbox" asp-for="@Model.UpdateItem.Completed" class="form-check-input" disabled />
+                        <label asp-for="@Model.UpdateItem.Completed" class="form-check-label"></label>
                     </div>
                 </div>
             </div>
@@ -64,7 +65,7 @@
         <div class="col-auto">
 
             <button type="submit" class="btn btn-secondary btn-success">@Localizer["Update"]</button>
-            <a asp-page="./Delete" asp-route-id="@Model.Id"><div class="btn btn-secondary btn-danger">@Localizer["Delete"]</div></a>
+            <a asp-page="./Delete" asp-route-id="@Model.UpdateItem.Id"><div class="btn btn-secondary btn-danger">@Localizer["Delete"]</div></a>
         </div>
 
     </div>

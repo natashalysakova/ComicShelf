@@ -4,7 +4,7 @@ namespace Services.ViewModels
 {
     public class AuthorCreateModel : ICreateModel
     {
-        public string Name { get; internal set; }
-        public Roles Roles { get; internal set; }
+        public string Name { get; set; }
+        public Roles Roles { get; set; }
     }
 }

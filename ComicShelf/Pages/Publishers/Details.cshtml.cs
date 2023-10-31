@@ -16,7 +16,7 @@ namespace ComicShelf.Pages.Publishers
 
       public PublisherViewModel Publisher { get; set; } = default!; 
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGetAsync(int? id)
         {
             if (id == null)
             {

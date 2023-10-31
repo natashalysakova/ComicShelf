@@ -16,14 +16,9 @@ namespace Services.Services
         SelectListGroup otherGroup = new SelectListGroup() { Name = "Other" };
         private CountryViewModel UnknownCountry { get => base.GetAll().Single(x => x.Name == "Unknown"); }
 
-        public IQueryable<CountryViewModel> GetAll()
-        {
-            return base.GetAll().Select(x => _mapper.Map<CountryViewModel>(x));
-        }
-
         public IEnumerable<SelectListItem> GetCountriesForView()
         {
-            var allExceptUnknown = base.GetAll().Include(x=>x.Publishers).ToList();
+            var allExceptUnknown = GetAllEntities().Include(x=>x.Publishers).ToList();
             var toRemove = allExceptUnknown.Single(x => x.Id == UnknownCountry.Id);
             allExceptUnknown.Remove(toRemove);
 
@@ -45,6 +40,11 @@ namespace Services.Services
             return string.Empty;
         }
 
+        private const string unknown = "Unknown";
+        internal Country GetUnknownn()
+        {
+            return dbSet.Single(x => x.Name == unknown);
+        }
     }
 
     enum CountrySort

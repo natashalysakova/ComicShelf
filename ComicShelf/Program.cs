@@ -12,7 +12,10 @@ using ComicShelf.Localization;
 using ComicShelf.Utilities;
 using System.Reflection;
 using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
+using ComicShelf.Profiles;
 
+namespace ComicShelf;
 internal class Program
 {
     private static void Main(string[] args)
@@ -123,14 +126,25 @@ internal class Program
             option.Cookie.Name = "VolumeFilters";
         });
 
-        var c = new MapperConfiguration(cfg =>
-        {
-            cfg.AddMaps(Assembly.GetExecutingAssembly());
-        });
 
-        c.AssertConfigurationIsValid();
+
+        //builder.Services.AddAutoMapper(c => new MapperConfiguration(cfg =>
+        //{
+        //    cfg.AddMaps(
+        //        typeof(AuthorsProfile)
+        //        );
+        //}).AssertConfigurationIsValid());
+
+        var cfg = new MapperConfiguration(c =>
+        {
+            c.AddMaps(typeof(Program));
+        });
+        cfg.AssertConfigurationIsValid();
+        builder.Services.AddTransient<IMapper>(x => { return cfg.CreateMapper(); });
 
         var app = builder.Build();
+
+        var mapper = app.Services.GetService<IMapper>();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

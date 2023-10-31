@@ -1,8 +1,11 @@
-﻿namespace Services.ViewModels
+﻿using System.ComponentModel;
+
+namespace Services.ViewModels
 {
     public class PublisherCreateModel : ICreateModel
     {
-        public IViewModel Country { get; set; }
+        [DisplayName("Country")]
+        public int CountryId { get; set; }
         public string Name { get; set; }
     }
 }

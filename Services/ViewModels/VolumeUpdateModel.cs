@@ -13,5 +13,6 @@ namespace Services.ViewModels
         public Status Status { get; set; }
         public int Rating { get; set; }
         public IFormFile? CoverFile { get; set; }
+        public string CoverUrl { get; set; }
     }
 }

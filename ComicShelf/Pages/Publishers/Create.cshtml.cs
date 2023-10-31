@@ -42,12 +42,12 @@ namespace ComicShelf.Pages.Publishers
 
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPostAsync()
         {
             var country = _countryService.Get(int.Parse(SelectedCountry));
             if (country != null)
             {
-                Publisher.Country = country.Id;
+                Publisher.CountryId = country.Id;
             }
 
             if (!ModelState.IsValid || Publisher == null)

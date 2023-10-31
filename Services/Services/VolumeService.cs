@@ -17,23 +17,35 @@ namespace Services.Services
         private readonly AuthorsService _authorService;
         private readonly PublishersService _publishersService;
 
-        public VolumeService(ComicShelfContext context, SeriesService seriesService, AuthorsService authorService, IMapper mapper) : base(context, mapper)
+        public VolumeService(ComicShelfContext context, SeriesService seriesService, AuthorsService authorService, PublishersService publishersService, IMapper mapper) : base(context, mapper)
         {
             _seriesService = seriesService;
             _authorService = authorService;
+            _publishersService = publishersService;
+        }
+
+        public override IEnumerable<VolumeViewModel> GetAll()
+        {
+            return _mapper.ProjectTo<VolumeViewModel>(GetAllEntities().Include(x=>x.Series));
         }
 
         public VolumeViewModel Get(int id)
         {
-            return _mapper.Map<VolumeViewModel>(base.GetById(id));
+            var volume = GetById(id);
+            LoadReference(volume, x => x.Series);
+            LoadCollection(volume, x => x.Authors);
+            _seriesService.LoadReference(volume.Series, x => x.Publisher);
+            _publishersService.LoadReference(volume.Series.Publisher, x => x.Country);
+
+            return _mapper.Map<VolumeViewModel>(volume);
         }
 
-        public void Add(VolumeCreateModel model)
+        public override int Add(VolumeCreateModel model)
         {
-            var series = _seriesService.GetByName(model.Series);
+            var series = _seriesService.GetByName(model.SeriesName);
             if (series == null)
             {
-                var newSeries = new SeriesCreateModel() { Name = model.Series, Type = ComicType.Comics};
+                var newSeries = new SeriesCreateModel() { Name = model.SeriesName, Type = ComicType.Comics};
                 if (model.SingleVolume)
                 {
                     newSeries.TotalVolumes = 1;
@@ -84,30 +96,12 @@ namespace Services.Services
                 }
             }
 
-            var issues = GenerateEmptyIssues(model.Issues, series.Type).ToList();
-
-            string? urlPath;
             if (model.CoverFile is not null)
-                urlPath = FileUtility.SaveOnServer(model.CoverFile, series.Name, model.Number);
+                model.CoverUrl = FileUtility.SaveOnServer(model.CoverFile, series.Name, model.Number);
             else
-                urlPath = "images\\static\\no-cover.png";
+                model.CoverUrl = "images\\static\\no-cover.png";
 
-            var volume = new Volume()
-            {
-                Title = model.Title,
-                Issues = issues,
-                Series = series,
-                Authors = _authorService.GetAll(authorList),
-                Number = model.Number,
-                PurchaseStatus = model.PurchaseStatus,
-                Status = model.Status,
-                CoverUrl = urlPath,
-                CreationDate = DateTime.Now,
-                ModificationDate = DateTime.Now,
-                Digitality = model.Digitality,
-                OneShot = model.SingleVolume,
-            };
-
+            var volume = _mapper.Map<Volume>(model);
 
             switch (model.PurchaseStatus)
             {
@@ -145,14 +139,21 @@ namespace Services.Services
                 volume.Status = Status.InQueue;
             }
 
+            volume.Series = series;
+            volume.Authors = _authorService.GetAll(authorList);
+            volume.CreationDate = DateTime.Now;
+            volume.ModificationDate = DateTime.Now;
+
             this.Add(volume);
 
             if(!series.Ongoing && series.Volumes.Count == series.TotalVolumes)
             {
                 series.Completed = true;
                 ///TODO: fix this
-                //_seriesService.Update(series);
+                _seriesService.Update(series);
             }
+
+            return volume.Id;
         }
 
         private IEnumerable<Issue> GenerateEmptyIssues(int issues, ComicType type)
@@ -168,13 +169,7 @@ namespace Services.Services
             return dbSet.Any(x => x.Series.Name == seriesName && x.Number == volumeNumber);
         }
 
-        public IQueryable<VolumeViewModel> GetAll()
-        {
-            return dbSet.Include(x => x.Series).Include(x => x.Authors).Select(x=> _mapper.Map<VolumeViewModel>(x));
-        }
-
-
-        public void Update(VolumeUpdateModel volumeToUpdate)
+        public override void Update(VolumeUpdateModel volumeToUpdate)
         {
             var item = GetById(volumeToUpdate.Id);
             if (item == null)
@@ -246,7 +241,7 @@ namespace Services.Services
                 {
                     series.Completed = true;
                     ///TODO: fix this
-                    //_seriesService.Update(series);
+                    _seriesService.Update(series);
                 }
             }
 
@@ -263,7 +258,7 @@ namespace Services.Services
 
         }
 
-        public IList<VolumeViewModel> Filter(BookshelfParams param)
+        public IEnumerable<VolumeViewModel> Filter(BookshelfParams param)
         {
             IList<PurchaseStatus> statusList = new List<PurchaseStatus>();
 
@@ -293,7 +288,12 @@ namespace Services.Services
 
 
 
-            var filterd = dbSet.Where(x => statusList.Contains(x.PurchaseStatus));
+            var filterd = GetAllEntities()
+                .Include(x=>x.Series)
+                    .ThenInclude(x=>x.Publisher)
+                    .ThenInclude(x=>x.Country)
+                .Include(x => x.Authors)
+                .Where(x => statusList.Contains(x.PurchaseStatus));
 
 
             switch (param.digitality)
@@ -375,13 +375,13 @@ namespace Services.Services
                 filterd = filterd.Reverse();
             }
 
-            return filterd.Select(x=> _mapper.Map<VolumeViewModel>(x)).ToList();
+            return _mapper.ProjectTo < VolumeViewModel>(filterd).ToList();
         }
 
         public override string SetNotificationMessage()
         {
             var builder = new StringBuilder();
-            if (dbSet.Any(x => x.Expired()))
+            if (GetAllEntities().ToList().Any(x => x.Expired()))
             {
                 builder.Append("There are volumes that need your attention");
             }

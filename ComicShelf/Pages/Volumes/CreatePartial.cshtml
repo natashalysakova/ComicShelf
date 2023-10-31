@@ -12,14 +12,14 @@
             <div class="modal-header">
 
                 <div class="modal-title display-6 col-9">
-                    <input asp-for="NewVolume.Series" class="form-control form-control-lg modal-input-form" list="datalistOptions" placeholder="Введіть назву серії" autocomplete="off" />
+                    <input asp-for="NewVolume.SeriesName" class="form-control form-control-lg modal-input-form" list="datalistOptions" placeholder="Введіть назву серії" autocomplete="off" />
                     <datalist id="datalistOptions">
                         @foreach (var item in Model.Series)
                         {
                             <option value="@item.Text">@item.Text</option>
                         }
                     </datalist>
-                    <span asp-validation-for="NewVolume.Series" class="text-danger"></span>
+                    <span asp-validation-for="NewVolume.SeriesName" class="text-danger"></span>
                 </div>
                 <label asp-for="NewVolume.Number" for="NewVolume_Number" class="modal-title display-6">#</label>
                 <div class="modal-title display-6 col-2">

@@ -14,7 +14,8 @@
 
         @foreach (var series in Model.Series)
         {
-            <partial name="_SeriesRowPartial" model="series" view-data="@ViewData" />
+            <partial name="_SeriesRowPartial" model="new PartialRowView(){ Publishers = Model.Publishers, Types = Model.Types, UpdateItem = series}" />
+
         }
     </div>
 </div>

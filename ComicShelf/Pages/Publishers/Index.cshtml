@@ -49,8 +49,8 @@
                 <td>
                     @foreach (var item2 in item.Series)
                     {
-                        <a asp-page="/Series/Details" asp-route-id="@item2.Id">@item2.Name</a>
-                    }
+@*                        <a asp-page="/Series/Details" asp-route-id="@item2.Id">@item2.Name</a>
+*@                    }
                 </td>
                 <td>
                     <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |

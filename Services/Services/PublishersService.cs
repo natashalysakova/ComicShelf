@@ -7,13 +7,10 @@ namespace Services.Services
 {
     public class PublishersService : BasicService<Publisher, PublisherViewModel, PublisherCreateModel, PublisherUpdateModel>
     {
+        private const string unknown = "Unknown";
+
         public PublishersService(ComicShelfContext context, IMapper mapper) : base(context, mapper)
         {
-        }
-
-        public IQueryable<PublisherViewModel> GetAll()
-        {
-            return base.GetAll().Select(x => _mapper.Map<PublisherViewModel>(x));
         }
 
         public PublisherViewModel? GetByName(string trimmedItem)
@@ -35,6 +32,11 @@ namespace Services.Services
             }
 
             return string.Empty;
+        }
+
+        internal Publisher GetUnknownn()
+        {
+            return dbSet.Single(x => x.Name == unknown);
         }
     }
 }

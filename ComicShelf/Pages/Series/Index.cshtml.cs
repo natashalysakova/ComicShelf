@@ -21,18 +21,23 @@ namespace ComicShelf.Pages.Series
             _enumUtilities = enumUtilities;
             _publishersService = publishersService;
 
-            Publishers = new SelectList(_publishersService.GetAll(), nameof(Publisher.Id), nameof(Publisher.Name));
+            var p = _publishersService.GetAll();
+
+            Publishers = new SelectList(p, nameof(PublisherViewModel.Id), nameof(PublisherViewModel.Name)) ;
+
+            Types = _enumUtilities.GetSelectItemList<ComicType>();
         }
 
         public SelectList Publishers { get; set; }
-        public IList<SeriesViewModel> Series { get; set; } = default!;
+        public IList<SeriesUpdateModel> Series { get; set; } = default!;
+        public IEnumerable<SelectListItem> Types { get; set; }
+
+        public SeriesUpdateModel UpdateModel { get; set; }
+
 
         public void OnGetAsync()
         {
-            ViewData["Types"] = _enumUtilities.GetSelectItemList<ComicType>();
-            ViewData["Publishers"] = Publishers;
-
-            Series = _service.GetAll().ToList();
+            Series = _service.GetAllForEdit().ToList();
         }
 
         public IActionResult OnPostUpdate(SeriesUpdateModel series)

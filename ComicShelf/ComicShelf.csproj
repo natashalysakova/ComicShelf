@@ -26,6 +26,7 @@
     <Compile Remove="Pages\Series\Create.cshtml.cs" />
     <Compile Remove="Pages\Series\Details.cshtml.cs" />
     <Compile Remove="Pages\Series\Edit.cshtml.cs" />
+    <Compile Remove="Pages\Volumes\Create.cshtml.cs" />
     <Compile Remove="Pages\Volumes\Details.cshtml.cs" />
     <Compile Remove="Pages\Volumes\Edit.cshtml.cs" />
   </ItemGroup>
@@ -36,6 +37,7 @@
     <Content Remove="Pages\Series\Create.cshtml" />
     <Content Remove="Pages\Series\Details.cshtml" />
     <Content Remove="Pages\Series\Edit.cshtml" />
+    <Content Remove="Pages\Volumes\Create.cshtml" />
     <Content Remove="Pages\Volumes\Details.cshtml" />
     <Content Remove="Pages\Volumes\Edit.cshtml" />
     <Content Remove="wwwroot\css\bookshelf.scss" />

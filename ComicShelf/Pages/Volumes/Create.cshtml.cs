@@ -25,8 +25,8 @@ namespace ComicShelf.Pages.Volumes
             PurchaseStatuses.AddRange(_enumUtilities.GetSelectItemList<PurchaseStatus>());
             Ratings.AddRange(_enumUtilities.GetRatingsSelectItemList());
 
-            Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id }));
-            Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id }));
+            Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+            Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
         }
 
         public List<SelectListItem> Statuses { get; set; } = new List<SelectListItem>();

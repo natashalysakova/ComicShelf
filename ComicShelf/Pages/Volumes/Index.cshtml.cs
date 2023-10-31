@@ -39,8 +39,8 @@ namespace ComicShelf.Pages.Volumes
             Digitalities.AddRange(_enumUtilities.GetSelectItemList<VolumeType>());
 
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
-            Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id}));
-            Filters.AddRange(filterService.GetAllForView());
+            Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+            Filters =filterService.GetAllForView();
 
             var test = _localizer["test"].ResourceNotFound; 
         }
@@ -54,24 +54,24 @@ namespace ComicShelf.Pages.Volumes
         public List<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Series { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Digitalities { get; set; } = new List<SelectListItem>();
-        public List<dynamic> Filters { get; set; } = new List<dynamic>();
+        public IEnumerable<IGrouping<string, FilterViewModel>> Filters { get; set; }
 
-        public IList<VolumeViewModel> Volumes { get; set; } = default!;
-        public IList<VolumeViewModel> AnnouncedAndPreordered
+        public IEnumerable<VolumeViewModel> Volumes { get; set; } = default!;
+        public IEnumerable<VolumeViewModel> AnnouncedAndPreordered
         {
             get
             {
                 return Volumes.Where(x => x.PurchaseStatus == PurchaseStatus.Announced || x.PurchaseStatus == Backend.Models.Enums.PurchaseStatus.Preordered).ToList();
             }
         }
-        public IList<VolumeViewModel> WishList
+        public IEnumerable<VolumeViewModel> WishList
         {
             get
             {
                 return Volumes.Where(x => x.PurchaseStatus == Backend.Models.Enums.PurchaseStatus.Wishlist).ToList();
             }
         }
-        public IList<VolumeViewModel> Purchased
+        public IEnumerable<VolumeViewModel> Purchased
         {
             get
             {
@@ -81,7 +81,7 @@ namespace ComicShelf.Pages.Volumes
 
 
 
-        public async Task OnGetAsync()
+        public void OnGetAsync()
         {
             //Volumes = await volumeService.GetAll().Include(x => x.Series).OrderBy(x => x.Series.Name).ThenBy(x => x.Number).ToListAsync();
             var filters = FromCookies();
@@ -118,11 +118,6 @@ namespace ComicShelf.Pages.Volumes
         public PartialViewResult OnGetVolumeAsync(int id)
         {
             var volume = _volumeService.Get(id);
-            //_volumeService.LoadReference(volume, x => x.Series);
-            //_volumeService.LoadCollection(volume, x => x.Authors);
-            //_seriesService.LoadReference(volume.Series, x => x.Publisher);
-            //_publishersService.LoadReference(volume.Series.Publisher, x => x.Country);
-
             var resultVD = new ViewDataDictionary<VolumeViewModel>(ViewData, volume);
             resultVD["PurchaseStatuses"] = _enumUtilities.GetPurchaseStatusesSelectItemList(volume.PurchaseStatus);
             resultVD["ReadingStatuses"] = _enumUtilities.GetSelectItemList<Status>();
@@ -135,7 +130,7 @@ namespace ComicShelf.Pages.Volumes
             };
         }
 
-        public async Task<IActionResult> OnPostChangeStatus(VolumeUpdateModel volumeToUpdate)
+        public IActionResult OnPostChangeStatus(VolumeUpdateModel volumeToUpdate)
         {
             _volumeService.Update(volumeToUpdate);
             var item = _volumeService.Get(volumeToUpdate.Id);
@@ -149,16 +144,16 @@ namespace ComicShelf.Pages.Volumes
             return StatusCode(404);
         }
 
-        public async Task<IActionResult> OnPostAddAsync()
+        public IActionResult OnPostAddAsync()
         {
             if (!ModelState.IsValid || NewVolume == null)
             {
                 return StatusCode(400, "Fill mandatory fields");
             }
 
-            if (_volumeService.Exists(NewVolume.Series, NewVolume.Number))
+            if (_volumeService.Exists(NewVolume.SeriesName, NewVolume.Number))
             {
-                return StatusCode(409, $"{NewVolume.Series} Volume #{NewVolume.Number} already exists");
+                return StatusCode(409, $"{NewVolume.SeriesName} Volume #{NewVolume.Number} already exists");
             }
 
             _volumeService.Add(NewVolume);

@@ -16,7 +16,7 @@ namespace ComicShelf.Pages.Publishers
 
         public IList<PublisherViewModel> Publisher { get; set; } = default!;
 
-        public async Task OnGetAsync()
+        public void OnGetAsync()
         {
             Publisher = _publisherService.GetAll().OrderByDescending(x=>x.SeriesCount).ThenBy(x=>x.Name).ToList();
         }

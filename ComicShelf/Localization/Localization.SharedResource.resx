@@ -295,7 +295,7 @@
     <value>{Free}</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value></value>
+    <value>Reset filters</value>
   </data>
   <data name="SingleVolume" xml:space="preserve">
     <value>SingleVolume</value>
@@ -307,36 +307,36 @@
     <value>Publisher</value>
   </data>
   <data name="NewSeries" xml:space="preserve">
-    <value></value>
+    <value>Something new</value>
   </data>
   <data name="PreorderDate" xml:space="preserve">
-    <value></value>
+    <value>Preorder date</value>
   </data>
   <data name="FilterName" xml:space="preserve">
-    <value></value>
+    <value>Filter name</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value></value>
+    <value>Save</value>
   </data>
   <data name="Filters" xml:space="preserve">
-    <value></value>
+    <value>Filters</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value></value>
+    <value>None</value>
   </data>
   <data name="standart" xml:space="preserve">
-    <value></value>
+    <value>Standart filters</value>
   </data>
   <data name="AllAvailable" xml:space="preserve">
-    <value></value>
+    <value>On the shelf</value>
   </data>
   <data name="Finished" xml:space="preserve">
-    <value></value>
+    <value>Finished</value>
   </data>
   <data name="SaveFilter" xml:space="preserve">
-    <value></value>
+    <value>Custom filters</value>
   </data>
   <data name="custom" xml:space="preserve">
-    <value></value>
+    <value>Custom filters</value>
   </data>
 </root>

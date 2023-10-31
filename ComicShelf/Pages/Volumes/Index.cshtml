@@ -24,11 +24,11 @@
                     <option class="bg-secondary" value="0">@Localizer["None"]</option>
                     @foreach (var group in Model.Filters)
                     {
-                        <optgroup class="bg-secondary" label="@Localizer[group.name]">
-                            @foreach (var item in group.items)
+                        <optgroup class="bg-secondary" label="@Localizer[group.Key]">
+                            @foreach (var item in group)
                             {
-                                var text = group.name == "standart" ? @Localizer[item.name] : item.name;
-                                <option class="bg-secondary" value="@item.id" data-json="@item.json">@text</option>
+                                var text = group.Key == "standart" ? @Localizer[item.Name] : item.Name;
+                                <option class="bg-secondary" value="@item.Id" data-json="@item.Json">@text</option>
                             }
                         </optgroup>
                     }

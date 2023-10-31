@@ -16,11 +16,11 @@ namespace Services.Utilities
             Value = value;
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var instance = validationContext.ObjectInstance;
             var type = instance.GetType();
-            var proprtyvalue = type.GetProperty(PropertyName).GetValue(instance, null);
+            var proprtyvalue = type.GetProperty(PropertyName)?.GetValue(instance, null);
             if (proprtyvalue != null)
             {
                 if (proprtyvalue.ToString() == Value.ToString() && value == null)

@@ -21,7 +21,7 @@
             </div>
             <div class="form-floating mb-3">
                 <select asp-for="SelectedCountry" asp-items="@Model.CountriesList" class="form-select"></select>
-                <label asp-for="Publisher.Country" class="control-label"></label>
+                <label asp-for="Publisher.CountryId" class="control-label"></label>
                 <span asp-validation-for="SelectedCountry" class="text-danger"></span>
             </div>
             <div class="mb-3">

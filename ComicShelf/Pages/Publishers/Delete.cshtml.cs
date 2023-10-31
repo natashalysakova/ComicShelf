@@ -18,7 +18,7 @@ namespace ComicShelf.Pages.Publishers
         [BindProperty]
       public PublisherViewModel Publisher { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGetAsync(int? id)
         {
             if (id == null)
             {
@@ -38,7 +38,7 @@ namespace ComicShelf.Pages.Publishers
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public IActionResult OnPostAsync(int? id)
         {
             if (id == null)
             {

@@ -19,6 +19,7 @@ namespace Services.Services
         public BasicService(ComicShelfContext context, IMapper mapper)
         {
             this.context = context;
+            _mapper = mapper;
             dbSet = context.Set<T>();
         }
 
@@ -46,12 +47,17 @@ namespace Services.Services
 
             Update(model);
         }
-        public virtual IQueryable<VM> GetAll()
+        public virtual IEnumerable<VM> GetAll()
         {
-            return dbSet.AsNoTracking().Select(x=>_mapper.Map<VM>(x));
+            return _mapper.ProjectTo<VM>(dbSet.AsNoTracking()).ToList();
         }
 
-        protected IQueryable<T> GetAll(bool tracking = false)
+        public virtual IEnumerable<UM> GetAllForEdit()
+        {
+            return _mapper.ProjectTo<UM>(dbSet.AsNoTracking());
+        }
+
+        protected IQueryable<T> GetAllEntities(bool tracking = false)
         {
             return tracking ? dbSet : dbSet.AsNoTracking();
         }
@@ -82,21 +88,21 @@ namespace Services.Services
         }
 
 
-        protected void Update(T country)
+        internal void Update(T country)
         {
             dbSet.Entry(country).State = EntityState.Modified;
             context.SaveChanges();
         }
 
 
-        protected int Add(T item)
+        internal int Add(T item)
         {
             dbSet.Add(item);
             context.SaveChanges();
             return item.Id;
         }
 
-        protected virtual IEnumerable<int> AddRange(IEnumerable<T> items)
+        internal virtual IEnumerable<int> AddRange(IEnumerable<T> items)
         {
             dbSet.AddRange(items);
             context.SaveChanges();

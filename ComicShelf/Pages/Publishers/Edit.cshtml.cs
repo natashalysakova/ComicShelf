@@ -28,7 +28,7 @@ namespace ComicShelf.Pages.Publishers
 
         [BindProperty]
         [Required]
-        public string SelectedCountry { get; set; }
+        public int SelectedCountry { get; set; }
 
 
         public IActionResult OnGetAsync(int? id)
@@ -50,17 +50,17 @@ namespace ComicShelf.Pages.Publishers
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            var country = _countryService.Get(int.Parse(SelectedCountry));
+            var country = _countryService.Get(SelectedCountry);
             if (country != null)
             {
-                Publisher.Country = country;
+                Publisher.CountryId = country.Id;
             }
 
             try

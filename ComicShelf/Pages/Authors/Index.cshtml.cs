@@ -21,13 +21,13 @@ namespace ComicShelf.Pages.Authors
 
         public IList<AuthorViewModel> Author { get; set; } = default!;
 
-        public async Task OnGetAsync()
+        public void OnGetAsync()
         {
             ViewData["AvailableRoles"] = _enumUtilities.GetSelectItemList<Roles>();
             Author = _service.GetAll().OrderBy(x => x.Name).ToList(); ;
         }
 
-        public async Task<IActionResult> OnPostUpdate(AuthorUpdateModel author)
+        public IActionResult OnPostUpdate(AuthorUpdateModel author)
         {
             if(!_service.Exists(author.Id))
             {

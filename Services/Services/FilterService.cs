@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Backend.Models;
+using Microsoft.EntityFrameworkCore;
 using Services.ViewModels;
 
 namespace Services.Services
@@ -13,17 +14,15 @@ namespace Services.Services
         {
         }
 
-        public IEnumerable<dynamic> GetAllForView(string selectedFilter = "")
+        public IEnumerable<IGrouping<string, FilterViewModel>> GetAllForView(string selectedFilter = "")
         {
-            return GetAll().GroupBy(x => x.Group).OrderByDescending(x=>x.Key)
-                .Select(group => new
-                {
-                    name = group.Key,
-                    items = group
-                    .OrderBy(x => x.DisplayOrder)
-                    .ThenBy(x => x.Name)
-                    .Select(x => new { id = x.Id, name = x.Name, selected = x.Name == selectedFilter, json = x.Json }).ToList()
-                });
+            var filters = GetAll();
+
+            var filterToSelect = filters.FirstOrDefault(filter => filter.Name == selectedFilter);
+            if(filterToSelect != null)
+                filterToSelect.Selected = true;
+
+            return filters.GroupBy(x => x.Group).OrderByDescending(x => x.Key);
         }
 
         public override int Add(FilterCreateModel item)

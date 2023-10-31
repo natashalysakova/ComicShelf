@@ -11,7 +11,6 @@ namespace Services.ViewModels
 
         [Required]
         public string Title { get; set; }
-        public string Series { get; set; }
         public Status Status { get; set; }
         public int Rating { get; set; }
         public PurchaseStatus PurchaseStatus { get; set; }
@@ -23,10 +22,11 @@ namespace Services.ViewModels
         public DateTime? ReleaseDate { get; set; }
         public DateTime? PreorderDate { get; set; }
         public IFormFile? CoverFile { get; set; }
+        public string? CoverUrl { get; set; }
+
         public string[] Authors { get; set; }
-        public int Issues { get; set; }
         public VolumeType Digitality { get; set; }
         public bool SingleVolume { get; set; }
-
+        public string SeriesName { get; set; }
     }
 }
