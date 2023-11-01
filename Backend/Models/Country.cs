@@ -15,9 +15,9 @@ namespace Backend.Models
         [Required]
         public string FlagSVG { get; set; }
         [Required]
-        public  string CountryCode { get; set; }   
+        public string CountryCode { get; set; }
 
         public virtual ICollection<Publisher> Publishers { get; set; } = new List<Publisher>();
     }
-    
+
 }

@@ -15,7 +15,7 @@ namespace ComicShelf.Pages.Volumes
         }
 
         [BindProperty]
-      public Volume Volume { get; set; } = default!;
+        public Volume Volume { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,7 +30,7 @@ namespace ComicShelf.Pages.Volumes
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Volume = volume;
             }

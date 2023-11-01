@@ -1,7 +1,7 @@
 ﻿namespace Services.ViewModels
 {
-    public interface IViewModel
+    public interface IViewModel<T>
     {
-        
+
     }
 }

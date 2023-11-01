@@ -1,6 +1,8 @@
-﻿namespace Services.ViewModels
+﻿using Backend.Models;
+
+namespace Services.ViewModels
 {
-    public class CountryUpdateModel : IUpdateModel
+    public class CountryUpdateModel : IUpdateModel<Country>
     {
         public int Id { get; set; }
         public string Name { get; set; }

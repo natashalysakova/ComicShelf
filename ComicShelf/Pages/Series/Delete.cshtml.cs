@@ -1,7 +1,5 @@
-﻿using Backend.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Services.Services;
 using Services.ViewModels;
 

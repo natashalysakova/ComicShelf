@@ -38,5 +38,13 @@ namespace Services.Services
         {
             return dbSet.Single(x => x.Name == unknown);
         }
+
+        public override IEnumerable<PublisherViewModel> GetAll()
+        {
+            return GetAllEntities()
+                .Include(x => x.Series)
+                .Include(x => x.Country)
+                .Select(x => _mapper.Map<PublisherViewModel>(x));
+        }
     }
 }

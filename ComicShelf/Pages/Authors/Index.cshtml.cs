@@ -2,7 +2,7 @@
 using ComicShelf.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.Services;
 using Services.ViewModels;
 
@@ -17,26 +17,39 @@ namespace ComicShelf.Pages.Authors
         {
             _service = service;
             _enumUtilities = enumUtilities;
+
+            AvailableRoles = _enumUtilities.GetSelectItemList<Roles>();
         }
 
-        public IList<AuthorViewModel> Author { get; set; } = default!;
+        public IEnumerable<AuthorUpdateModel> Authors { get; set; } = default!;
+        public IEnumerable<SelectListItem> AvailableRoles { get; set; }
 
         public void OnGetAsync()
         {
-            ViewData["AvailableRoles"] = _enumUtilities.GetSelectItemList<Roles>();
-            Author = _service.GetAll().OrderBy(x => x.Name).ToList(); ;
+            Authors = _service.GetAllForUpdate()
+                .Select(x => { x.Series = x.Series.Distinct(new IdNameViewComparer()); return x; })
+                .OrderBy(x => x.Name);
         }
 
         public IActionResult OnPostUpdate(AuthorUpdateModel author)
         {
-            if(!_service.Exists(author.Id))
+            if (!_service.Exists(author.Id))
             {
                 return NotFound(author);
             }
 
             _service.Update(author);
+            var updated = _service.GetForUpdate(author.Id);
 
-            return StatusCode(200);
+            return Partial("_AuthorPartialEdit", new AuthorEditPageModel() { Author = updated, AvailableRoles = AvailableRoles });
+
         }
+    }
+
+    public class AuthorEditPageModel
+    {
+        public AuthorUpdateModel Author { get; set; }
+        public IEnumerable<SelectListItem> AvailableRoles { get; set; }
+
     }
 }

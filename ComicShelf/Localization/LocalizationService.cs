@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Localization;
 
 namespace ComicShelf.Localization
-{ 
+{
     public class LocalizationService
     {
         private readonly IStringLocalizer<SharedResource> _localizer;

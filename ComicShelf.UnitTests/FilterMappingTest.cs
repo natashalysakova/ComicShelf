@@ -1,15 +1,20 @@
 ﻿using AutoMapper;
 using Backend.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Services.ViewModels;
+using Services.Profiles;
 
 namespace ComicShelf.UnitTests
 {
     [TestClass]
-    public class FilterMappingTest : BasicTest
+    public class FilterMappingTest : BasicTest<Filter>
     {
-        public FilterMappingTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(Profiles.FiltersProfile)); }))
+        public FilterMappingTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(FiltersProfile)); }))
         {
+        }
+
+        public override Filter GetNewInstance()
+        {
+            return DataSet.Filter;
         }
 
         [TestMethod]

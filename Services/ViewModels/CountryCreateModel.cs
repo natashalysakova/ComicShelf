@@ -1,6 +1,8 @@
-﻿namespace Services.ViewModels
+﻿using Backend.Models;
+
+namespace Services.ViewModels
 {
-    public class CountryCreateModel : ICreateModel
+    public class CountryCreateModel : ICreateModel<Country>
     {
         public string Name { get; set; }
         public string FlagPNG { get; set; }

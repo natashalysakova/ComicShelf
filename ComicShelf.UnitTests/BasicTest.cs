@@ -2,13 +2,11 @@ using AutoMapper;
 using Backend.Models;
 using Backend.Models.Enums;
 using Services.ViewModels;
-using System.Configuration;
-using System.Text.RegularExpressions;
 
 namespace ComicShelf.UnitTests
 {
     [TestClass]
-    public abstract class BasicTest
+    public abstract class BasicTest<T> where T : class, IIdEntity, new()
     {
         protected IMapper _mapper;
         MapperConfiguration _configuration;
@@ -25,7 +23,17 @@ namespace ComicShelf.UnitTests
             _configuration.AssertConfigurationIsValid();
         }
 
+        public void IdNameViewMapping()
+        {
+            var tmp = GetNewInstance();
+            var viewModel = _mapper.Map<IdNameView>(tmp);
 
+            Assert.IsNotNull(viewModel);
+            Assert.AreEqual(tmp.Id, viewModel.Id);
+            Assert.IsFalse(string.IsNullOrEmpty(viewModel.Name));
+        }
+
+        public abstract T GetNewInstance();
         public abstract void TestViewModel();
         public abstract void TestCreateModel();
         public abstract void TestUpdateModel();

@@ -1,16 +1,23 @@
 ﻿using AutoMapper;
 using Backend.Models;
 using Services.ViewModels;
+using Services.Profiles;
 
 namespace ComicShelf.UnitTests
 {
     [TestClass]
-    public class PublisherMappingTest : BasicTest
+    public class PublisherMappingTest : BasicTest<Publisher>
     {
-        public PublisherMappingTest():base(new MapperConfiguration(c => { c.AddMaps(typeof(Profiles.PublisherProfile)); }))
+        public PublisherMappingTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(PublisherProfile)); }))
         {
-            
+
         }
+
+        public override Publisher GetNewInstance()
+        {
+            return DataSet.Publisher;
+        }
+
         [TestMethod]
         public override void TestCreateModel()
         {
@@ -59,7 +66,7 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(entity.Series.Count, viewModel.SeriesCount);
             Assert.AreEqual(entity.Country.Name, viewModel.CountryName);
             Assert.AreEqual(entity.Country.FlagPNG, viewModel.CountryFlagPNG);
-            Assert.IsTrue(entity.Series.Select(x=>x.Name).Distinct().SequenceEqual(viewModel.Series));
+            Assert.AreEqual(entity.Series.Count(), viewModel.Series.Count());
         }
     }
 }

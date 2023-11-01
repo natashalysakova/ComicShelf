@@ -1,6 +1,8 @@
-﻿namespace Services.ViewModels
+﻿using Backend.Models;
+
+namespace Services.ViewModels
 {
-    public class FilterViewModel : IViewModel
+    public class FilterViewModel : IViewModel<Filter>
     {
         public string Group { get; internal set; }
         public int DisplayOrder { get; internal set; }

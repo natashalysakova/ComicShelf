@@ -1,6 +1,6 @@
 ﻿namespace ComicShelf.Localization
 {
-    public class SharedResource 
+    public class SharedResource
     {
     }
 }

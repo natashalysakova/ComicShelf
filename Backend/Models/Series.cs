@@ -9,7 +9,7 @@ namespace Backend.Models
         public int Id { get; set; }
 
         [Required]
-        public  string Name { get; set; }
+        public string Name { get; set; }
         public string? OriginalName { get; set; }
         public bool Ongoing { get; set; }
 
@@ -25,6 +25,5 @@ namespace Backend.Models
         public virtual Publisher? Publisher { get; set; }
 
         public virtual ICollection<Volume> Volumes { get; set; } = new List<Volume>();
-
     }
 }

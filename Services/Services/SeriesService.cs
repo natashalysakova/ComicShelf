@@ -38,7 +38,7 @@ namespace Services.Services
         {
             StringBuilder builder = new StringBuilder();
 
-            if (dbSet.Any(x => x.Publisher.Id == 0 
+            if (dbSet.Any(x => x.Publisher.Id == 0
             || !x.Volumes.Any()
             || (!x.Ongoing && x.TotalVolumes == 0)))
             {
@@ -48,38 +48,9 @@ namespace Services.Services
             return string.Empty;
         }
 
-
-        public override IEnumerable<SeriesUpdateModel> GetAllForEdit()
+        protected override IQueryable<Series> GetAllEntities(bool tracking = false)
         {
-            return _mapper.ProjectTo<SeriesUpdateModel>(GetAllEntities().Include(x => x.Publisher));
-        }
-
-        public override void Update(SeriesUpdateModel model)
-        {
-            var entry = _mapper.Map<Series>(model); 
-
-
-            //var original = dbSet.Include(x => x.Publisher).Single(x => x.Id == model.Id);
-
-            //original.Name = model.Name;
-            //original.OriginalName = model.OriginalName;
-            //original.Type = model.Type;
-            //original.Ongoing = model.Ongoing;
-            //original.Completed = model.Completed;
-            //original.TotalVolumes = model.TotalVolumes.HasValue ? model.TotalVolumes.Value : 0;
-            //original.PublisherId = model.PublisherId;
-            //original.Color = model.Color;
-
-            //LoadCollection(entry, x => x.Volumes);
-
-            //if (entry.Volumes.Count == entry.TotalVolumes)
-            //    entry.Completed = true;
-            //else
-            //    entry.Completed = false;
-
-
-
-            base.Update(entry);
+            return base.GetAllEntities(tracking).Include(x => x.Publisher);
         }
     }
 }

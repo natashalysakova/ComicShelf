@@ -1,17 +1,21 @@
 ﻿using AutoMapper;
 using Backend.Models;
 using Backend.Models.Enums;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Services.ViewModels;
+using Services.Profiles;
 
 namespace ComicShelf.UnitTests
 {
     [TestClass]
-    public class AuthorsMappingTest : BasicTest
+    public class AuthorsMappingTest : BasicTest<Author>
     {
-        public AuthorsMappingTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(Profiles.AuthorsProfile)); }))
+        public AuthorsMappingTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(AuthorsProfile)); }))
         {
+        }
+
+        public override Author GetNewInstance()
+        {
+            return DataSet.Author;
         }
 
         [TestMethod]
@@ -47,6 +51,7 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(model.Id, entity.Id);
             Assert.AreEqual(model.Name, entity.Name);
             Assert.AreEqual(model.Roles, entity.Roles);
+            Assert.IsFalse(model.HasError);
         }
 
         [TestMethod]
@@ -58,8 +63,6 @@ namespace ComicShelf.UnitTests
             Assert.IsNotNull(viewModel);
             Assert.AreEqual(entity.Id, viewModel.Id);
             Assert.AreEqual(entity.Name, viewModel.Name);
-            Assert.AreEqual(entity.Roles, viewModel.Roles);
-            Assert.IsTrue(entity.Volumes.Select(x => x.Series.Name).Distinct().SequenceEqual(viewModel.SeriesNames));
         }
     }
 }

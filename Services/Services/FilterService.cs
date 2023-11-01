@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Backend.Models;
-using Microsoft.EntityFrameworkCore;
 using Services.ViewModels;
 
 namespace Services.Services
@@ -19,7 +18,7 @@ namespace Services.Services
             var filters = GetAll();
 
             var filterToSelect = filters.FirstOrDefault(filter => filter.Name == selectedFilter);
-            if(filterToSelect != null)
+            if (filterToSelect != null)
                 filterToSelect.Selected = true;
 
             return filters.GroupBy(x => x.Group).OrderByDescending(x => x.Key);
@@ -29,7 +28,7 @@ namespace Services.Services
         {
             var model = _mapper.Map<Filter>(item);
 
-            if(string.IsNullOrEmpty(model.Group))
+            if (string.IsNullOrEmpty(model.Group))
             {
                 model.Group = CUSTOM;
             }
@@ -40,7 +39,7 @@ namespace Services.Services
 
         public IEnumerable<int> AddRange(IEnumerable<FilterCreateModel> items)
         {
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 if (string.IsNullOrEmpty(item.Group))
                 {
@@ -48,7 +47,7 @@ namespace Services.Services
                 }
             }
 
-            return base.AddRange(items.Select(x=> _mapper.Map<Filter>(x)));
+            return base.AddRange(items.Select(x => _mapper.Map<Filter>(x)));
         }
 
         public override string SetNotificationMessage()

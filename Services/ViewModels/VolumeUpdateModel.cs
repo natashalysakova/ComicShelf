@@ -1,9 +1,10 @@
-﻿using Backend.Models.Enums;
+﻿using Backend.Models;
+using Backend.Models.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace Services.ViewModels
 {
-    public class VolumeUpdateModel : IUpdateModel
+    public class VolumeUpdateModel : IUpdateModel<Volume>
     {
         public int Id { get; set; }
         public PurchaseStatus PurchaseStatus { get; set; }

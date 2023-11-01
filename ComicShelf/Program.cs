@@ -1,19 +1,15 @@
-using ComicShelf;
+using AutoMapper;
+using Backend.Models;
+using ComicShelf.Localization;
+using ComicShelf.Utilities;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Globalization;
-using Microsoft.AspNetCore.Localization;
 using MySqlConnector;
-
-using Backend.Models;
+using Services.Profiles;
 using Services.Services;
-using ComicShelf.Localization;
-using ComicShelf.Utilities;
-using System.Reflection;
-using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
-using ComicShelf.Profiles;
+using System.Globalization;
 
 namespace ComicShelf;
 internal class Program
@@ -126,7 +122,7 @@ internal class Program
             option.Cookie.Name = "VolumeFilters";
         });
 
-
+        builder.Services.AddServerSideBlazor();
 
         //builder.Services.AddAutoMapper(c => new MapperConfiguration(cfg =>
         //{
@@ -137,7 +133,7 @@ internal class Program
 
         var cfg = new MapperConfiguration(c =>
         {
-            c.AddMaps(typeof(Program));
+            c.AddMaps(typeof(VolumeProfile));
         });
         cfg.AssertConfigurationIsValid();
         builder.Services.AddTransient<IMapper>(x => { return cfg.CreateMapper(); });
@@ -184,7 +180,7 @@ internal class Program
         app.UseStaticFiles();
 
         app.UseRouting();
-
+        app.MapBlazorHub();
         app.UseAuthorization();
         app.UseSession();
         app.MapRazorPages();

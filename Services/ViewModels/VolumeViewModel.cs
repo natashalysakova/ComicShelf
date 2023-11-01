@@ -1,8 +1,9 @@
-﻿using Backend.Models.Enums;
+﻿using Backend.Models;
+using Backend.Models.Enums;
 
 namespace Services.ViewModels
 {
-    public class VolumeViewModel : IViewModel
+    public class VolumeViewModel : IViewModel<Volume>
     {
         public bool Expired { get; internal set; }
         public PurchaseStatus PurchaseStatus { get; internal set; }
@@ -25,5 +26,7 @@ namespace Services.ViewModels
         public string SeriesPublisherCountryFlag { get; set; }
         public bool SeriesOngoing { get; set; }
         public int SeriesTotalVolumes { get; set; }
+
+        public bool HasError { get; set; }
     }
 }

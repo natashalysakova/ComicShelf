@@ -20,8 +20,8 @@ namespace Backend.Models
         public DateTime? PurchaseDate { get; set; }
         public string CoverUrl { get; set; }
         public DateTime CreationDate { get; set; }
-        public DateTime ModificationDate{ get; set; }
-        public DateTime? ReleaseDate{ get; set; }
+        public DateTime ModificationDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
         public DateTime? PreorderDate { get; set; }
 
         public bool OneShot { get; set; }
@@ -34,8 +34,8 @@ namespace Backend.Models
 
         public bool Expired()
         {
-            return 
-                (PurchaseStatus == PurchaseStatus.Announced || PurchaseStatus == PurchaseStatus.Preordered) && 
+            return
+                (PurchaseStatus == PurchaseStatus.Announced || PurchaseStatus == PurchaseStatus.Preordered) &&
                 ReleaseDate.HasValue && ReleaseDate < DateTime.Today;
         }
     }

@@ -1,0 +1,44 @@
+﻿@using ComicShelf.Localization;
+@using Services.ViewModels;
+@model AuthorEditPageModel
+@inject LocalizationService Localizer
+
+
+<form data-ajax="true" method="post"
+      data-ajax-method="post"
+      asp-page-handler="Update"
+      data-ajax-mode="replace"
+      data-ajax-update="#author-@Model.Author.Id"
+      data-ajax-complete="changeAuthorComplete">
+    @{
+        var errorClass = Model.Author.HasError ? "bg-danger" : string.Empty;
+    }
+
+
+    <div class="row @errorClass">
+        <div class="col">
+            <input asp-for="@Model.Author.Id" hidden />
+            <input type="text" asp-for="@Model.Author.Name" class="form-control update-on-status-change" />
+        </div>
+        <div class="col-auto">
+            <select asp-items="@Model.AvailableRoles" class="form-select update-on-status-change" asp-for="@Model.Author.Roles"></select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-secondary btn-success">@Localizer["Update"]</button>
+        </div>
+        <div class="col-6">
+            <span class="input-group-text">
+                @foreach (var series in Model.Author.Series)
+                {
+                    <a asp-page="Series/Details" asp-route-id="@series.Id">@series.Name</a>
+
+                    if (series != Model.Author.Series.Last())
+                    {
+                        <span>,&nbsp;</span>
+                    }
+                }
+            </span>
+        </div>
+
+    </div>
+</form>

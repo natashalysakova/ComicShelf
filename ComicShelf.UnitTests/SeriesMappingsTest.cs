@@ -1,14 +1,20 @@
 ﻿using AutoMapper;
 using Backend.Models;
 using Services.ViewModels;
+using Services.Profiles;
 
 namespace ComicShelf.UnitTests
 {
     [TestClass]
-    public class SeriesMappingsTest : BasicTest
+    public class SeriesMappingsTest : BasicTest<Series>
     {
-        public SeriesMappingsTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(Profiles.SeriesProfile)); }))
+        public SeriesMappingsTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(SeriesProfile)); }))
         {
+        }
+
+        public override Series GetNewInstance()
+        {
+            return DataSet.Series;
         }
 
         [TestMethod]
@@ -64,6 +70,7 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(model.TotalVolumes, entity.TotalVolumes);
             Assert.AreEqual(model.Type, entity.Type);
             Assert.AreEqual(model.OriginalName, entity.OriginalName);
+            Assert.IsFalse(model.HasError);
 
         }
 

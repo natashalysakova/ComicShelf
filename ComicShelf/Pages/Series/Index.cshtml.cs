@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ComicShelf.Utilities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ComicType = Backend.Models.Enums.Type;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.Services;
-using ComicShelf.Utilities;
-using Backend.Models;
 using Services.ViewModels;
+using ComicType = Backend.Models.Enums.Type;
 
 namespace ComicShelf.Pages.Series
 {
@@ -23,7 +22,7 @@ namespace ComicShelf.Pages.Series
 
             var p = _publishersService.GetAll();
 
-            Publishers = new SelectList(p, nameof(PublisherViewModel.Id), nameof(PublisherViewModel.Name)) ;
+            Publishers = new SelectList(p, nameof(PublisherViewModel.Id), nameof(PublisherViewModel.Name));
 
             Types = _enumUtilities.GetSelectItemList<ComicType>();
         }
@@ -37,24 +36,24 @@ namespace ComicShelf.Pages.Series
 
         public void OnGetAsync()
         {
-            Series = _service.GetAllForEdit().ToList();
+            Series = _service.GetAllForUpdate().OrderBy(x => x.Name).ToList();
         }
 
-        public IActionResult OnPostUpdate(SeriesUpdateModel series)
+        public IActionResult OnPostUpdate(SeriesUpdateModel UpdateItem)
         {
-            if (series is null)
+            if (UpdateItem is null)
                 return BadRequest("Nothing to update");
 
-            if (!_service.Exists(series.Id))
+            if (!_service.Exists(UpdateItem.Id))
             {
-                return NotFound(series);
+                return NotFound(UpdateItem);
             }
 
-            _service.Update(series);
+            _service.Update(UpdateItem);
 
-            var newSeries = _service.Get(series.Id);
+            var newSeries = _service.GetForUpdate(UpdateItem.Id);
 
-            return Partial("_SeriesRowPartial", newSeries);
+            return Partial("_SeriesRowPartial", new PartialRowView() { Publishers = Publishers, Types = Types, UpdateItem = newSeries });
         }
 
         public IActionResult OnDelete(int id)

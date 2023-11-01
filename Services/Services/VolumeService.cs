@@ -1,13 +1,12 @@
-﻿using ComicType = Backend.Models.Enums.Type;
-using Microsoft.EntityFrameworkCore;
-
-using System.Text;
+﻿using AutoMapper;
 using Backend.Models;
 using Backend.Models.Enums;
-using Services.Services.Enums;
+using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
+using Services.Services.Enums;
 using Services.ViewModels;
-using AutoMapper;
+using System.Text;
+using ComicType = Backend.Models.Enums.Type;
 
 namespace Services.Services
 {
@@ -26,7 +25,7 @@ namespace Services.Services
 
         public override IEnumerable<VolumeViewModel> GetAll()
         {
-            return _mapper.ProjectTo<VolumeViewModel>(GetAllEntities().Include(x=>x.Series));
+            return _mapper.ProjectTo<VolumeViewModel>(GetAllEntities().Include(x => x.Series));
         }
 
         public VolumeViewModel Get(int id)
@@ -45,7 +44,7 @@ namespace Services.Services
             var series = _seriesService.GetByName(model.SeriesName);
             if (series == null)
             {
-                var newSeries = new SeriesCreateModel() { Name = model.SeriesName, Type = ComicType.Comics};
+                var newSeries = new SeriesCreateModel() { Name = model.SeriesName, Type = ComicType.Comics };
                 if (model.SingleVolume)
                 {
                     newSeries.TotalVolumes = 1;
@@ -119,7 +118,7 @@ namespace Services.Services
                     break;
             }
 
-            if(model.Status is Status.Dropped or Status.Completed)
+            if (model.Status is Status.Dropped or Status.Completed)
             {
                 volume.Rating = model.Rating;
             }
@@ -131,10 +130,10 @@ namespace Services.Services
 
             _seriesService.LoadCollection(series, x => x.Volumes);
 
-            if((volume.PurchaseStatus is PurchaseStatus.Bought 
-                or PurchaseStatus.Pirated 
-                or  PurchaseStatus.Gift 
-                or PurchaseStatus.Free) && series.Volumes.Count > 0 && series.Volumes.All(x=>x.Status == Status.Completed))
+            if ((volume.PurchaseStatus is PurchaseStatus.Bought
+                or PurchaseStatus.Pirated
+                or PurchaseStatus.Gift
+                or PurchaseStatus.Free) && series.Volumes.Count > 0 && series.Volumes.All(x => x.Status == Status.Completed))
             {
                 volume.Status = Status.InQueue;
             }
@@ -146,10 +145,9 @@ namespace Services.Services
 
             this.Add(volume);
 
-            if(!series.Ongoing && series.Volumes.Count == series.TotalVolumes)
+            if (!series.Ongoing && series.Volumes.Count == series.TotalVolumes)
             {
                 series.Completed = true;
-                ///TODO: fix this
                 _seriesService.Update(series);
             }
 
@@ -220,7 +218,6 @@ namespace Services.Services
                 {
                     item.Status = Status.InQueue;
                 }
-
             }
 
 
@@ -237,10 +234,9 @@ namespace Services.Services
             if (item.PurchaseStatus != PurchaseStatus.Announced || item.PurchaseStatus != PurchaseStatus.GiftedAway)
             {
                 var series = _seriesService.GetById(item.SeriesId);
-                if(!series.Ongoing && series.Volumes.Count == series.TotalVolumes)
+                if (!series.Ongoing && series.Volumes.Count == series.TotalVolumes)
                 {
                     series.Completed = true;
-                    ///TODO: fix this
                     _seriesService.Update(series);
                 }
             }
@@ -289,9 +285,9 @@ namespace Services.Services
 
 
             var filterd = GetAllEntities()
-                .Include(x=>x.Series)
-                    .ThenInclude(x=>x.Publisher)
-                    .ThenInclude(x=>x.Country)
+                .Include(x => x.Series)
+                    .ThenInclude(x => x.Publisher)
+                    .ThenInclude(x => x.Country)
                 .Include(x => x.Authors)
                 .Where(x => statusList.Contains(x.PurchaseStatus));
 
@@ -375,7 +371,7 @@ namespace Services.Services
                 filterd = filterd.Reverse();
             }
 
-            return _mapper.ProjectTo < VolumeViewModel>(filterd).ToList();
+            return _mapper.ProjectTo<VolumeViewModel>(filterd).ToList();
         }
 
         public override string SetNotificationMessage()
@@ -383,7 +379,7 @@ namespace Services.Services
             var builder = new StringBuilder();
             if (GetAllEntities().ToList().Any(x => x.Expired()))
             {
-                builder.Append("There are volumes that need your attention");
+                builder.Append("There are expired preorders");
             }
 
             return builder.ToString();

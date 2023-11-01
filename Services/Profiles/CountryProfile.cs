@@ -2,7 +2,7 @@
 using Backend.Models;
 using Services.ViewModels;
 
-namespace ComicShelf.Profiles
+namespace Services.Profiles
 {
     public class CountryProfile : Profile
     {
@@ -10,13 +10,9 @@ namespace ComicShelf.Profiles
         {
             CreateMap<CountryCreateModel, Country>(MemberList.Source);
             CreateMap<CountryUpdateModel, Country>(MemberList.Source).ReverseMap();
-            
-            CreateMap<Country, CountryViewModel>()
-                .ForMember(x => x.Publishers,
-                    act =>
-                    {
-                        act.MapFrom(x => x.Publishers.Select(x => x.Name));
-                    });
+
+            CreateMap<Country, IdNameView>();
+            CreateMap<Country, CountryViewModel>();
 
         }
     }

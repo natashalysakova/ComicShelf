@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend", "Backend\Backend.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{D41B2F69-75B3-4CD0-A5DA-6CAA80EE1780}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicShelf.UnitTests", "ComicShelf.UnitTests\ComicShelf.UnitTests.csproj", "{E4AAEC3E-50EC-4A28-86BA-3036EDF699A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComicShelf.UnitTests", "ComicShelf.UnitTests\ComicShelf.UnitTests.csproj", "{E4AAEC3E-50EC-4A28-86BA-3036EDF699A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +38,10 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_MoveToResources = {"Items":[{"Extensions":".cs,.vb","Patterns":"$Namespace.$File.$Key|$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key|nameof($File.$Key), ResourceType = typeof($File)|ErrorMessageResourceType = typeof($File), ErrorMessageResourceName = nameof($File.$Key)"},{"Extensions":".cshtml,.vbhtml","Patterns":"$Key"},{"Extensions":".cpp,.c,.hxx,.h","Patterns":"$File::$Key"},{"Extensions":".aspx,.ascx","Patterns":"<%$ Resources:$File,$Key %>|<%= $File.$Key %>|<%= $Namespace.$File.$Key %>"},{"Extensions":".xaml","Patterns":"\"{x:Static properties:$File.$Key}\""},{"Extensions":".ts","Patterns":"resources.$Key"},{"Extensions":".html","Patterns":"{{ resources.$Key }}"}]}
-		RESX_ShowPerformanceTraces = True
-		RESX_CodeReferences = {"Items":[{"Expression":"\\W\"($Key)\"\\W","Extensions":".cs,.xaml,.cshtml","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"\\W($File.$Key)\\W","Extensions":".vbhtml","IsCaseSensitive":false,"SingleLineComment":null},{"Expression":"ResourceManager.GetString\\(\"($Key)\"\\)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"typeof\\((\\w+\\.)*($File)\\).+\"($Key)\"|\"($Key)\".+typeof\\((\\w+\\.)*($File)\\)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"\\W($Key)\\W","Extensions":".vb","IsCaseSensitive":false,"SingleLineComment":"'"},{"Expression":"\\W($File::$Key)\\W","Extensions":".cpp,.c,.hxx,.h","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"&lt;%\\$\\s+Resources:\\s*($File)\\s*,\\s*($Key)\\s*%&gt;","Extensions":".aspx,.ascx,.master","IsCaseSensitive":true,"SingleLineComment":null},{"Expression":"StringResourceKey\\.($Key)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"\\.($Key)","Extensions":".ts,.html","IsCaseSensitive":true,"SingleLineComment":"\/\/"}]}
-		SolutionGuid = {3CF27153-4179-4E13-AAD3-9E88D6E089BD}
 		RESX_RemoveEmptyEntries = True
+		SolutionGuid = {3CF27153-4179-4E13-AAD3-9E88D6E089BD}
+		RESX_CodeReferences = {"Items":[{"Expression":"\\W\"($Key)\"\\W","Extensions":".cs,.xaml,.cshtml","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"\\W($File.$Key)\\W","Extensions":".vbhtml","IsCaseSensitive":false,"SingleLineComment":null},{"Expression":"ResourceManager.GetString\\(\"($Key)\"\\)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"typeof\\((\\w+\\.)*($File)\\).+\"($Key)\"|\"($Key)\".+typeof\\((\\w+\\.)*($File)\\)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"\\W($Key)\\W","Extensions":".vb","IsCaseSensitive":false,"SingleLineComment":"'"},{"Expression":"\\W($File::$Key)\\W","Extensions":".cpp,.c,.hxx,.h","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"&lt;%\\$\\s+Resources:\\s*($File)\\s*,\\s*($Key)\\s*%&gt;","Extensions":".aspx,.ascx,.master","IsCaseSensitive":true,"SingleLineComment":null},{"Expression":"StringResourceKey\\.($Key)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"\\.($Key)","Extensions":".ts,.html","IsCaseSensitive":true,"SingleLineComment":"\/\/"}]}
+		RESX_ShowPerformanceTraces = True
+		RESX_MoveToResources = {"Items":[{"Extensions":".cs,.vb","Patterns":"$Namespace.$File.$Key|$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key|nameof($File.$Key), ResourceType = typeof($File)|ErrorMessageResourceType = typeof($File), ErrorMessageResourceName = nameof($File.$Key)"},{"Extensions":".cshtml,.vbhtml","Patterns":"$Key"},{"Extensions":".cpp,.c,.hxx,.h","Patterns":"$File::$Key"},{"Extensions":".aspx,.ascx","Patterns":"<%$ Resources:$File,$Key %>|<%= $File.$Key %>|<%= $Namespace.$File.$Key %>"},{"Extensions":".xaml","Patterns":"\"{x:Static properties:$File.$Key}\""},{"Extensions":".ts","Patterns":"resources.$Key"},{"Extensions":".html","Patterns":"{{ resources.$Key }}"}]}
 	EndGlobalSection
 EndGlobal

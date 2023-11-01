@@ -1,8 +1,8 @@
 ﻿namespace Services.ViewModels
 {
-    public interface ICreateModel
+    public interface ICreateModel<T>
     {
-        
+
 
     }
 }

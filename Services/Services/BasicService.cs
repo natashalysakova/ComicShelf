@@ -6,15 +6,16 @@ using System.Linq.Expressions;
 
 namespace Services.Services
 {
-    public abstract class BasicService<T, VM, CM, UM> : IService 
-        where T : class, IIdEntity 
-        where VM : IViewModel
-        where CM : ICreateModel
-        where UM : IUpdateModel
+    public abstract class BasicService<T, VM, CM, UM> : IService
+        where T : class, IIdEntity
+        where VM : IViewModel<T>
+        where CM : ICreateModel<T>
+        where UM : IUpdateModel<T>
     {
+        protected readonly IMapper _mapper;
         protected DbSet<T> dbSet;
         private ComicShelfContext context;
-        protected readonly IMapper _mapper;
+        private string notificationCache;
 
         public BasicService(ComicShelfContext context, IMapper mapper)
         {
@@ -23,16 +24,60 @@ namespace Services.Services
             dbSet = context.Set<T>();
         }
 
-        public VM Get(int? id)
-        {
-            return _mapper.Map<VM>(GetById(id));
-        }
-
         public virtual int Add(CM item)
         {
             var model = _mapper.Map<T>(item);
             Add(model);
             return model.Id;
+        }
+
+        public bool Exists(int id)
+        {
+            return GetById(id) != null;
+        }
+
+        public VM Get(int? id)
+        {
+            return _mapper.Map<VM>(GetById(id));
+        }
+        public virtual IEnumerable<VM> GetAll()
+        {
+            return _mapper.ProjectTo<VM>(dbSet.AsNoTracking());
+        }
+
+        public IEnumerable<UM> GetAllForUpdate()
+        {
+            return _mapper.ProjectTo<UM>(dbSet.AsNoTracking());
+        }
+
+        public virtual UM GetForUpdate(int? id)
+        {
+            var item = GetAllEntities().SingleOrDefault(x => x.Id == id);
+            if (item != null)
+                return _mapper.Map<UM>(item);
+            return default(UM);
+        }
+
+        public virtual void Remove(int? id)
+        {
+            var item = dbSet.Find(id);
+            if (item != null)
+            {
+                dbSet.Remove(item);
+                context.SaveChanges();
+            }
+        }
+
+        public abstract string SetNotificationMessage();
+
+        public string ShowNotification()
+        {
+            if (string.IsNullOrEmpty(notificationCache))
+            {
+                notificationCache = SetNotificationMessage();
+            }
+
+            return notificationCache;
         }
 
         public virtual void Update(UM item)
@@ -47,54 +92,6 @@ namespace Services.Services
 
             Update(model);
         }
-        public virtual IEnumerable<VM> GetAll()
-        {
-            return _mapper.ProjectTo<VM>(dbSet.AsNoTracking()).ToList();
-        }
-
-        public virtual IEnumerable<UM> GetAllForEdit()
-        {
-            return _mapper.ProjectTo<UM>(dbSet.AsNoTracking());
-        }
-
-        protected IQueryable<T> GetAllEntities(bool tracking = false)
-        {
-            return tracking ? dbSet : dbSet.AsNoTracking();
-        }
-
-        internal virtual T? GetById(int? id)
-        {
-            return dbSet.Find(id);
-        }
-
-        public virtual void Remove(T item)
-        {
-            dbSet.Remove(item);
-            context.SaveChanges();
-        }
-        public virtual void Remove(int? id)
-        {
-            var item = dbSet.Find(id);
-            if(item != null)
-            {
-                dbSet.Remove(item);
-                context.SaveChanges();
-            }
-        }
-
-        protected void Detach(T item)
-        {
-            dbSet.Entry(item).State = EntityState.Detached;
-        }
-
-
-        internal void Update(T country)
-        {
-            dbSet.Entry(country).State = EntityState.Modified;
-            context.SaveChanges();
-        }
-
-
         internal int Add(T item)
         {
             dbSet.Add(item);
@@ -102,48 +99,60 @@ namespace Services.Services
             return item.Id;
         }
 
-        internal virtual IEnumerable<int> AddRange(IEnumerable<T> items)
+        internal IEnumerable<int> AddRange(IEnumerable<T> items)
         {
             dbSet.AddRange(items);
             context.SaveChanges();
             return items.Select(x => x.Id);
         }
 
-        public bool Exists(int id)
+        internal T? GetById(int? id)
         {
-            return GetById(id) != null;
+            return dbSet.Find(id);
+        }
+
+        internal void LoadCollection(T item, string collection)
+        {
+            dbSet.Entry(item).Collection(collection).Load();
+        }
+
+        internal void LoadCollection<TProperty>(T item, Expression<Func<T, IEnumerable<TProperty>>> expression) where TProperty : class
+        {
+            dbSet.Entry(item).Collection(expression).Load();
         }
 
         internal void LoadReference(T item, string reference)
         {
             dbSet.Entry(item).Reference(reference).Load();
         }
+
         internal void LoadReference<TProperty>(T item, Expression<Func<T, TProperty?>> expression) where TProperty : class
         {
             dbSet.Entry(item).Reference(expression).Load();
         }
-        internal void LoadCollection(T item, string collection)
-        {
-            dbSet.Entry(item).Collection(collection).Load();
-        }
-        internal void LoadCollection<TProperty>(T item, Expression<Func<T, IEnumerable<TProperty>>> expression) where TProperty : class
-        {
-            dbSet.Entry(item).Collection(expression).Load();
-        }
 
-
-
-        string notificationCache;
-        public string ShowNotification()
+        internal void Update(T item)
         {
-            if (string.IsNullOrEmpty(notificationCache))
+            var existingEntity = context.Set<T>().Local.FirstOrDefault(e => e.Id == item.Id);
+
+            if (existingEntity != null)
             {
-                notificationCache = SetNotificationMessage();
+                dbSet.Entry(existingEntity).State = EntityState.Detached;
             }
 
-            return notificationCache;
+            dbSet.Update(item);
+
+            context.SaveChanges();
         }
 
-        public abstract string SetNotificationMessage();
+        protected void Detach(T item)
+        {
+            dbSet.Entry(item).State = EntityState.Detached;
+        }
+
+        protected virtual IQueryable<T> GetAllEntities(bool tracking = false)
+        {
+            return tracking ? dbSet : dbSet.AsNoTracking();
+        }
     }
 }

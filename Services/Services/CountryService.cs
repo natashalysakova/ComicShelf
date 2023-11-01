@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using AutoMapper;
 using Backend.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Services.ViewModels;
-using AutoMapper;
 
 namespace Services.Services
 {
@@ -18,11 +18,11 @@ namespace Services.Services
 
         public IEnumerable<SelectListItem> GetCountriesForView()
         {
-            var allExceptUnknown = GetAllEntities().Include(x=>x.Publishers).ToList();
+            var allExceptUnknown = GetAllEntities().Include(x => x.Publishers).ToList();
             var toRemove = allExceptUnknown.Single(x => x.Id == UnknownCountry.Id);
             allExceptUnknown.Remove(toRemove);
 
-            var selectListItems = allExceptUnknown.OrderByDescending(x=>x.Publishers.Count()).ThenBy(x=>x.Name).Select(x => new SelectListItem()
+            var selectListItems = allExceptUnknown.OrderByDescending(x => x.Publishers.Count()).ThenBy(x => x.Name).Select(x => new SelectListItem()
             {
                 Text = $"{x.Name}",
                 Value = x.Id.ToString(),

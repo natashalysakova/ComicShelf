@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using Microsoft.AspNetCore.Http;
+﻿using Backend.Models;
 using Backend.Models.Enums;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Services.ViewModels
 {
-    public class VolumeCreateModel :  ICreateModel
+    public class VolumeCreateModel : ICreateModel<Volume>
     {
         public int Number { get; set; }
 

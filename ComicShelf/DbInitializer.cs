@@ -26,7 +26,7 @@ internal class DbInitializer
         }
 
         var unknownCountry = _context.Countries.Single(x => x.Name == unknown);
-        if (!_context.Publishers.Any(x=>x.Name == unknown))
+        if (!_context.Publishers.Any(x => x.Name == unknown))
         {
             _context.Publishers.Add(new Publisher() { Country = unknownCountry, Name = unknown });
             _context.SaveChanges();
@@ -58,11 +58,11 @@ internal class DbInitializer
                 },
             };
 
-        if (_context.Filters.Count(x=>x.Group == FilterService.STANDART) !=  standartFilters.Length)
+        if (_context.Filters.Count(x => x.Group == FilterService.STANDART) != standartFilters.Length)
         {
             foreach (var item in standartFilters)
             {
-                if(_context.Filters.SingleOrDefault(x=>x.Name == item.Name) == default)
+                if (_context.Filters.SingleOrDefault(x => x.Name == item.Name) == default)
                 {
                     _context.Filters.Add(item);
                 }

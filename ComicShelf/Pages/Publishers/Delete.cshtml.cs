@@ -16,7 +16,7 @@ namespace ComicShelf.Pages.Publishers
         }
 
         [BindProperty]
-      public PublisherViewModel Publisher { get; set; } = default!;
+        public PublisherViewModel Publisher { get; set; } = default!;
 
         public IActionResult OnGetAsync(int? id)
         {
@@ -31,7 +31,7 @@ namespace ComicShelf.Pages.Publishers
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Publisher = publisher;
             }

@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using ComicShelf.Localization;
+@using ComicShelf.Pages.Shared.Components;
 @using Microsoft.AspNetCore.Mvc.Localization;
 @using Newtonsoft.Json;
 @using Services.Services.Enums;
@@ -9,6 +10,11 @@
 @{
     ViewData["Title"] = Localizer["MainPage"];
 }
+
+@*<div class="card">
+    @(await Html.RenderComponentAsync<DataViewComponent>(RenderMode.ServerPrerendered, new { Data = "I came from Index", style = "bg-danger" }))
+</div>*@
+
 
 <div class="row">
     <div class="col-lg-3 col-xl-2">

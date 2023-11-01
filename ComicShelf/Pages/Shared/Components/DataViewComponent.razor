@@ -1,0 +1,39 @@
+﻿<h3>DataViewComponent</h3>
+
+<div class="card-header">
+
+    <h3>DataComponent</h3>
+    <button @onclick="Getdata" class="btn btn-dark">Click to GetData</button>
+</div>
+<div class="card-body">
+    <br />
+    <div class="@style">@Data</div>
+    <div class="@hidden"> Am I visible</div>
+</div>
+
+
+
+
+@code {
+    [Parameter]
+    public string Data { get; set; } = string.Empty;
+    [Parameter]
+    public string style { get; set; }
+
+    string hidden = "visible";
+
+    private void Getdata()
+    {
+        Data = "I am Working";
+        style = "bg-success";
+
+        if (hidden == "invisible")
+        {
+            hidden = "visible";
+        }
+        else
+        {
+                hidden = "invisible";
+        }
+    }
+}

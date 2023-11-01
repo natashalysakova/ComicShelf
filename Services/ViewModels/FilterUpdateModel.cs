@@ -1,6 +1,8 @@
-﻿namespace Services.ViewModels
+﻿using Backend.Models;
+
+namespace Services.ViewModels
 {
-    public class FilterUpdateModel : IUpdateModel
+    public class FilterUpdateModel : IUpdateModel<Filter>
     {
         public int Id { get; set; }
         public string Name { get; set; }

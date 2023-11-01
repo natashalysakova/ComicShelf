@@ -1,6 +1,8 @@
-﻿namespace Services.ViewModels
+﻿using Backend.Models;
+
+namespace Services.ViewModels
 {
-    public class PublisherViewModel : IViewModel
+    public class PublisherViewModel : IViewModel<Publisher>
     {
         public int CountryId { get; set; }
         public int SeriesCount { get; set; }
@@ -8,7 +10,7 @@
         public int Id { get; set; }
         public string CountryName { get; set; }
         public string CountryFlagPNG { get; set; }
-        public IEnumerable<string> Series { get; set; }
+        public IEnumerable<IdNameView> Series { get; set; }
 
     }
 }

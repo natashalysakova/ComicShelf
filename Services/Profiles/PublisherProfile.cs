@@ -2,7 +2,7 @@
 using Backend.Models;
 using Services.ViewModels;
 
-namespace ComicShelf.Profiles
+namespace Services.Profiles
 {
     public class PublisherProfile : Profile
     {
@@ -10,12 +10,9 @@ namespace ComicShelf.Profiles
         {
             CreateMap<PublisherCreateModel, Publisher>(MemberList.Source);
             CreateMap<PublisherUpdateModel, Publisher>(MemberList.Source).ReverseMap();
-            CreateMap<Publisher, PublisherViewModel>()
-                .ForMember(x=>x.Series, act =>
-                {
-                    act.MapFrom(x=>x.Series.Select(x=>x.Name).Distinct());
-                })
-                ;
+
+            CreateMap<Publisher, IdNameView>();
+            CreateMap<Publisher, PublisherViewModel>();
 
         }
     }

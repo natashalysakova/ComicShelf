@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Services.ViewModels
 {
-    public class SeriesUpdateModel : IUpdateModel
+    public class SeriesUpdateModel : IUpdateModel<Series>
     {
         public int Id { get; set; }
         [DisplayName("Title")]
@@ -31,5 +31,7 @@ namespace Services.ViewModels
         public string Color { get; set; }
 
         public int VolumeCount { get; set; }
+        public bool HasError { get; set; }
+
     }
 }

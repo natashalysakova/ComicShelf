@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Services.Services;
 using Services.ViewModels;
 
@@ -14,11 +13,13 @@ namespace ComicShelf.Pages.Publishers
             _publisherService = service;
         }
 
-        public IList<PublisherViewModel> Publisher { get; set; } = default!;
+        public IEnumerable<PublisherViewModel> Publisher { get; set; } = default!;
 
         public void OnGetAsync()
         {
-            Publisher = _publisherService.GetAll().OrderByDescending(x=>x.SeriesCount).ThenBy(x=>x.Name).ToList();
+            var t = _publisherService.GetAll();
+
+            Publisher = t.OrderBy(x => x.Name).Select(x => { x.Series = x.Series.OrderBy(y => y.Name); return x; });
         }
     }
 }

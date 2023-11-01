@@ -22,18 +22,6 @@ namespace Services.Services
             return string.Empty;
         }
 
-        public override IQueryable<AuthorViewModel> GetAll()
-        {
-            var all = GetAllEntities().Include(x => x.Volumes).ThenInclude(x => x.Series);
-
-            foreach (var i in all)
-            {
-                var a = _mapper.Map<AuthorViewModel>(i);
-            }
-
-            return all.Select(x => _mapper.Map<AuthorViewModel>(x));
-        }
-
         internal Author GetByName(string trimmedItem)
         {
             return dbSet.Where(x => x.Name == trimmedItem).FirstOrDefault();
@@ -49,6 +37,10 @@ namespace Services.Services
             return collection;
         }
 
+        protected override IQueryable<Author> GetAllEntities(bool tracking = false)
+        {
+            return base.GetAllEntities(tracking).Include(x => x.Volumes).ThenInclude(x => x.Series);
+        }
 
 
 

@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using NuGet.Packaging;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using Backend.Models.Enums;
 using ComicShelf.Localization;
+using ComicShelf.Utilities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using NuGet.Packaging;
 using Services.Services;
-using Backend.Models.Enums;
 using Services.Services.Enums;
 using Services.ViewModels;
-using ComicShelf.Utilities;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -40,9 +40,9 @@ namespace ComicShelf.Pages.Volumes
 
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
-            Filters =filterService.GetAllForView();
+            Filters = filterService.GetAllForView();
 
-            var test = _localizer["test"].ResourceNotFound; 
+            var test = _localizer["test"].ResourceNotFound;
         }
 
         [BindProperty]

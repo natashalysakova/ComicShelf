@@ -2,7 +2,7 @@
 using Backend.Models;
 using Services.ViewModels;
 
-namespace ComicShelf.Profiles
+namespace Services.Profiles
 {
     public class VolumeProfile : Profile
     {
@@ -23,17 +23,18 @@ namespace ComicShelf.Profiles
                 .ForMember(x => x.CoverFile, act => { act.Ignore(); });
 
 
+            CreateMap<Volume, IdNameView>().ForMember(x => x.Name, act => act.MapFrom(x => $"{x.Series.Name} {x.Title}"));
             CreateMap<Volume, VolumeViewModel>()
-                .ForMember(x => x.SeriesPublisherCountryFlag, act =>
-                {
-                    act.MapFrom(x => x.Series.Publisher.Country.FlagPNG);
-                })
-                .ForMember(x => x.SeriesName, act =>
-                {
-                    act.MapFrom(x => x.Series.Name);
-                })
-                .ForMember(x=>x.Authors, act=> act.MapFrom(x=>x.Authors.Select(x=>x.Name)))
-                ;
+                .ForMember(x => x.SeriesPublisherCountryFlag,
+                    act => act.MapFrom(x => x.Series.Publisher.Country.FlagPNG))
+                .ForMember(x => x.SeriesName, act => act.MapFrom(x => x.Series.Name))
+                .ForMember(x => x.Authors, act => act.MapFrom(x => x.Authors.Select(x => x.Name)))
+                .ForMember(x => x.HasError, act => act.MapFrom(x => HasError(x)));
+        }
+
+        private static bool HasError(Volume x)
+        {
+            return x.Expired();
         }
     }
 }

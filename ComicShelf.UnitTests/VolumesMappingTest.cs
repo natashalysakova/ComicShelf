@@ -2,15 +2,21 @@
 using Backend.Models;
 using Backend.Models.Enums;
 using Services.ViewModels;
+using Services.Profiles;
 
 namespace ComicShelf.UnitTests
 {
     [TestClass]
-    public class VolumesMappingTest : BasicTest
+    public class VolumesMappingTest : BasicTest<Volume>
     {
-        public VolumesMappingTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(Profiles.VolumeProfile)); }))
+        public VolumesMappingTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(VolumeProfile)); }))
         {
 
+        }
+
+        public override Volume GetNewInstance()
+        {
+            return DataSet.Volume1;
         }
 
         [TestMethod]
@@ -111,6 +117,9 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(entity.Series.TotalVolumes, model.SeriesTotalVolumes);
 
             Assert.IsTrue(entity.Authors.Select(x => x.Name).SequenceEqual(model.Authors));
+            Assert.IsFalse(model.HasError);
         }
+
+
     }
 }

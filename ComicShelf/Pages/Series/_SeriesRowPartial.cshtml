@@ -9,9 +9,14 @@
 
 
 <form data-ajax="true" method="post" data-ajax-method="post" asp-page-handler="Update"
+      data-ajax-mode="replace"
+      data-ajax-update="#series-@Model.UpdateItem.Id"
       data-ajax-complete="changeSeriesComplete">
-    <div class="row" id="#series">
 
+    @{
+        var errorClass = Model.UpdateItem.HasError ? "bg-danger" : string.Empty;
+    }
+    <div class="row @errorClass" id="#series">
 
         <input asp-for="@Model.UpdateItem.Id" hidden />
         <div class="col">
@@ -25,7 +30,7 @@
             </div>
         </div>
         <div class="col-auto">
-            <select asp-items="@Model.Types" class="form-select" asp-for="@Model.Types"></select>
+            <select asp-items="@Model.Types" class="form-select" asp-for="@Model.UpdateItem.Type" autocomplete="off"></select>
             <select class="form-select" asp-for="@Model.UpdateItem.PublisherId" asp-items="@Model.Publishers" autocomplete="off"></select>
         </div>
         <div class="col-4">

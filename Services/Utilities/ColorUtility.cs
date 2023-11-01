@@ -19,7 +19,8 @@ public static class ColorUtility
         return Color.FromArgb(Random.Next(0, 255), Random.Next(0, 255), Random.Next(0, 255));
     }
     public static Color GetRandomColor(
-        int minHue = 0, int maxHue = 360,
+        int minHue = 0, 
+        int maxHue = 360,
         int minSaturation = 0, int maxSaturation = 100,
         int minValue = 0, int maxValue = 100)
     {

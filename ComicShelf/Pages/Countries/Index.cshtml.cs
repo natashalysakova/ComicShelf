@@ -1,6 +1,4 @@
-﻿using Backend.Models;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.Services;
 using Services.ViewModels;
 
@@ -15,11 +13,15 @@ namespace ComicShelf.Pages.Countries
             _service = service;
         }
 
-        public List<CountryViewModel> Countries { get;set; } = default!;
+        public List<CountryViewModel> Countries { get; set; } = default!;
 
         public void OnGet()
         {
-            Countries = _service.GetAll().Where(x => x.Publishers.Any()).ToList();
+            Countries = _service.GetAll()
+                .Where(x => x.Publishers.Any())
+                .OrderBy(x => x.Publishers.Count())
+                .Select(x => { x.Publishers = x.Publishers.OrderBy(y => y.Name); return x; })
+                .ToList();
         }
     }
 }

@@ -1,14 +1,20 @@
 ﻿using AutoMapper;
 using Backend.Models;
+using Services.Profiles;
 using Services.ViewModels;
 
 namespace ComicShelf.UnitTests
 {
     [TestClass]
-    public class CountriesMappingTest : BasicTest
+    public class CountriesMappingTest : BasicTest<Country>
     {
-        public CountriesMappingTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(Profiles.CountryProfile)); }))
+        public CountriesMappingTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(CountryProfile)); }))
         {
+        }
+
+        public override Country GetNewInstance()
+        {
+            return DataSet.Country;
         }
 
         [TestMethod]
@@ -68,7 +74,7 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(entity.FlagSVG, viewModel.FlagSVG);
 
             Assert.AreEqual(1, viewModel.Publishers.Count());
-            Assert.AreEqual(entity.Publishers.ElementAt(0).Name, viewModel.Publishers.ElementAt(0));
+            Assert.AreEqual(entity.Publishers.ElementAt(0).Name, viewModel.Publishers.ElementAt(0).Name);
 
         }
     }

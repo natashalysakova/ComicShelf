@@ -1,8 +1,8 @@
 ﻿namespace Services.ViewModels
 {
-    public interface IUpdateModel
+    public interface IUpdateModel<T>
     {
-        
+
 
     }
 }

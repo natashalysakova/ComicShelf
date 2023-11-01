@@ -1,6 +1,8 @@
-﻿namespace Services.ViewModels
+﻿using Backend.Models;
+
+namespace Services.ViewModels
 {
-    public class SeriesViewModel : IViewModel
+    public class SeriesViewModel : IViewModel<Series>
     {
         public string Name { get; set; }
         public int Id { get; set; }

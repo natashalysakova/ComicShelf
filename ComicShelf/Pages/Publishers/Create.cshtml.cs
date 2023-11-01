@@ -19,10 +19,10 @@ namespace ComicShelf.Pages.Publishers
             _countryService = countryService;
 
 
-            CountriesList = _countryService.GetCountriesForView(); 
+            CountriesList = _countryService.GetCountriesForView();
         }
 
-        
+
 
         public IActionResult OnGet()
         {

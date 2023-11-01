@@ -7,7 +7,7 @@ namespace Backend.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        
+
         [Required]
         public string Name { get; set; }
         public int Number { get; set; }

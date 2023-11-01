@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
+﻿using Backend.Models;
+using System.ComponentModel;
 
 namespace Services.ViewModels
 {
-    public class PublisherCreateModel : ICreateModel
+    public class PublisherCreateModel : ICreateModel<Publisher>
     {
         [DisplayName("Country")]
         public int CountryId { get; set; }

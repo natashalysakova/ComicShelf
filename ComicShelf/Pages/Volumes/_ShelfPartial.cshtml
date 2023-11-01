@@ -11,10 +11,11 @@
 <div class="shelf">
     @foreach (var item in Model)
     {
+        var errorClass = item.HasError ? "bg-danger" : string.Empty;
 
-            <div class="book" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="bookClick(@item.Id)" id="book-@item.Id">
-                <partial name="_BookPartial" model="item" view-data="@ViewData" />
-            </div>
+        <div class="book @errorClass" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="bookClick(@item.Id)" id="book-@item.Id">
+            <partial name="_BookPartial" model="item" view-data="@ViewData" />
+        </div>
 
     }
 </div>
