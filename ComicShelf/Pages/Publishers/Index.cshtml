@@ -1,11 +1,13 @@
 ﻿@page
+@using ComicShelf.Localization;
 @model ComicShelf.Pages.Publishers.IndexModel
+@inject LocalizationService Localizer
 
 @{
-    ViewData["Title"] = "Publishers";
+    ViewData["Title"] = Localizer["Publishers"];
 }
 
-<h1>Publishers</h1>
+<h1>@Localizer["Publishers"]</h1>
 @{
     var warning = ViewData["PublisherNotification"]?.ToString();
     if (!string.IsNullOrEmpty(warning))
@@ -18,19 +20,19 @@
 
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="Create">@Localizer["Create"]</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Publisher.ElementAt(0).Name)
+                @Localizer["Name"]
             </th>
             <th>
-                @Html.DisplayNameFor(model=>model.Publisher.ElementAt(0).CountryName)
+                @Localizer["Country"]
             </th>
             <th>
-                @Html.DisplayNameFor(model=>model.Publisher.ElementAt(0).Series)
+                @Localizer["AllSeries"]
             </th>
             <th></th>
         </tr>

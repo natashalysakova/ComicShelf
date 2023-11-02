@@ -118,190 +118,190 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddNewVolume" xml:space="preserve">
-    <value>{AddNewVolume}</value>
+    <value>New Volume</value>
   </data>
   <data name="Announced" xml:space="preserve">
-    <value>{Announced}</value>
+    <value>Announced</value>
   </data>
   <data name="Author" xml:space="preserve">
-    <value>{Author}</value>
+    <value>Author</value>
   </data>
   <data name="Authors" xml:space="preserve">
-    <value>{Authors}</value>
+    <value>Authors</value>
   </data>
   <data name="Bought" xml:space="preserve">
-    <value>{Bought}</value>
+    <value>Purchased</value>
   </data>
   <data name="ByCreationDate" xml:space="preserve">
-    <value>{ByCreationDate}</value>
+    <value>By creation date</value>
   </data>
   <data name="ByPurchaseDate" xml:space="preserve">
-    <value>{ByPurchaseDate}</value>
+    <value>By purchase date</value>
   </data>
   <data name="BySeriesTitle" xml:space="preserve">
-    <value>{ByTitle}</value>
+    <value>By title</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>{Clear}</value>
+    <value>Clear</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>{Close}</value>
+    <value>Close</value>
   </data>
   <data name="Completed" xml:space="preserve">
-    <value>{Completed}</value>
+    <value>Completed</value>
   </data>
   <data name="Countries" xml:space="preserve">
-    <value>{Countries}</value>
+    <value>Countries</value>
   </data>
   <data name="Cover" xml:space="preserve">
-    <value>{Cover}</value>
+    <value>Cover</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>{Create}</value>
+    <value>Create</value>
   </data>
   <data name="Created" xml:space="preserve">
-    <value>{Created}</value>
+    <value>Created</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>{Delete}</value>
+    <value>Delete</value>
   </data>
   <data name="Dropped" xml:space="preserve">
-    <value>{Dropped}</value>
+    <value>Dropped</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>{Edit}</value>
+    <value>Edit</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>{All}</value>
+    <value>All</value>
   </data>
   <data name="FilterAnnounced" xml:space="preserve">
-    <value>{FilterAnnounced}</value>
+    <value>Announced</value>
   </data>
   <data name="Available" xml:space="preserve">
-    <value>{Available}</value>
+    <value>Available</value>
   </data>
   <data name="Gone" xml:space="preserve">
-    <value>{Gone}</value>
+    <value>Gone</value>
   </data>
   <data name="Preorders" xml:space="preserve">
-    <value>{Preorders}</value>
+    <value>Preorders</value>
   </data>
   <data name="FilterWishlist" xml:space="preserve">
-    <value>{FilterWishlist}</value>
+    <value>Wishlist</value>
   </data>
   <data name="Gift" xml:space="preserve">
-    <value>{Gift}</value>
+    <value>Gift</value>
   </data>
   <data name="GiftedAway" xml:space="preserve">
-    <value>{GiftedAway}</value>
+    <value>Gone</value>
   </data>
   <data name="InQueue" xml:space="preserve">
-    <value>{InQueue}</value>
+    <value>In queue</value>
   </data>
   <data name="MainHeader" xml:space="preserve">
-    <value>{MainHeader}</value>
+    <value>Comics and Manga</value>
   </data>
   <data name="MainPage" xml:space="preserve">
-    <value>{MainPage}</value>
+    <value>Main page</value>
   </data>
   <data name="Modified" xml:space="preserve">
-    <value>{Modified}</value>
+    <value>Modified</value>
   </data>
   <data name="NotStarted" xml:space="preserve">
-    <value>{NotStarted}</value>
+    <value>Not started</value>
   </data>
   <data name="NumberInSeries" xml:space="preserve">
-    <value>{NumberInSeries}</value>
+    <value># in series</value>
   </data>
   <data name="Ongoing" xml:space="preserve">
-    <value>{Ongoing}</value>
+    <value>Ongoing</value>
   </data>
-  <data name="OriginalTitile" xml:space="preserve">
-    <value>{OriginalTitile}</value>
+  <data name="OriginalName" xml:space="preserve">
+    <value>Original title</value>
   </data>
   <data name="Pirated" xml:space="preserve">
-    <value>{Pirated}</value>
+    <value>Pirated</value>
   </data>
   <data name="Preordered" xml:space="preserve">
-    <value>{Preordered}</value>
+    <value>Preordered</value>
   </data>
   <data name="Privacy" xml:space="preserve">
-    <value>{Privacy}</value>
+    <value>Privacy</value>
   </data>
   <data name="Publishers" xml:space="preserve">
-    <value>{Publishers}</value>
+    <value>Publishers</value>
   </data>
   <data name="PurchaseDate" xml:space="preserve">
-    <value>{PurchaseDate}</value>
+    <value>Purchase date</value>
   </data>
   <data name="PurchaseStatus" xml:space="preserve">
-    <value>{PurchaseStatus}</value>
+    <value>Status</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>{Rating}</value>
+    <value>Rating</value>
   </data>
   <data name="Reading" xml:space="preserve">
-    <value>{Reading}</value>
+    <value>Reading</value>
   </data>
   <data name="ReadingStatus" xml:space="preserve">
-    <value>{ReadingStatus}</value>
+    <value>Progress</value>
   </data>
   <data name="ReleaseDate" xml:space="preserve">
-    <value>{ReleaseDate}</value>
+    <value>Release date</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>{Search}</value>
+    <value>Search</value>
   </data>
   <data name="Series" xml:space="preserve">
-    <value>{Series}</value>
+    <value>Series</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>{Title}</value>
+    <value>Title</value>
   </data>
   <data name="TypeForSearch" xml:space="preserve">
-    <value>{TypeForSearch}</value>
+    <value>Type for search</value>
   </data>
   <data name="Update" xml:space="preserve">
-    <value>{Update}</value>
+    <value>Update</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>{Volume}</value>
+    <value>Volume</value>
   </data>
   <data name="Wishlist" xml:space="preserve">
-    <value>{Wishlist}</value>
+    <value>Wishlist</value>
   </data>
   <data name="Digitality" xml:space="preserve">
-    <value>{Digitality}</value>
+    <value>Digitality</value>
   </data>
   <data name="Physical" xml:space="preserve">
-    <value>{Physical}</value>
+    <value>Physical</value>
   </data>
   <data name="Digital" xml:space="preserve">
-    <value>{Digital}</value>
+    <value>Digital</value>
   </data>
   <data name="AddOneMore" xml:space="preserve">
-    <value>{AddOneMore}</value>
+    <value>Create another</value>
   </data>
   <data name="DigitalityAll" xml:space="preserve">
-    <value>{DigitalityAll}</value>
+    <value>All</value>
   </data>
   <data name="DigitalityPhysical" xml:space="preserve">
-    <value>{DigitalityPhysical}</value>
+    <value>Physical</value>
   </data>
   <data name="DigitalityDigital" xml:space="preserve">
-    <value>{DigitalityDigital}</value>
+    <value>Digital</value>
   </data>
   <data name="Free" xml:space="preserve">
-    <value>{Free}</value>
+    <value>Free</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset filters</value>
   </data>
   <data name="SingleVolume" xml:space="preserve">
-    <value>SingleVolume</value>
+    <value>One Shot</value>
   </data>
   <data name="SingleVolumeHint" xml:space="preserve">
-    <value>SingleVolumeHint</value>
+    <value>Select this if volume is finished story</value>
   </data>
   <data name="Publisher" xml:space="preserve">
     <value>Publisher</value>
@@ -338,5 +338,44 @@
   </data>
   <data name="custom" xml:space="preserve">
     <value>Custom filters</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Назва</value>
+  </data>
+  <data name="Manga" xml:space="preserve">
+    <value>Manga</value>
+  </data>
+  <data name="Comics" xml:space="preserve">
+    <value>Comics</value>
+  </data>
+  <data name="Volumes" xml:space="preserve">
+    <value>Volumes</value>
+  </data>
+  <data name="TotalVolumes" xml:space="preserve">
+    <value>Total volumes</value>
+  </data>
+  <data name="Writer" xml:space="preserve">
+    <value>Writer</value>
+  </data>
+  <data name="Mangaka" xml:space="preserve">
+    <value>Mangaka</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="AllSeries" xml:space="preserve">
+    <value>AllSeries</value>
+  </data>
+  <data name="Vol" xml:space="preserve">
+    <value>Vol.</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="of" xml:space="preserve">
+    <value>of</value>
   </data>
 </root>

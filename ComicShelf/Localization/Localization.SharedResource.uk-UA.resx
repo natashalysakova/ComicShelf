@@ -214,9 +214,9 @@
     <value>№ в серії</value>
   </data>
   <data name="Ongoing" xml:space="preserve">
-    <value>Онгоінг</value>
+    <value>І</value>
   </data>
-  <data name="OriginalTitile" xml:space="preserve">
+  <data name="OriginalName" xml:space="preserve">
     <value>Оригінальна назва</value>
   </data>
   <data name="Pirated" xml:space="preserve">
@@ -338,5 +338,44 @@
   </data>
   <data name="custom" xml:space="preserve">
     <value>Користувацькі фільтри</value>
+  </data>
+  <data name="Manga" xml:space="preserve">
+    <value>Манга</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Назва</value>
+  </data>
+  <data name="Comics" xml:space="preserve">
+    <value>Комікс</value>
+  </data>
+  <data name="Volumes" xml:space="preserve">
+    <value>Томів</value>
+  </data>
+  <data name="TotalVolumes" xml:space="preserve">
+    <value>Усього томів</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Художник</value>
+  </data>
+  <data name="Mangaka" xml:space="preserve">
+    <value>Мангака</value>
+  </data>
+  <data name="Writer" xml:space="preserve">
+    <value>Сценарист</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Країна</value>
+  </data>
+  <data name="AllSeries" xml:space="preserve">
+    <value>Серії</value>
+  </data>
+  <data name="Vol" xml:space="preserve">
+    <value>Томів</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Усього</value>
+  </data>
+  <data name="of" xml:space="preserve">
+    <value>з</value>
   </data>
 </root>

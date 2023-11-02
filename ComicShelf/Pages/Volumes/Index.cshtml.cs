@@ -41,8 +41,6 @@ namespace ComicShelf.Pages.Volumes
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Filters = filterService.GetAllForView();
-
-            var test = _localizer["test"].ResourceNotFound;
         }
 
         [BindProperty]

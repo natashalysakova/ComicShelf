@@ -15,7 +15,8 @@
       "applicationUrl": "http://localhost:5297",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "hotReloadProfile": "aspnetcore"
     },
     "httpProd": {
       "commandName": "Project",

@@ -122,14 +122,7 @@ internal class Program
             option.Cookie.Name = "VolumeFilters";
         });
 
-        builder.Services.AddServerSideBlazor();
-
-        //builder.Services.AddAutoMapper(c => new MapperConfiguration(cfg =>
-        //{
-        //    cfg.AddMaps(
-        //        typeof(AuthorsProfile)
-        //        );
-        //}).AssertConfigurationIsValid());
+        //builder.Services.AddServerSideBlazor();
 
         var cfg = new MapperConfiguration(c =>
         {
@@ -180,7 +173,7 @@ internal class Program
         app.UseStaticFiles();
 
         app.UseRouting();
-        app.MapBlazorHub();
+        //app.MapBlazorHub();
         app.UseAuthorization();
         app.UseSession();
         app.MapRazorPages();

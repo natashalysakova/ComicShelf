@@ -216,7 +216,7 @@
   <data name="Ongoing" xml:space="preserve">
     <value>Ongoing</value>
   </data>
-  <data name="OriginalTitile" xml:space="preserve">
+  <data name="OriginalName" xml:space="preserve">
     <value>Original title</value>
   </data>
   <data name="Pirated" xml:space="preserve">
@@ -338,5 +338,44 @@
   </data>
   <data name="standart" xml:space="preserve">
     <value>Standart filters</value>
+  </data>
+  <data name="Manga" xml:space="preserve">
+    <value>Manga</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Назва</value>
+  </data>
+  <data name="Comics" xml:space="preserve">
+    <value>Comics</value>
+  </data>
+  <data name="Volumes" xml:space="preserve">
+    <value>Volumes</value>
+  </data>
+  <data name="TotalVolumes" xml:space="preserve">
+    <value>Total volumes</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="Mangaka" xml:space="preserve">
+    <value>Mangaka</value>
+  </data>
+  <data name="Writer" xml:space="preserve">
+    <value>Writer</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="AllSeries" xml:space="preserve">
+    <value>AllSeries</value>
+  </data>
+  <data name="Vol" xml:space="preserve">
+    <value>Vol.</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="of" xml:space="preserve">
+    <value>of</value>
   </data>
 </root>
