@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.Services;
 using Services.ViewModels;
 
-namespace ComicShelf.Pages.Authors
+namespace ComicShelf.Pages.Manga.Authors
 {
     public class IndexModel : PageModel
     {

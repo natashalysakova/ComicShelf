@@ -3,6 +3,7 @@ using System;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ComicShelfContext))]
-    partial class ComicShelfContextModelSnapshot : ModelSnapshot
+    [Migration("20231108191554_AddAnime2")]
+    partial class AddAnime2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,15 +43,9 @@ namespace Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsOngoing")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("OriginalTitle")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -162,22 +159,22 @@ namespace Backend.Migrations
                     b.Property<int>("AnimeId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<int>("HierarchyOrder")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("item_type")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -185,7 +182,7 @@ namespace Backend.Migrations
 
                     b.ToTable("Items");
 
-                    b.HasDiscriminator<string>("item_type").HasValue("Item");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Item");
 
                     b.UseTphMappingStrategy();
                 });
@@ -317,7 +314,7 @@ namespace Backend.Migrations
 
                     b.ToTable("Items", (string)null);
 
-                    b.HasDiscriminator().HasValue("movie");
+                    b.HasDiscriminator().HasValue("Movie");
                 });
 
             modelBuilder.Entity("Backend.Models.Season", b =>
@@ -326,7 +323,7 @@ namespace Backend.Migrations
 
                     b.ToTable("Items", (string)null);
 
-                    b.HasDiscriminator().HasValue("season");
+                    b.HasDiscriminator().HasValue("Season");
                 });
 
             modelBuilder.Entity("Backend.Models.Special", b =>
@@ -335,7 +332,7 @@ namespace Backend.Migrations
 
                     b.ToTable("Items", (string)null);
 
-                    b.HasDiscriminator().HasValue("special");
+                    b.HasDiscriminator().HasValue("Special");
                 });
 
             modelBuilder.Entity("AuthorVolume", b =>

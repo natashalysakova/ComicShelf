@@ -334,7 +334,7 @@
     <value>Finished</value>
   </data>
   <data name="SaveFilter" xml:space="preserve">
-    <value>Custom filters</value>
+    <value>Save filter</value>
   </data>
   <data name="custom" xml:space="preserve">
     <value>Custom filters</value>
@@ -377,5 +377,11 @@
   </data>
   <data name="of" xml:space="preserve">
     <value>of</value>
+  </data>
+  <data name="VolumesPlural" xml:space="preserve">
+    <value>Volumes</value>
+  </data>
+  <data name="SeriesPlural" xml:space="preserve">
+    <value>Series</value>
   </data>
 </root>

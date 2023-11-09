@@ -1,5 +1,5 @@
 ﻿@page
-@model ComicShelf.Pages.Countries.IndexModel
+@model IndexModel
 
 @{
     ViewData["Title"] = "Countries";
@@ -34,10 +34,10 @@
                     @Html.DisplayFor(modelItem => country.Name)
                 </td>
                 <td>
-                    <img class="flag" src="@country.FlagPNG" />
+                    <img class="flag" src="~/@country.FlagPNG" />
                 </td>
                 <td>
-                    <img class="flag" src="@country.FlagSVG" />
+                    <img class="flag" src="~/@country.FlagSVG" />
                 </td>
                 <td>
                     @{

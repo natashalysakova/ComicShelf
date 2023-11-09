@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Backend.Migrations;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Backend.Models
@@ -16,6 +17,9 @@ namespace Backend.Models
         public virtual DbSet<Series> Series { get; set; }
         public virtual DbSet<Volume> Volumes { get; set; }
         public virtual DbSet<Filter> Filters { get; set; }
+        public virtual DbSet<Anime> Anime { get; set; }
+        public virtual DbSet<Item> Items { get; set; }
+
 
         //public virtual DbSet<VolumeCover> VolumeCovers { get; set; }
 
@@ -29,6 +33,23 @@ namespace Backend.Models
             modelBuilder.Entity<Volume>().ToTable("Volume");
             modelBuilder.Entity<Filter>().ToTable("Filter");
             //modelBuilder.Entity<VolumeCover>().ToTable("VolumeCovers");
+
+
+
+            modelBuilder.Entity<Anime>().ToTable("Animes");
+
+            //modelBuilder.Entity<Item>().ToTable("Items")
+            //    .HasDiscriminator(x => x.Type);
+            modelBuilder.Entity<Movie>().ToTable("Items")
+                .HasDiscriminator<string>("item_type")
+                .HasValue("movie");
+            modelBuilder.Entity<Special>().ToTable("Items")
+                .HasDiscriminator<string>("item_type")
+                .HasValue("special");
+            modelBuilder.Entity<Season>().ToTable("Items")
+                .HasDiscriminator<string>("item_type")
+                .HasValue("season");
+
         }
     }
 }

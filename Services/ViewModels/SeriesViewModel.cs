@@ -12,5 +12,7 @@ namespace Services.ViewModels
         public int TotalVolumes { get; set; }
         public string OriginalName { get; set; }
         public string Color { get; set; }
+        public int MalId { get; set; }
+
     }
 }

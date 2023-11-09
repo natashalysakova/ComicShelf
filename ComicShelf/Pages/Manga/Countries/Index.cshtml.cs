@@ -2,7 +2,7 @@
 using Services.Services;
 using Services.ViewModels;
 
-namespace ComicShelf.Pages.Countries
+namespace ComicShelf.Pages.Manga.Countries
 {
     public class IndexModel : PageModel
     {

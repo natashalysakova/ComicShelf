@@ -220,7 +220,7 @@ function filter(e) {
 
 
     $.ajax({
-        url: "?handler=Filtered",
+        url: "/Manga/Index?handler=Filtered",
         type: 'GET',
         cache: false,
         data: filters
@@ -229,18 +229,24 @@ function filter(e) {
     });
 };
 
-function bookClick(id) {
-    $.ajax({
-        url: "?handler=Volume",
-        type: 'GET',
-        cache: false,
-        data: { id: id },
+//function bookClick(id) {
+//    $.ajax({
+//        url: "/Manga/Index?handler=Volume",
+//        type: 'GET',
+//        cache: false,
+//        data: { id: id },
 
-    }).done(function (result) {
-        $('#detail-modal-content').html(result);
-        purchaseStatusChanged('PurchaseStatus')
-        readingStatusChanged('Status')
-    });
+//    }).done(function (result) {
+//        $('#detail-modal-content').html(result);
+//        purchaseStatusChanged('PurchaseStatus')
+//        readingStatusChanged('Status')
+//    });
+//}
+
+
+function detailsLoaded() {
+    purchaseStatusChanged('PurchaseStatus')
+    readingStatusChanged('Status')
 }
 
 

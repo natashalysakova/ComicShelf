@@ -32,6 +32,7 @@ namespace Services.ViewModels
 
         public int VolumeCount { get; set; }
         public bool HasError { get; set; }
+        public int MalId { get; set; }
 
     }
 }

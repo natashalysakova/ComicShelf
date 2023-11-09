@@ -115,6 +115,11 @@ namespace ComicShelf.Pages.Volumes
 
         public PartialViewResult OnGetVolumeAsync(int id)
         {
+            if (id is <= 0)
+            {
+                throw new ArgumentException("Invalid Id");
+            }
+
             var volume = _volumeService.Get(id);
             var resultVD = new ViewDataDictionary<VolumeViewModel>(ViewData, volume);
             resultVD["PurchaseStatuses"] = _enumUtilities.GetPurchaseStatusesSelectItemList(volume.PurchaseStatus);

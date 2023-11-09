@@ -1,0 +1,36 @@
+﻿@page
+@model ComicShelf.Pages.Anime.IndexModel
+@{
+}
+
+<h2>Anime</h2>
+
+@foreach(var anime in Model.Anime){
+    <p>@anime.Title - @anime.OriginalTitle</p> 
+
+    @foreach(var item in anime.Items)
+    {
+        <p>@item.Title</p>
+    }
+}
+
+<h2>Movies</h2>
+
+@foreach (var anime in Model.Movies)
+{
+    <p>@anime.Title - @anime.Anime.OriginalTitle</p>
+}
+
+<h2>Specials</h2>
+
+@foreach (var anime in Model.Specials)
+{
+    <p>@anime.Title - @anime.Anime.OriginalTitle</p>
+}
+
+<h2>Seasons</h2>
+
+@foreach (var anime in Model.Seasons)
+{
+    <p>@anime.Title - @anime.Anime.OriginalTitle</p>
+}

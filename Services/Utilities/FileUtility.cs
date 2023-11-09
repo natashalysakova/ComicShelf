@@ -73,9 +73,8 @@ public static class FileUtility
     {
         var extention = new FileInfo(coverFile.FileName).Extension;
         var escapedSeriesName = seriesName.Unidecode().Replace(Path.GetInvalidFileNameChars(), string.Empty);
-        var destiantionFolder = $"{imageDir}/Series/{escapedSeriesName}";
+        var destiantionFolder = Path.Combine(imageDir, "Series", escapedSeriesName);
         var filename = $"{escapedSeriesName} {volumeNumber} {coverFile.GetHashCode()}{extention}";
-        var urlPath = Path.Combine(destiantionFolder, filename);
 
         try
         {
@@ -89,6 +88,8 @@ public static class FileUtility
             {
                 coverFile.CopyTo(fileStream);
             }
+
+            var urlPath = Path.Combine("~", destiantionFolder, filename);
             return urlPath;
         }
         catch (Exception)

@@ -80,6 +80,46 @@ internal class DbInitializer
         }
         _context.SaveChanges();
 
+        if(_context.Anime.Count() == 0)
+        {
+            var anime = new Anime()
+            {
+                Title = "test",
+                OriginalTitle = "tesutu"
+            };
+
+            var season = new Season()
+            {
+                Anime = anime,
+                HierarchyOrder = 1,
+                ReleaseDate = DateTime.Today,
+                Title = "season 1"
+            };
+
+            var movie = new Movie()
+            {
+                Anime = anime,
+                HierarchyOrder = 1,
+                ReleaseDate = DateTime.Today,
+                Title = "movie"
+            };
+
+            var special = new Special()
+            {
+                Anime = anime,
+                HierarchyOrder = 1,
+                ReleaseDate = DateTime.Today,
+                Title = "special"
+            };
+
+            _context.Anime.Add(anime); ;
+
+            _context.Items.AddRange(season, movie, special);
+            _context.SaveChanges();
+        }
+
+
+
         if (_context.Countries.Count() > 1)
         {
             return;

@@ -378,4 +378,10 @@
   <data name="of" xml:space="preserve">
     <value>of</value>
   </data>
+  <data name="VolumesPlural" xml:space="preserve">
+    <value>Volumes</value>
+  </data>
+  <data name="SeriesPlural" xml:space="preserve">
+    <value>Series</value>
+  </data>
 </root>

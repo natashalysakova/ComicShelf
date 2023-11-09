@@ -82,12 +82,12 @@ internal class Program
             );
         }
 
-        builder.Services.AddDbContext<ComicShelfContext>(
-            options => options.UseMySql(connectionString, version)
-                .LogTo(Console.WriteLine, LogLevel.Information)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors()
-        );
+        //builder.Services.AddDbContext<ComicShelfContext>(
+        //    options => options.UseMySql(connectionString, version)
+        //        .LogTo(Console.WriteLine, LogLevel.Information)
+        //        .EnableSensitiveDataLogging()
+        //        .EnableDetailedErrors()
+        //);
 
         RegisterMyServices(builder.Services);
 

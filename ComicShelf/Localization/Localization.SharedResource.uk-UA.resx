@@ -378,4 +378,10 @@
   <data name="of" xml:space="preserve">
     <value>з</value>
   </data>
+  <data name="VolumesPlural" xml:space="preserve">
+    <value>Томи</value>
+  </data>
+  <data name="SeriesPlural" xml:space="preserve">
+    <value>Серії</value>
+  </data>
 </root>

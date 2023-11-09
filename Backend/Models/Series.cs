@@ -15,6 +15,7 @@ namespace Backend.Models
 
         [Required]
         public Enums.Type Type { get; set; }
+        public int MalId { get; set; }
 
         public int TotalVolumes { get; set; }
         public bool Completed { get; set; }

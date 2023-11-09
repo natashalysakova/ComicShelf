@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "~/Manga/Index"
 @using ComicShelf.Localization;
 @using ComicShelf.Pages.Shared.Components;
 @using Microsoft.AspNetCore.Mvc.Localization;
@@ -9,6 +9,7 @@
 
 @{
     ViewData["Title"] = Localizer["MainPage"];
+    ViewData["IndexActive"] = "active";
 }
 
 @*<div class="card">
@@ -17,7 +18,7 @@
 
 
 <div class="row">
-    <div class="col-lg-3 col-xl-2">
+    <div class="col-md-4 col-lg-3 col-xl-2">
         <div class="row single-button">
             <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["AddNewVolume"]</button>
         </div>
@@ -111,8 +112,8 @@
 
 
     </div>
-    <div class="col-lg-9 col-xl-10">
-        <div class="row mb-3 col-lg-6 offset-lg-6">
+    <div class="col-md-8 col-lg-9 col-xl-10">
+        <div class="row mb-3 col-xl-6 offset-xl-6">
             <div class="col">
                 <div class="input-group">
                     <input id="search-field" type="search" class="form-control filter half-transparent" placeholder="@Localizer["Search"]" aria-label="Search" aria-describedby="button-addon2">
@@ -154,7 +155,6 @@
 
 
 @section Scripts {
-
     <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content" id="detail-modal-content">

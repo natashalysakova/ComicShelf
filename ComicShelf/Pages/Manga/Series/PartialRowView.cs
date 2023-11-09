@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.ViewModels;
 
-namespace ComicShelf.Pages.Series
+namespace ComicShelf.Pages.Manga.Series
 {
     public class PartialRowView
     {

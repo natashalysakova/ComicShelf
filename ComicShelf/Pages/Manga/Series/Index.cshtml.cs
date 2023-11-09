@@ -6,7 +6,7 @@ using Services.Services;
 using Services.ViewModels;
 using ComicType = Backend.Models.Enums.Type;
 
-namespace ComicShelf.Pages.Series
+namespace ComicShelf.Pages.Manga.Series
 {
     public class IndexModel : PageModel
     {
