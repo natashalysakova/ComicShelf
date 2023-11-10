@@ -11,6 +11,7 @@ namespace Services.ViewModels
         public string CountryName { get; set; }
         public string CountryFlagPNG { get; set; }
         public IEnumerable<IdNameView> Series { get; set; }
+        public string Url { get; set; }
 
     }
 }

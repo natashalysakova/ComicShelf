@@ -69,4 +69,80 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(entity.Series.Count(), viewModel.Series.Count());
         }
     }
+
+    [TestClass]
+    public class IssueMappingTest : BasicTest<Issue>
+    {
+        public IssueMappingTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(IssueProfile)); }))
+        {
+        }
+
+        public override Issue GetNewInstance()
+        {
+            return DataSet.Issue;
+        }
+
+        [TestMethod]
+        public override void TestCreateModel()
+        {
+            throw new NotImplementedException();
+        }
+        [TestMethod]
+
+        public override void TestUpdateModel()
+        {
+            throw new NotImplementedException();
+        }
+        [TestMethod]
+
+        public override void TestViewModel()
+        {
+            var entity = DataSet.Issue;
+            var viewModel = _mapper.Map<IssueViewModel>(entity);
+
+            Assert.IsNotNull(viewModel);
+            Assert.AreEqual(entity.Id, viewModel.Id);
+            Assert.AreEqual(entity.Name, viewModel.Name);
+            Assert.AreEqual(entity.GetType().Name, viewModel.Type);
+            Assert.AreEqual(entity.Number, viewModel.Number);
+        }
+    }
+
+    [TestClass]
+    public class BonusMappingTest : BasicTest<Bonus>
+    {
+        public BonusMappingTest() : base(new MapperConfiguration(c => { c.AddMaps(typeof(IssueProfile)); }))
+        {
+        }
+
+        public override Bonus GetNewInstance()
+        {
+            return DataSet.BonusIssue;
+        }
+        [TestMethod]
+
+        public override void TestCreateModel()
+        {
+            throw new NotImplementedException();
+        }
+        [TestMethod]
+
+        public override void TestUpdateModel()
+        {
+            throw new NotImplementedException();
+        }
+        [TestMethod]
+
+        public override void TestViewModel()
+        {
+            var entity = DataSet.BonusIssue;
+            var viewModel = _mapper.Map<IssueViewModel>(entity);
+
+            Assert.IsNotNull(viewModel);
+            Assert.AreEqual(entity.Id, viewModel.Id);
+            Assert.AreEqual(entity.Name, viewModel.Name);
+            Assert.AreEqual(entity.GetType().Name, viewModel.Type);
+            Assert.AreEqual(entity.Number, viewModel.Number);
+        }
+    }
 }

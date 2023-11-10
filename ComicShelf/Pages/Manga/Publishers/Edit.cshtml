@@ -13,16 +13,21 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Publisher.Id" />
+            <input type="hidden" asp-for="@Model.Publisher.Id" />
             <div class="form-floating mb-3">
-                <input asp-for="Publisher.Name" class="form-control" placeholder="Name" />
-                <label asp-for="Publisher.Name" class="control-label"></label>
-                <span asp-validation-for="Publisher.Name" class="text-danger"></span>
+                <input asp-for="@Model.Publisher.Name" class="form-control" placeholder="Name" />
+                <label asp-for="@Model.Publisher.Name" class="control-label"></label>
+                <span asp-validation-for="@Model.Publisher.Name" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <select asp-for="SelectedCountry" asp-items="@Model.CountriesList" class="form-select"></select>
-                <label asp-for="Publisher.CountryId" class="control-label"></label>
+                <label asp-for="@Model.Publisher.CountryId" class="control-label"></label>
                 <span asp-validation-for="SelectedCountry" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="@Model.Publisher.Url" class="form-control" placeholder="Name" />
+                <label asp-for="@Model.Publisher.Url" class="control-label"></label>
+                <span asp-validation-for="@Model.Publisher.Url" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <input type="submit" value="Save" class="btn btn-primary" />

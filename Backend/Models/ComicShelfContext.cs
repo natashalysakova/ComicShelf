@@ -27,7 +27,8 @@ namespace Backend.Models
         {
             modelBuilder.Entity<Author>().ToTable("Author");
             modelBuilder.Entity<Country>().ToTable("Country");
-            modelBuilder.Entity<Issue>().ToTable("Issue");
+            modelBuilder.Entity<Issue>().ToTable("Issue").HasDiscriminator<string>("issue_type").HasValue("chapter");
+            modelBuilder.Entity<Bonus>().ToTable("Issue").HasDiscriminator<string>("issue_type").HasValue("bonus");
             modelBuilder.Entity<Publisher>().ToTable("Publisher");
             modelBuilder.Entity<Series>().ToTable("Series");
             modelBuilder.Entity<Volume>().ToTable("Volume");
@@ -49,6 +50,8 @@ namespace Backend.Models
             modelBuilder.Entity<Season>().ToTable("Items")
                 .HasDiscriminator<string>("item_type")
                 .HasValue("season");
+
+            
 
         }
     }

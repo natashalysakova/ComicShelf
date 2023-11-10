@@ -3,6 +3,7 @@ using System;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ComicShelfContext))]
-    partial class ComicShelfContextModelSnapshot : ModelSnapshot
+    [Migration("20231109195445_addPublisherURL")]
+    partial class addPublisherURL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,19 +149,11 @@ namespace Backend.Migrations
                     b.Property<int>("VolumeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("issue_type")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.HasKey("Id");
 
                     b.HasIndex("VolumeId");
 
                     b.ToTable("Issue", (string)null);
-
-                    b.HasDiscriminator<string>("issue_type").HasValue("chapter");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Backend.Models.Item", b =>
@@ -321,15 +316,6 @@ namespace Backend.Migrations
                     b.HasIndex("SeriesId");
 
                     b.ToTable("Volume", (string)null);
-                });
-
-            modelBuilder.Entity("Backend.Models.Bonus", b =>
-                {
-                    b.HasBaseType("Backend.Models.Issue");
-
-                    b.ToTable("Issue", (string)null);
-
-                    b.HasDiscriminator().HasValue("bonus");
                 });
 
             modelBuilder.Entity("Backend.Models.Movie", b =>

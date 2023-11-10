@@ -72,6 +72,15 @@
                         </datalist>
                         <span asp-validation-for="NewVolume.Authors" class="text-danger"></span>
 
+
+                        <div class="mb-3 input-group">
+                            <label asp-for="@Model.NewVolume.NumberOfIssues" class="input-group-text">@Localizer["Issues"]</label>
+                            <input asp-for="@Model.NewVolume.NumberOfIssues" class="form-control" type="number" autocomplete="off" />
+
+                            <label asp-for="@Model.NewVolume.NumberOfBonusIssues" class="input-group-text">@Localizer["BonusIssues"]</label>
+                            <input asp-for="@Model.NewVolume.NumberOfBonusIssues" class="form-control" type="number" autocomplete="off" />
+                        </div>
+
                         <div class="row mb-3">
                             <div class="input-group">
                                 <label asp-for="NewVolume.Digitality" class="input-group-text">@Localizer["Digitality"]</label>

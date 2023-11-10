@@ -38,12 +38,12 @@ namespace ComicShelf.Pages.Publishers
                 return NotFound();
             }
 
-            var publisher = _publisherService.Get(id);
+            var publisher = _publisherService.GetForUpdate(id);
             if (publisher == null)
             {
                 return NotFound();
             }
-            //Publisher = publisher;
+            Publisher = publisher;
             SelectedCountry = publisher.CountryId;
             return Page();
         }

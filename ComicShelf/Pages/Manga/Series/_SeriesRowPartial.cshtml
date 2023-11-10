@@ -15,7 +15,7 @@
       data-ajax-complete="changeSeriesComplete">
 
     @{
-        var errorClass = Model.UpdateItem.HasError ? "bg-danger" : string.Empty;
+        var errorClass = Model.UpdateItem.HasError ? "bg-warning" : string.Empty;
     }
     <div class="row @errorClass" id="#series">
 
@@ -24,10 +24,23 @@
             <div class="input-group mb-1">
                 <span class="input-group-text">@Localizer["Name"]</span>
                 <input type="text" asp-for="@Model.UpdateItem.Name" class="form-control" />
+                @{
+                    var url = $"https://www.google.com/search?q={Model.UpdateItem.Name} {Localizer[Model.UpdateItem.Type.ToString()]}";
+                    <a class="custom-button google-button" target="_blank" rel="noopener noreferrer" href="@url">
+                        <i class="bi bi-google"></i>
+                    </a>
+                }
+
             </div>
             <div class="input-group">
                 <span class="input-group-text">@Localizer["OriginalName"]</span>
                 <input type="text" asp-for="@Model.UpdateItem.OriginalName" class="form-control">
+                @{
+                    var original = $"https://www.google.com/search?q={Model.UpdateItem.OriginalName} {Model.UpdateItem.Type.ToString()}";
+                    <a class="custom-button google-button" target="_blank" rel="noopener noreferrer" href="@original">
+                        <i class="bi bi-google"></i>
+                    </a>
+                }
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6 mb-1">
@@ -35,16 +48,31 @@
                 <div class="col-sm-6">
                     <select asp-items="@Model.Types" class="form-select mb-1" asp-for="@Model.UpdateItem.Type" autocomplete="off"></select>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6 mb-1">
                     <select class="form-select" asp-for="@Model.UpdateItem.PublisherId" asp-items="@Model.Publishers" autocomplete="off"></select>
+                </div>
+                <div class="col">
+                    @if (Model.UpdateItem.Type == Backend.Models.Enums.Type.Manga)
+                    {
+                        var mal = "https://myanimelist.net/manga/" + Model.UpdateItem.MalId;
 
+                        <div class="input-group">
+                            <span class="input-group-text">@Localizer["MalId"]</span>
+                            <input type="number" asp-for="@Model.UpdateItem.MalId" class="form-control" />
+
+                            <a class="custom-button mal-button" title="MyAnimeList" target="_blank" rel="noopener noreferrer" href="@mal">
+                                <i class="bi bi-list-ul"></i>
+                            </a>
+
+                        </div>
+                    }
                 </div>
             </div>
         </div>
         <div class="col-xs-6 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-1">
             <div class="input-group mb-1">
                 <span class="input-group-text">@Localizer["Vol"]</span>
-                <input type="text" asp-for="@Model.UpdateItem.VolumeCount" readonly class="form-control"/>
+                <input type="text" asp-for="@Model.UpdateItem.VolumeCount" readonly class="form-control" />
                 <span class="input-group-text">@Localizer["of"]</span>
 
                 <input type="text" asp-for="@Model.UpdateItem.TotalVolumes" class="form-control" />
@@ -64,11 +92,11 @@
                         <label asp-for="@Model.UpdateItem.Ongoing" class="form-check-label"></label>
                     </div>
                 </div>
-@*                <div class="col">
-                    <div class="form-check">
-                        <input type="checkbox" asp-for="@Model.UpdateItem.Completed" class="form-check-input" disabled />
-                        <label asp-for="@Model.UpdateItem.Completed" class="form-check-label"></label>
-                    </div>
+                @*                <div class="col">
+                <div class="form-check">
+                <input type="checkbox" asp-for="@Model.UpdateItem.Completed" class="form-check-input" disabled />
+                <label asp-for="@Model.UpdateItem.Completed" class="form-check-label"></label>
+                </div>
                 </div>*@
             </div>
         </div>

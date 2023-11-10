@@ -24,8 +24,11 @@ namespace Services.ViewModels
         public IEnumerable<string> Authors { get; set; }
         public string SeriesPublisherName { get; set; }
         public string SeriesPublisherCountryFlag { get; set; }
+        public string SeriesPublisherUrl { get; set; }
         public bool SeriesOngoing { get; set; }
         public int SeriesTotalVolumes { get; set; }
+        public string SeriesType { get; set; }
+        public int MalId { get; set; }
 
         public bool HasError { get; set; }
     }

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Backend.Models;
 using Backend.Models.Enums;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Services.ViewModels;
 
 namespace ComicShelf.UnitTests
@@ -49,6 +50,10 @@ namespace ComicShelf.UnitTests
             Author.Volumes = new List<Volume>() { Volume1, Volume2 };
             Volume1.Authors = new List<Author>() { Author };
             Volume1.Series = Series;
+            Volume1.Issues = new List<Issue>() { Issue, BonusIssue };
+
+            Issue.Volume = Volume1;
+            BonusIssue.Volume = Volume1;                
 
             Volume2.Authors = new List<Author>() { Author };
             Volume2.Series = Series;
@@ -62,6 +67,22 @@ namespace ComicShelf.UnitTests
             Country.Publishers = new List<Publisher>() { Publisher };
 
         }
+
+        public static Issue Issue = new Issue()
+        {
+            Id = 41,
+            Name = "Chapter 16",
+            Number = 16,
+            VolumeId = 542
+        };
+
+        public static Bonus BonusIssue = new Bonus()
+        {
+            Id = 51,
+            Name = "Bonus chapter 12",
+            Number = 12,
+            VolumeId = 542
+        };
 
         public static Volume Volume1 = new Volume()
         {

@@ -25,7 +25,7 @@ namespace Backend.Models
     }
 
 
-    public class Anime
+    public class Anime : IIdEntity
     {
 
 
@@ -42,7 +42,7 @@ namespace Backend.Models
         public virtual ICollection<Item> Items { get; set; }
     }
 
-    public abstract class Item
+    public abstract class Item : IIdEntity
     {
         public Item()
         {

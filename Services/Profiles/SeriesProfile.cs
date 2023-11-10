@@ -27,7 +27,7 @@ namespace Services.Profiles
 
         private static bool HasError(Series item)
         {
-            return item.PublisherId <= 1 || (!item.Ongoing && item.TotalVolumes == 0);
+            return item.PublisherId <= 1 || (!item.Ongoing && item.TotalVolumes == 0) || (item.Type == Backend.Models.Enums.Type.Manga && item.MalId == 0);
         }
     }
 }

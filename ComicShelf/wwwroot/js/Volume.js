@@ -220,7 +220,7 @@ function filter(e) {
 
 
     $.ajax({
-        url: "/Manga/Index?handler=Filtered",
+        url: "/Manga?handler=Filtered",
         type: 'GET',
         cache: false,
         data: filters

@@ -40,7 +40,8 @@ namespace Services.Services
 
             if (dbSet.Any(x => x.Publisher.Id == 0
             || !x.Volumes.Any()
-            || (!x.Ongoing && x.TotalVolumes == 0)))
+            || (!x.Ongoing && x.TotalVolumes == 0)
+            || (x.MalId == 0 && x.Type == Backend.Models.Enums.Type.Manga)))
             {
                 return "You have not filled data for series";
             }

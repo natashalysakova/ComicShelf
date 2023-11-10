@@ -312,3 +312,57 @@ body .modal-open {
   padding: 0;
   margin: 0;
 }
+
+.custom-button {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  text-align: center;
+  white-space: nowrap;
+  background-color: var(--bs-tertiary-bg);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+}
+
+.google-button:hover {
+  color: #ffe5d0;
+  background-color: #ca6510;
+  border-color: #984c0c;
+}
+
+.google-button.show {
+  color: #ffe5d0;
+  background-color: #984c0c;
+  border-color: #653208;
+}
+
+.google-button:active {
+  color: #fff;
+  background-color: #984c0c;
+  border-color: #653208;
+}
+
+.mal-button:hover {
+  color: #cfe2ff;
+  background-color: #0a58ca;
+  border-color: #084298;
+}
+
+.mal-button.show {
+  color: #cfe2ff;
+  background-color: #084298;
+  border-color: #052c65;
+}
+
+.mal-button:active {
+  color: #fff;
+  background-color: #084298;
+  border-color: #052c65;
+}

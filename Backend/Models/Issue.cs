@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Principal;
 
 namespace Backend.Models
 {
@@ -7,12 +8,15 @@ namespace Backend.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        [Required]
         public string Name { get; set; }
         public int Number { get; set; }
 
         public int VolumeId { get; set; }
         public virtual Volume Volume { get; set; }
+    }
+
+    public class Bonus : Issue
+    {
+
     }
 }

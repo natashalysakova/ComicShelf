@@ -21,11 +21,19 @@
             <div class="modal-title display-6" id="exampleModalLabel">
                 @Model.SeriesName
                 @if (!Model.OneShot)
+                {
                     @Model.Number
-                </div>
-                @if (!string.IsNullOrEmpty(Model.SeriesOriginalName))
+                }
+            </div>
+            @if (!string.IsNullOrEmpty(Model.SeriesOriginalName))
             {
-                <div class="modal-title" id="exampleModalLabel">@Model.SeriesOriginalName</div>
+
+                <div class="row">
+                    <!-- Example split danger button -->
+
+                    <div class="modal-title col" id="exampleModalLabel">@Model.SeriesOriginalName</div>
+                </div>
+
             }
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -43,9 +51,32 @@
                     </div>
                 </div>
                 <div class="col-lg-7">
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 dropstart">
                         <span class="input-group-text">@Localizer["Title"]</span>
                         <span type="text" class="form-control">@Model.Title</span>
+                        @{
+                            var url = $"https://www.google.com/search?q={Model.SeriesName} {Model.Title}";
+                            var original = $"https://www.google.com/search?q={Model.SeriesOriginalName} {Model.Number} {Model.SeriesType}";
+
+                            <button type="button" class="custom-button google-button dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="@url" target="_blank" rel="noopener noreferrer">@Localizer["FullTitle"]</a></li>
+                                <li><a class="dropdown-item" href="@original" target="_blank" rel="noopener noreferrer">@Localizer["OriginalName"]</a></li>
+                            </ul>
+                            <a class="custom-button google-button" target="_blank" rel="noopener noreferrer" href="@url">
+                                <i class="bi bi-google"></i>
+                            </a>
+                        }
+                        @if (Model.MalId != 0)
+                        {
+                            var mal = "https://myanimelist.net/manga/" + Model.MalId;
+                            <a class="custom-button mal-button" target="_blank" rel="noopener noreferrer" href="@mal" title="MyAnimeList">
+                                <i class="bi bi-list-ul"></i>
+                            </a>
+                        }
+
                     </div>
                     <div class="input-group mb-3">
                         @if (Model.Authors.Count() < 2)
@@ -65,6 +96,11 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text">@Localizer["Publisher"]</span>
                             <span type="text" class="form-control">@Model.SeriesPublisherName</span>
+                            <span class="input-group-text">
+                                <a href="@Model.SeriesPublisherUrl" target="_blank" rel="noopener noreferrer">
+                                    <i class="bi bi-globe"></i>
+                                </a>
+                            </span>
                             <span class="input-group-text"> <img class="flag" src="@Model.SeriesPublisherCountryFlag" /></span>
                         </div>
 

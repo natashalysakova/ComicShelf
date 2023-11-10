@@ -12,12 +12,14 @@ namespace Services.Services
 {
     public class VolumeService : BasicService<Volume, VolumeViewModel, VolumeCreateModel, VolumeUpdateModel>
     {
+        private readonly ComicShelfContext _context;
         private readonly SeriesService _seriesService;
         private readonly AuthorsService _authorService;
         private readonly PublishersService _publishersService;
 
         public VolumeService(ComicShelfContext context, SeriesService seriesService, AuthorsService authorService, PublishersService publishersService, IMapper mapper) : base(context, mapper)
         {
+            _context = context;
             _seriesService = seriesService;
             _authorService = authorService;
             _publishersService = publishersService;
@@ -144,6 +146,49 @@ namespace Services.Services
             volume.ModificationDate = DateTime.Now;
 
             this.Add(volume);
+
+            
+            int maxChapter = 0;
+
+            foreach (var item in series.Volumes)
+            {
+                LoadCollection(item, x => x.Issues);
+
+                foreach (var item1 in item.Issues)
+                {
+                    if (item1 is not Bonus && item1.Number > maxChapter)
+                    {
+                        maxChapter = item1.Number;
+                    }
+                }
+            }
+
+
+            for (int i = 0; i < model.NumberOfIssues; i++)
+            {
+                var issue = new Issue()
+                {
+                    Volume = volume,
+                    Number = maxChapter + 1,
+                    Name = $"Chapter {maxChapter + 1}"
+                };
+
+                _context.Issues.Add(issue);
+                maxChapter++;
+            }
+            for (int i = 0; i < model.NumberOfBonusIssues; i++)
+            {
+                var issue = new Bonus()
+                {
+                    Volume = volume,
+                    Number = i + 1,
+                    Name = $"Bonus chapter {i + 1}"
+                };
+
+                _context.Issues.Add(issue);
+            }
+            _context.SaveChanges();
+
 
             if (!series.Ongoing && series.Volumes.Count == series.TotalVolumes)
             {

@@ -31,6 +31,7 @@
             <th>
                 @Localizer["Country"]
             </th>
+            <th>@Localizer["URL"]</th>
             <th>
                 @Localizer["All Series"]
             </th>
@@ -49,9 +50,12 @@
                     @Html.DisplayFor(x=> item.CountryName)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Url)
+                </td>
+                <td>
                     @foreach(var series in item.Series)
                     {
-                        <a asp-page="/Series/Details" asp-route-id="@series.Id">@series.Name</a>
+                        <a asp-page="/Manga/Series/Details" asp-route-id="@series.Id">@series.Name</a>
                     }
                 </td>
                 <td>

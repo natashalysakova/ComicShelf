@@ -12,6 +12,8 @@ namespace Services.Profiles
                 .ForSourceMember(x => x.CoverFile, act => act.DoNotValidate())
                 .ForSourceMember(x => x.SeriesName, act => act.DoNotValidate())
                 .ForSourceMember(x => x.Authors, act => act.DoNotValidate())
+                .ForSourceMember(x=>x.NumberOfIssues, act => act.DoNotValidate())
+                .ForSourceMember(x=> x.NumberOfBonusIssues, act => act.DoNotValidate())
                 .ForMember(x => x.OneShot, act => act.MapFrom(x => x.SingleVolume))
                 .ForMember(x => x.Authors, act => act.Ignore());
 
@@ -29,7 +31,11 @@ namespace Services.Profiles
                     act => act.MapFrom(x => x.Series.Publisher.Country.FlagPNG))
                 .ForMember(x => x.SeriesName, act => act.MapFrom(x => x.Series.Name))
                 .ForMember(x => x.Authors, act => act.MapFrom(x => x.Authors.Select(x => x.Name)))
-                .ForMember(x => x.HasError, act => act.MapFrom(x => HasError(x)));
+                .ForMember(x => x.HasError, act => act.MapFrom(x => HasError(x)))
+                .ForMember(x => x.SeriesPublisherUrl, act => act.MapFrom(x => x.Series.Publisher.Url))
+                .ForMember(x => x.SeriesType, act => act.MapFrom(x => x.Series.Type.ToString()))
+                .ForMember(x => x.MalId, act => act.MapFrom(x => x.Series.MalId));
+                ;
         }
 
         private static bool HasError(Volume x)
