@@ -1,4 +1,8 @@
-﻿//stop existing 
+﻿connection string sample
+"server={IP};user id={USERNAME};password={PASSWORD};database=comicShelf_dev"
+
+
+//stop existing 
 kill $(ps -ef | grep '[d]otnet ./ComicShelf.dll' | awk '{print $2}')
 
 publish 
