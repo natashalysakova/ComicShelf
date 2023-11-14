@@ -1,0 +1,23 @@
+﻿@using Services.ViewModels;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IssueViewModel[]
+
+@{
+    string title = ViewData["title"] as string ?? string.Empty;
+}
+
+@for (int i = 0; i < Model.Length; i++)
+{
+    var item = $"{title}[{i}]";
+
+    <input asp-for="@Model[i].Id" type="hidden" name="@($"{item}.Id")" id="@($"{item}.Id")" />
+    <div class="input-group mb-1">
+        <input asp-for="@Model[i].Number" name="@($"{item}.Number")" id="@($"{item}.Number")" 
+            class="input-group-text update-on-status-change" style="width: 100px;" />
+        <input asp-for="@Model[i].Name" name="@($"{item}.Name")" id="@($"{item}.Name")"
+               class="form-control update-on-status-change" />
+        <span class="input-group-text"><i class="bi bi-trash"></i></span>
+    </div>
+}

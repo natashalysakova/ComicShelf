@@ -37,6 +37,7 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(model.Ongoing, entity.Ongoing);
             Assert.AreEqual(model.Completed, entity.Completed);
             Assert.AreEqual(model.TotalVolumes, entity.TotalVolumes);
+            Assert.AreEqual(0, entity.TotalIssues);
             Assert.AreEqual(model.Type, entity.Type);
 
         }
@@ -55,7 +56,8 @@ namespace ComicShelf.UnitTests
                 TotalVolumes = 2,
                 Type = Backend.Models.Enums.Type.Manga,
                 OriginalName = "Test",
-                VolumeCount = 2
+                VolumeCount = 2,
+                TotalIssues = 1
             };
 
             var entity = _mapper.Map<Series>(model);
@@ -68,6 +70,8 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(model.Completed, entity.Completed);
             Assert.AreEqual(model.PublisherId, entity.PublisherId);
             Assert.AreEqual(model.TotalVolumes, entity.TotalVolumes);
+            Assert.AreEqual(model.TotalIssues, entity.TotalIssues);
+
             Assert.AreEqual(model.Type, entity.Type);
             Assert.AreEqual(model.OriginalName, entity.OriginalName);
             Assert.IsFalse(model.HasError);
@@ -88,6 +92,7 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(entity.Completed, viewModel.Completed);
             Assert.AreEqual(entity.TotalVolumes, viewModel.TotalVolumes);
             Assert.AreEqual(entity.Type, entity.Type);
+            Assert.AreEqual(entity.TotalIssues, viewModel.TotalIssues);
 
             Assert.AreEqual(entity.OriginalName, viewModel.OriginalName);
             Assert.AreEqual(entity.Volumes.Count, viewModel.VolumesCount);

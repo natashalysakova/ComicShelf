@@ -22,7 +22,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Countries[0].Publishers)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -43,7 +42,7 @@
                     @{
                         foreach (var publisher in country.Publishers)
                         {
-                            <a asp-page="/Publishers/Details" asp-route-id="@publisher.Id">@publisher.Name</a>
+                            <a asp-page="/Manga/Publishers/Details" asp-route-id="@publisher.Id">@publisher.Name</a>
                             <br />
                         }
                     }

@@ -384,4 +384,40 @@
   <data name="SeriesPlural" xml:space="preserve">
     <value>Серії</value>
   </data>
+  <data name="Add" xml:space="preserve">
+    <value>Додати</value>
+  </data>
+  <data name="AddIssues" xml:space="preserve">
+    <value>Додати глави</value>
+  </data>
+  <data name="Anime" xml:space="preserve">
+    <value>Аніме</value>
+  </data>
+  <data name="Beer" xml:space="preserve">
+    <value>Пиво</value>
+  </data>
+  <data name="BonusIssues" xml:space="preserve">
+    <value>Бонусні глави</value>
+  </data>
+  <data name="ComiscAndManga" xml:space="preserve">
+    <value>Комікси та манга</value>
+  </data>
+  <data name="FullTitle" xml:space="preserve">
+    <value>Повна назва</value>
+  </data>
+  <data name="Issues" xml:space="preserve">
+    <value>Глави</value>
+  </data>
+  <data name="MalId" xml:space="preserve">
+    <value>MAL Id</value>
+  </data>
+  <data name="ServiceData" xml:space="preserve">
+    <value>Довідкові таблиці</value>
+  </data>
+  <data name="SiteHeader" xml:space="preserve">
+    <value>Світ Хоббі</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
 </root>

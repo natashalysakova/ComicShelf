@@ -27,8 +27,12 @@ namespace Services.ViewModels
         public string SeriesPublisherUrl { get; set; }
         public bool SeriesOngoing { get; set; }
         public int SeriesTotalVolumes { get; set; }
+        public int SeriesTotalIssues { get; set; }
         public string SeriesType { get; set; }
         public int MalId { get; set; }
+        
+        public IssueViewModel[] Issues { get; set; }
+        public IssueViewModel[] BonusIssues { get; set; }
 
         public bool HasError { get; set; }
     }

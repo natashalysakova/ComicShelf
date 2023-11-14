@@ -427,3 +427,16 @@ $mal-btn-darkest-color: $blue-800;
     background-color: $mal-btn-darker-color;
     border-color: $mal-btn-darkest-color;
 }
+
+.wide-collapse-button {
+    background-color: var(--bs-tertiary-bg);
+    text-align: start;
+    
+    span{
+        font-weight: 400;
+        font-size: 1rem;
+    }
+}
+.wide-collapse-button:hover {
+    background-color: var(--bs-secondary-bg);
+}

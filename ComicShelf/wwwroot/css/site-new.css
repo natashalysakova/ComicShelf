@@ -366,3 +366,16 @@ body .modal-open {
   background-color: #084298;
   border-color: #052c65;
 }
+
+.wide-collapse-button {
+  background-color: var(--bs-tertiary-bg);
+  text-align: start;
+}
+.wide-collapse-button span {
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.wide-collapse-button:hover {
+  background-color: var(--bs-secondary-bg);
+}

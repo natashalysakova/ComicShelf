@@ -147,6 +147,7 @@ namespace ComicShelf.UnitTests
             OriginalName = "Nakayama San wa ooishi desu",
             PublisherId = 342,
             TotalVolumes = 42,
+            TotalIssues = 12,
             Type = Backend.Models.Enums.Type.Manga
         };
         public static Author Author = new Author()

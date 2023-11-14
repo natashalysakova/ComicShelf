@@ -17,20 +17,12 @@ namespace ComicShelf.Pages.Volumes
     public class IndexModel : PageModel
     {
         private readonly VolumeService _volumeService;
-        private readonly SeriesService _seriesService;
-        private readonly CountryService _countryService;
-        private readonly PublishersService _publishersService;
         private readonly FilterService _filterService;
-        private readonly LocalizationService _localizer;
         private readonly EnumUtilities _enumUtilities;
-        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, CountryService countryService, PublishersService publishersService, FilterService filterService, LocalizationService localizer, EnumUtilities enumUtilities)
+        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService,  FilterService filterService,  EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
-            _seriesService = seriesService;
-            _countryService = countryService;
-            _publishersService = publishersService;
             _filterService = filterService;
-            _localizer = localizer;
             _enumUtilities = enumUtilities;
 
             Statuses.AddRange(_enumUtilities.GetSelectItemList<Status>());
@@ -145,6 +137,14 @@ namespace ComicShelf.Pages.Volumes
             }
 
             return StatusCode(404);
+        }
+
+        public IActionResult OnPostAddChapters (int volumeId, int issueNumber, int bonusIssueNumber)
+        {
+            _volumeService.AddIssues(volumeId, issueNumber, bonusIssueNumber);
+
+            var volume = _volumeService.Get(volumeId);
+            return Partial("_ChaptersView", volume);
         }
 
         public IActionResult OnPostAddAsync()

@@ -21,7 +21,7 @@ namespace Services.Services
         {
             _context = context;
             _seriesService = seriesService;
-            _authorService = authorService;
+            _authorService = authorService; 
             _publishersService = publishersService;
         }
 
@@ -35,9 +35,11 @@ namespace Services.Services
             var volume = GetById(id);
             LoadReference(volume, x => x.Series);
             LoadCollection(volume, x => x.Authors);
+            LoadCollection(volume, x => x.Issues);
+            volume.Issues = volume.Issues.OrderBy(x => x.Number).ToList();
             _seriesService.LoadReference(volume.Series, x => x.Publisher);
             _publishersService.LoadReference(volume.Series.Publisher, x => x.Country);
-
+            
             return _mapper.Map<VolumeViewModel>(volume);
         }
 
@@ -274,6 +276,15 @@ namespace Services.Services
             if (item.SeriesId == 0)
                 item.SeriesId = _seriesService.GetByName(item.Series.Name).Id;
 
+            if(volumeToUpdate.Issues != null)
+            {
+                item.Issues.AddRange(_mapper.Map<Issue[]>(volumeToUpdate.Issues));
+            }
+            if (volumeToUpdate.BonusIssues != null)
+            {
+                item.Issues.AddRange(_mapper.Map<Issue[]>(volumeToUpdate.BonusIssues));
+            }
+
             base.Update(item);
 
             if (item.PurchaseStatus != PurchaseStatus.Announced || item.PurchaseStatus != PurchaseStatus.GiftedAway)
@@ -428,6 +439,68 @@ namespace Services.Services
             }
 
             return builder.ToString();
+        }
+
+        public void AddIssues(int volumeId, int issueNumber, int bonusIssueNumber)
+        {
+            var volume = GetById(volumeId);
+            LoadReference(volume, x => x.Series);
+            _seriesService.LoadCollection(volume.Series, x => x.Volumes);
+
+            int maxChapter = 0;
+            int maxBonusChapter = 0;
+
+            foreach (var item in volume.Series.Volumes)
+            {
+                LoadCollection(item, x => x.Issues);
+
+                foreach (var item1 in item.Issues)
+                {
+                    if (item1 is not Bonus && item1.Number > maxChapter)
+                    {
+                        maxChapter = item1.Number;
+                    }
+                }
+            }
+
+            foreach (var item in volume.Series.Volumes)
+            {
+                foreach (var item1 in item.Issues)
+                {
+                    if (item1 is Bonus && item1.Number > maxBonusChapter)
+                    {
+                        maxBonusChapter = item1.Number;
+                    }
+                }
+            }
+
+
+            for (int i = 0; i < issueNumber; i++)
+            {
+                var issue = new Issue()
+                {
+                    Volume = volume,
+                    Number = maxChapter + 1,
+                    Name = $"Chapter {maxChapter + 1}"
+                };
+
+                _context.Issues.Add(issue);
+                maxChapter++;
+            }
+            for (int i = 0; i < bonusIssueNumber; i++)
+            {
+                var issue = new Bonus()
+                {
+                    Volume = volume,
+                    Number = maxBonusChapter + 1,
+                    Name = $"Bonus chapter {maxBonusChapter + 1}"
+                };
+
+                _context.Issues.Add(issue);
+                maxBonusChapter++;
+            }
+
+            _context.SaveChanges();
         }
     }
 }

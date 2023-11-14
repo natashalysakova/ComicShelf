@@ -41,6 +41,7 @@ namespace Services.Services
             if (dbSet.Any(x => x.Publisher.Id == 0
             || !x.Volumes.Any()
             || (!x.Ongoing && x.TotalVolumes == 0)
+            || (!x.Ongoing && x.TotalIssues == 0)
             || (x.MalId == 0 && x.Type == Backend.Models.Enums.Type.Manga)))
             {
                 return "You have not filled data for series";
@@ -51,7 +52,8 @@ namespace Services.Services
 
         protected override IQueryable<Series> GetAllEntities(bool tracking = false)
         {
-            return base.GetAllEntities(tracking).Include(x => x.Publisher);
+            return base.GetAllEntities(tracking).Include(x => x.Publisher).Include(x=>x.Volumes).ThenInclude(x=>x.Issues);
         }
+
     }
 }

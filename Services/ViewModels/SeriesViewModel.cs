@@ -7,9 +7,12 @@ namespace Services.ViewModels
         public string Name { get; set; }
         public int Id { get; set; }
         public bool Ongoing { get; set; }
-        public int VolumesCount { get; set; }
         public bool Completed { get; set; }
+        public int VolumesCount { get; set; }
         public int TotalVolumes { get; set; }
+        public int IssuesCount { get; set; }
+        public int TotalIssues { get; set; }
+
         public string OriginalName { get; set; }
         public string Color { get; set; }
         public int MalId { get; set; }

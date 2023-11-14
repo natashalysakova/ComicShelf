@@ -15,5 +15,8 @@ namespace Services.ViewModels
         public int Rating { get; set; }
         public IFormFile? CoverFile { get; set; }
         public string CoverUrl { get; set; }
+
+        public IssueUpdateModel[] Issues { get; set; }
+        public IssueUpdateModel[] BonusIssues { get; set; }
     }
 }

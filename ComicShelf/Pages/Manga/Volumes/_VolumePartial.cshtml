@@ -1,6 +1,8 @@
 ﻿@using Backend.Models.Enums;
 @using ComicShelf.Localization;
 @using Services.ViewModels;
+@using System.Linq.Expressions;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @inject LocalizationService Localizer
 @*
@@ -8,43 +10,46 @@
 *@
 @model VolumeViewModel
 
-<form method="post"
-      asp-page-handler="ChangeStatus" enctype="multipart/form-data" data-ajax-method="post" data-ajax="true"
-      data-ajax-mode="replace"
-      data-ajax-update="#book-@Model.Id"
-      data-ajax-complete="changeStatusSuccess">
 
 
 
-    <div class="modal-header">
-        <div class="row">
-            <div class="modal-title display-6" id="exampleModalLabel">
-                @Model.SeriesName
-                @if (!Model.OneShot)
-                {
-                    @Model.Number
-                }
-            </div>
-            @if (!string.IsNullOrEmpty(Model.SeriesOriginalName))
+
+<div class="modal-header">
+    <div class="row">
+        <div class="modal-title display-6" id="exampleModalLabel">
+            @Model.SeriesName
+            @if (!Model.OneShot)
             {
-
-                <div class="row">
-                    <!-- Example split danger button -->
-
-                    <div class="modal-title col" id="exampleModalLabel">@Model.SeriesOriginalName</div>
-                </div>
-
+                @Model.Number
             }
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
+        @if (!string.IsNullOrEmpty(Model.SeriesOriginalName))
+        {
 
-        <div class="container-fluid">
+            <div class="row">
+                <!-- Example split danger button -->
+
+                <div class="modal-title col" id="exampleModalLabel">@Model.SeriesOriginalName</div>
+            </div>
+
+        }
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+
+    <div class="container-fluid">
+
+        <form method="post" id="updateForm"
+              asp-page-handler="ChangeStatus" enctype="multipart/form-data" data-ajax-method="post" data-ajax="true"
+              data-ajax-mode="replace"
+              data-ajax-update="#book-@Model.Id"
+              data-ajax-complete="changeStatusSuccess">
+
             <div class="row">
                 <div class="col-lg-5 mb-3">
                     <img src="@Model.CoverUrl" class="img-fluid volume-image" id="volume-cover" onerror="if (this.src != '/images/static/no-cover.png') this.src = '/images/static/no-cover.png';" alt="add alternative text here" />
-                    <div class="input-group mb-3" id="new-cover">
+                    <div class="input-group" id="new-cover">
                         <input id="CoverFile" name="CoverFile" class="form-control update-on-status-change" type="file" accept="image/*" onchange="showPreview(event);" />
                         @*                        <label for="CoverFile" class="input-group-text">@Localizer["Cover"]</label>
                         *@
@@ -125,6 +130,29 @@
                             }
                         }
                     </div>
+                    @if (Model.Issues.Any())
+                    {
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">@Localizer["Issues"]</span>
+                            <span type="text" class="form-control">@Model.Issues.Min(x=>x.Number) - @Model.Issues.Max(x=>x.Number)</span>
+                            <span class="input-group-text">/</span>
+                            @{
+                                if (@Model.SeriesOngoing)
+                                {
+                                    <span class="form-control text-bg-success">@Localizer["Ongoing"]</span>
+                                }
+                                else
+                                {
+                                    <span type="text" class="form-control">@Model.SeriesTotalIssues</span>
+                                }
+
+                                if (Model.OneShot)
+                                {
+                                    <span class="form-control text-bg-primary">@Localizer["SingleVolume"]</span>
+                                }
+                            }
+                        </div>
+                    }
                     <div class="input-group mb-3">
                         <span class="input-group-text">@Localizer["Digitality"]</span>
                         <span type="text" class="form-control">@Localizer[@Model.Digitality.ToString()]</span>
@@ -175,7 +203,7 @@
                     </div>
 
                     <div class="input-group mb-3" id="rating-select">
-                        <span class="input-group-text">@Localizer["Raiting"]</span>
+                        <span class="input-group-text">@Localizer["Rating"]</span>
                         <div class="form-control">
 
                             @{
@@ -208,27 +236,61 @@
 
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <a asp-page="./Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger float-start"><i class="bi bi-trash"></i></a>
-                </div>
-                <div class="col-lg-4 col-6">
-                    @*                <div class="text-end">
-                    <small>@Localizer["Created"] @Model.CreationDate</small><br />
-                    <small>@Localizer["Modified"] @Model.ModificationDate</small>
-                    </div>*@
-                    <div class="text-end">
-                        <input type="submit" value="@Localizer["Update"]" class="btn btn-success" />
+
+            <div id="chapters">
+                <partial name="_ChaptersView" model="Model" />
+            </div>
+        </form>
+        @if (!Model.Issues.Any() && !Model.BonusIssues.Any())
+        {
+            <form method="post" id="addIssuesForm"
+                  asp-page-handler="AddChapters" enctype="multipart/form-data" data-ajax-method="post" data-ajax="true"
+                  data-ajax-mode="replace"
+                  data-ajax-update="#chapters">
+                <div class="row">
+                    <input type="hidden" value="@Model.Id" name="volumeId" />
+
+                    <h3>@Localizer["AddIssues"]</h3>
+
+                    <div class="col-lg-4 mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text">@Localizer["Issues"]</span>
+                            <input type="number" value="0" name="issueNumber" class="form-control" />
+                        </div>
                     </div>
-                    @*                <a asp-page="./Edit" asp-route-id="@Model.Id" class="btn btn-primary float-end">Edit</a>
-                    *@
+                    <div class="col-lg-4 mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text">@Localizer["BonusIssues"]</span>
+                            <input type="number" value="0" name="bonusIssueNumber" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <input type="submit" value="@Localizer["Add"]" class="btn btn-success" />
+                    </div>
                 </div>
+            </form>
+        }
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <a asp-page="./Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger float-start"><i class="bi bi-trash"></i></a>
+            </div>
+            <div class="col-lg-4 col-6">
+                @*                <div class="text-end">
+                <small>@Localizer["Created"] @Model.CreationDate</small><br />
+                <small>@Localizer["Modified"] @Model.ModificationDate</small>
+                </div>*@
+                <div class="text-end">
+                    <input type="submit" form="updateForm" value="@Localizer["Update"]" class="btn btn-success" />
+                </div>
+                @*                <a asp-page="./Edit" asp-route-id="@Model.Id" class="btn btn-primary float-end">Edit</a>
+                *@
             </div>
         </div>
     </div>
-</form>
+</div>
+
 

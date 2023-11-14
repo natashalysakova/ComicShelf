@@ -18,6 +18,7 @@ namespace Backend.Models
         public int MalId { get; set; }
 
         public int TotalVolumes { get; set; }
+        public int TotalIssues { get; set; }
         public bool Completed { get; set; }
         public string? Color { get; set; }
         public string? ComplimentColor { get; set; }

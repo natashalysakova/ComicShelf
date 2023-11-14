@@ -42,12 +42,13 @@ namespace Services.Services
         }
         public virtual IEnumerable<VM> GetAll()
         {
-            return _mapper.ProjectTo<VM>(dbSet.AsNoTracking());
+            return _mapper.ProjectTo<VM>(GetAllEntities());
         }
 
         public IEnumerable<UM> GetAllForUpdate()
         {
-            return _mapper.ProjectTo<UM>(dbSet.AsNoTracking());
+            var entries = GetAllEntities();
+            return _mapper.ProjectTo<UM>(entries);
         }
 
         public virtual UM GetForUpdate(int? id)

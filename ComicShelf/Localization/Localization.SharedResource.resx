@@ -384,4 +384,40 @@
   <data name="SeriesPlural" xml:space="preserve">
     <value>Series</value>
   </data>
+  <data name="FullTitle" xml:space="preserve">
+    <value>Full title</value>
+  </data>
+  <data name="AddIssues" xml:space="preserve">
+    <value>Add issues</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="SiteHeader" xml:space="preserve">
+    <value>Hobby World</value>
+  </data>
+  <data name="ComiscAndManga" xml:space="preserve">
+    <value>Comics and Manga</value>
+  </data>
+  <data name="Anime" xml:space="preserve">
+    <value>Anime</value>
+  </data>
+  <data name="Beer" xml:space="preserve">
+    <value>Beer</value>
+  </data>
+  <data name="ServiceData" xml:space="preserve">
+    <value>Service data</value>
+  </data>
+  <data name="Issues" xml:space="preserve">
+    <value>Issues</value>
+  </data>
+  <data name="BonusIssues" xml:space="preserve">
+    <value>Bonus issues</value>
+  </data>
+  <data name="MalId" xml:space="preserve">
+    <value>MAL Id</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
 </root>

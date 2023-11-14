@@ -20,8 +20,12 @@ namespace Services.ViewModels
         public Backend.Models.Enums.Type Type { get; set; }
 
         [DisplayName("Total issues")]
-        [RequiredIf(nameof(Ongoing), false, "Provide total issue for finished series")]
+        [RequiredIf(nameof(Ongoing), false, "Provide total of volumes for finished series")]
         public int? TotalVolumes { get; set; }
+
+        [RequiredIf(nameof(Ongoing), false, "Provide total of issues for finished series")]
+        public int? TotalIssues { get; set; }
+
         [DisplayName("Completed collection")]
         public bool Completed { get; set; }
 
@@ -31,6 +35,7 @@ namespace Services.ViewModels
         public string Color { get; set; }
 
         public int VolumeCount { get; set; }
+        public int IssueCount { get; set; }
         public bool HasError { get; set; }
         public int MalId { get; set; }
 

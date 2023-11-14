@@ -1,0 +1,30 @@
+﻿@using ComicShelf.Localization;
+@using Services.ViewModels;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@inject LocalizationService Localizer
+@model VolumeViewModel
+
+@if (Model.Issues != null && Model.Issues.Any())
+{
+    ViewData["title"] = nameof(Model.Issues);
+
+    <button class="btn wide-collapse-button mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseIssues" aria-expanded="false" aria-controls="collapseIssues">
+        <span>@Localizer["Issues"] - @Model.Issues.Length</span>
+    </button>
+    <div id="collapseIssues" class="collapse mb-3">
+        <partial name="_IssuesView" model="Model.Issues" view-data="ViewData" />
+    </div>
+}
+@if (Model.BonusIssues!=null && Model.BonusIssues.Any())
+{
+    ViewData["title"] = nameof(Model.BonusIssues);
+    
+    <button class="btn wide-collapse-button mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBonuses" aria-expanded="false" aria-controls="collapseBonuses" >
+        <span>@Localizer["BonusIssues"] - @Model.BonusIssues.Length</span>
+    </button>
+    <div id="collapseBonuses" class="collapse mb-3">
+    <partial name="_IssuesView" model="Model.BonusIssues" view-data="ViewData" />
+    </div>
+}
