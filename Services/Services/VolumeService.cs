@@ -16,13 +16,15 @@ namespace Services.Services
         private readonly SeriesService _seriesService;
         private readonly AuthorsService _authorService;
         private readonly PublishersService _publishersService;
+        private readonly IssueService _issueService;
 
-        public VolumeService(ComicShelfContext context, SeriesService seriesService, AuthorsService authorService, PublishersService publishersService, IMapper mapper) : base(context, mapper)
+        public VolumeService(ComicShelfContext context, SeriesService seriesService, AuthorsService authorService, PublishersService publishersService, IssueService issueService, IMapper mapper) : base(context, mapper)
         {
             _context = context;
             _seriesService = seriesService;
             _authorService = authorService; 
             _publishersService = publishersService;
+            _issueService = issueService;
         }
 
         public override IEnumerable<VolumeViewModel> GetAll()
@@ -501,6 +503,11 @@ namespace Services.Services
             }
 
             _context.SaveChanges();
+        }
+
+        public void DeleteIssue(int id)
+        {
+            _issueService.Remove(id);
         }
     }
 }

@@ -12,12 +12,14 @@
 {
     var item = $"{title}[{i}]";
 
-    <input asp-for="@Model[i].Id" type="hidden" name="@($"{item}.Id")" id="@($"{item}.Id")" />
-    <div class="input-group mb-1">
-        <input asp-for="@Model[i].Number" name="@($"{item}.Number")" id="@($"{item}.Number")" 
-            class="input-group-text update-on-status-change" style="width: 100px;" />
-        <input asp-for="@Model[i].Name" name="@($"{item}.Name")" id="@($"{item}.Name")"
-               class="form-control update-on-status-change" />
-        <span class="input-group-text"><i class="bi bi-trash"></i></span>
+    <div id="issue_@Model[i].Id">
+        <input asp-for="@Model[i].Id" type="hidden" name="@($"{item}.Id")" id="@($"{item}.Id")" />
+        <div class="input-group mb-1">
+            <input asp-for="@Model[i].Number" name="@($"{item}.Number")" id="@($"{item}.Number")"
+                   class="input-group-text update-on-status-change" style="width: 100px;" />
+            <input asp-for="@Model[i].Name" name="@($"{item}.Name")" id="@($"{item}.Name")"
+                   class="form-control update-on-status-change" />
+            <span class="input-group-text btn btn-outline-danger" onclick="DeleteIssue(@Model[i].Id);"><i class="bi bi-trash"></i></span>
+        </div>
     </div>
 }

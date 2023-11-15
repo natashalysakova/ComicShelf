@@ -241,35 +241,36 @@
                 <partial name="_ChaptersView" model="Model" />
             </div>
         </form>
-        @if (!Model.Issues.Any() && !Model.BonusIssues.Any())
-        {
+        <button class="btn wide-collapse-button mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddChapters" aria-expanded="false" aria-controls="collapseAddChapters">
+            <span>@Localizer["AddIssues"]</span>
+        </button>
+        <div id="collapseAddChapters" class="collapse mb-3">
             <form method="post" id="addIssuesForm"
                   asp-page-handler="AddChapters" enctype="multipart/form-data" data-ajax-method="post" data-ajax="true"
                   data-ajax-mode="replace"
-                  data-ajax-update="#chapters">
+                  data-ajax-update="#chapters"
+                  data-ajax-complete="addChaptersSuccess">
                 <div class="row">
                     <input type="hidden" value="@Model.Id" name="volumeId" />
-
-                    <h3>@Localizer["AddIssues"]</h3>
-
-                    <div class="col-lg-4 mb-3">
+                    <div class="col mb-3">
                         <div class="input-group">
                             <span class="input-group-text">@Localizer["Issues"]</span>
                             <input type="number" value="0" name="issueNumber" class="form-control" />
                         </div>
                     </div>
-                    <div class="col-lg-4 mb-3">
+                    <div class="col mb-3">
                         <div class="input-group">
                             <span class="input-group-text">@Localizer["BonusIssues"]</span>
                             <input type="number" value="0" name="bonusIssueNumber" class="form-control" />
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-auto">
                         <input type="submit" value="@Localizer["Add"]" class="btn btn-success" />
                     </div>
                 </div>
             </form>
-        }
+        </div>
+        
     </div>
 </div>
 <div class="modal-footer">

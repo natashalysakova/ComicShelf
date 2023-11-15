@@ -62,11 +62,9 @@ namespace Services.Services
         public virtual void Remove(int? id)
         {
             var item = dbSet.Find(id);
-            if (item != null)
-            {
-                dbSet.Remove(item);
-                context.SaveChanges();
-            }
+
+            dbSet.Remove(item);
+            context.SaveChanges();
         }
 
         public abstract string SetNotificationMessage();

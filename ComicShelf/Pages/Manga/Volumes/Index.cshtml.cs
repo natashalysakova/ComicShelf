@@ -11,6 +11,7 @@ using NuGet.Packaging;
 using Services.Services;
 using Services.Services.Enums;
 using Services.ViewModels;
+using System.Net;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -19,7 +20,7 @@ namespace ComicShelf.Pages.Volumes
         private readonly VolumeService _volumeService;
         private readonly FilterService _filterService;
         private readonly EnumUtilities _enumUtilities;
-        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService,  FilterService filterService,  EnumUtilities enumUtilities)
+        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, FilterService filterService, EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
             _filterService = filterService;
@@ -139,13 +140,20 @@ namespace ComicShelf.Pages.Volumes
             return StatusCode(404);
         }
 
-        public IActionResult OnPostAddChapters (int volumeId, int issueNumber, int bonusIssueNumber)
+        public IActionResult OnPostAddChapters(int volumeId, int issueNumber, int bonusIssueNumber)
         {
             _volumeService.AddIssues(volumeId, issueNumber, bonusIssueNumber);
 
             var volume = _volumeService.Get(volumeId);
             return Partial("_ChaptersView", volume);
         }
+
+        public IActionResult OnGetDeleteChapter(int id)
+        {
+            _volumeService.DeleteIssue(id);
+            return StatusCode(200);
+        }
+
 
         public IActionResult OnPostAddAsync()
         {

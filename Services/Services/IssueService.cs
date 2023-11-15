@@ -4,7 +4,7 @@ using Services.ViewModels;
 
 namespace Services.Services
 {
-    internal class IssueService : BasicService<Issue, IssueViewModel, IssueCreateModel, IssueUpdateModel>
+    public class IssueService : BasicService<Issue, IssueViewModel, IssueCreateModel, IssueUpdateModel>
     {
         public IssueService(ComicShelfContext context, IMapper mapper) : base(context, mapper)
         {

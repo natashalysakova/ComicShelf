@@ -15,13 +15,13 @@ namespace Services.Profiles
                 .ForMember(x => x.Publisher, act => { act.Ignore(); })
                 .ForMember(x => x.Volumes, act => { act.Ignore(); });
             CreateMap<Series, SeriesUpdateModel>()
-                .ForMember(x => x.VolumeCount, act => act.MapFrom(x => x.Volumes.Count))
+                .ForMember(x => x.VolumeCount, act => act.MapFrom(source => source.Volumes.Count(x => x.Issues.Any(x => x.GetType() == typeof(Issue)))))
                 .ForMember(x => x.IssueCount, act => act.MapFrom(source => source.Volumes.Sum(x => x.Issues.Count(x => x.GetType() == typeof(Issue)))))
                 .ForMember(x => x.HasError, act => act.MapFrom(y => HasError(y)));
 
             CreateMap<Series, IdNameView>();
             CreateMap<Series, SeriesViewModel>()
-                .ForMember(x => x.VolumesCount, act => act.MapFrom(source => source.Volumes.Count))
+                .ForMember(x => x.VolumesCount, act => act.MapFrom(source => source.Volumes.Count(x=>x.Issues.Any(x=>x.GetType() == typeof(Issue)))))
                 .ForMember(x => x.IssuesCount, act => act.MapFrom(source => source.Volumes.Sum(x => x.Issues.Count(x => x.GetType() == typeof(Issue)))));
 
 

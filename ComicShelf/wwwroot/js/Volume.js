@@ -510,3 +510,48 @@ function getJSONFromCookie(cookieName) {
     }
     return null; // Return null if the cookie isn't found or doesn't contain valid JSON
 }
+
+function DeleteIssue(id) {
+
+    $.ajax({
+        url: "/Manga?handler=DeleteChapter",
+        type: 'GET',
+        cache: false,
+        data: {
+            "id": id
+        },
+        success: function (res) {
+            var element = $('#issue_' + id);
+            var parent = element.parent();
+            var buttonAbove = parent.prev("button");
+
+            element.remove();
+
+            // Check if the parent is empty after removal
+            if ($.trim(parent.html()) === "") {
+                // If the parent is empty, remove it as well
+                parent.remove();
+                buttonAbove.remove();
+            }
+        },
+        error: function (res) {
+            alert('error!' + res);
+        }
+    });
+}
+
+function addChaptersSuccess(e) {
+
+    if ($('#collapseIssues').length) {
+        var bsCollapse2 = new bootstrap.Collapse('#collapseIssues', {
+            show: true
+        });
+    }
+    if ($('#collapseBonuses').length) {
+        var bsCollapse2 = new bootstrap.Collapse('#collapseBonuses', {
+            show: true
+        });
+    }
+
+    $("#addIssuesForm").trigger("reset");
+}

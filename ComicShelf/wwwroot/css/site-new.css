@@ -370,6 +370,7 @@ body .modal-open {
 .wide-collapse-button {
   background-color: var(--bs-tertiary-bg);
   text-align: start;
+  width: 100%;
 }
 .wide-collapse-button span {
   font-weight: 400;

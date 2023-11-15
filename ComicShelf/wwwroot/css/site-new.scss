@@ -431,6 +431,7 @@ $mal-btn-darkest-color: $blue-800;
 .wide-collapse-button {
     background-color: var(--bs-tertiary-bg);
     text-align: start;
+    width: 100%;
     
     span{
         font-weight: 400;
