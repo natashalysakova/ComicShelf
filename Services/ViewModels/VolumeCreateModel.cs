@@ -27,9 +27,17 @@ namespace Services.ViewModels
 
         public string[] Authors { get; set; }
         public VolumeType Digitality { get; set; }
-        public bool SingleVolume { get; set; }
         public string SeriesName { get; set; }
         public int NumberOfIssues { get; set; }
         public int NumberOfBonusIssues { get; set; }
+        public VolumeItemType VolumeType { get; set; }
+    }
+
+    public enum VolumeItemType
+    {
+        All,
+        Volume,
+        OneShot,
+        Issue
     }
 }

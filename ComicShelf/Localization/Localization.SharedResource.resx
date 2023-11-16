@@ -298,7 +298,7 @@
     <value>Reset filters</value>
   </data>
   <data name="SingleVolume" xml:space="preserve">
-    <value>One Shot</value>
+    <value>Oneshot</value>
   </data>
   <data name="SingleVolumeHint" xml:space="preserve">
     <value>Select this if volume is finished story</value>
@@ -370,7 +370,7 @@
     <value>AllSeries</value>
   </data>
   <data name="Vol" xml:space="preserve">
-    <value>Vol.</value>
+    <value>Vol</value>
   </data>
   <data name="Total" xml:space="preserve">
     <value>Total</value>
@@ -419,5 +419,20 @@
   </data>
   <data name="URL" xml:space="preserve">
     <value>URL</value>
+  </data>
+  <data name="VolumeHint" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="SingleIssueHint" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OneShot" xml:space="preserve">
+    <value>Oneshot</value>
+  </data>
+  <data name="Issue" xml:space="preserve">
+    <value>Issue</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
   </data>
 </root>

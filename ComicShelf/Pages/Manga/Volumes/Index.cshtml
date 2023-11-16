@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Mvc.Localization;
 @using Newtonsoft.Json;
 @using Services.Services.Enums;
+@using Services.ViewModels;
 @model ComicShelf.Pages.Volumes.IndexModel
 @inject LocalizationService Localizer
 
@@ -84,6 +85,20 @@
                 }
 
             </div>
+
+            <span class="filter-header">@Localizer["Type"]</span>
+            <div class="btn-group-vertical mb-3" role="group" aria-la bel="digitiality filters">
+                @foreach (var item in ViewData["VolumeTypesFilters"] as IEnumerable<VolumeItemType>)
+                {
+                    var check = filters.volumeType == @item ? "checked" : string.Empty;
+
+                    <input id="VolumeTypes_@item" class="btn-check filter" type="radio" name="volumeType" value="@((int)item)" autocomplete="off" data="@item" @check />
+                    <label for="VolumeTypes_@item" class="btn btn-secondary">
+                        @Localizer[item.ToString()]
+                    </label>
+                }
+            </div>
+
             <span class="filter-header">@Localizer["Digitality"]</span>
             <div class="btn-group-vertical mb-3" role="group" aria-la bel="digitiality filters">
                 @foreach (var item in ViewData["DigitalityFilters"] as IEnumerable<DigitalityEnum>)

@@ -30,6 +30,7 @@ namespace ComicShelf.Pages.Volumes
             PurchaseStatuses.AddRange(_enumUtilities.GetSelectItemList<PurchaseStatus>());
             Ratings.AddRange(_enumUtilities.GetRatings());
             Digitalities.AddRange(_enumUtilities.GetSelectItemList<VolumeType>());
+            VolumeTypes.AddRange(_enumUtilities.GetSelectItemList<VolumeItemType>());
 
             Authors.AddRange(authorsService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
             Series.AddRange(seriesService.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
@@ -45,6 +46,7 @@ namespace ComicShelf.Pages.Volumes
         public List<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Series { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Digitalities { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> VolumeTypes { get; set; } = new List<SelectListItem>();
         public IEnumerable<IGrouping<string, FilterViewModel>> Filters { get; set; }
 
         public IEnumerable<VolumeViewModel> Volumes { get; set; } = default!;
@@ -82,6 +84,7 @@ namespace ComicShelf.Pages.Volumes
             ViewData["PurchaseFilters"] = _enumUtilities.GetListOfValues<PurchaseFilterEnum>();
             ViewData["Sort"] = _enumUtilities.GetListOfValues<SortEnum>();
             ViewData["ReadingFilters"] = _enumUtilities.GetListOfValues<ReadingEnum>();
+            ViewData["VolumeTypesFilters"] = _enumUtilities.GetListOfValues<VolumeItemType>();
             SetCookies(filters);
         }
 
@@ -162,7 +165,7 @@ namespace ComicShelf.Pages.Volumes
                 return StatusCode(400, "Fill mandatory fields");
             }
 
-            if (_volumeService.Exists(NewVolume.SeriesName, NewVolume.Number))
+            if (NewVolume.NumberOfIssues > 1 && _volumeService.Exists(NewVolume.SeriesName, NewVolume.Number))
             {
                 return StatusCode(409, $"{NewVolume.SeriesName} Volume #{NewVolume.Number} already exists");
             }

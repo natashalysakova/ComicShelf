@@ -110,45 +110,55 @@
                         </div>
 
                     }
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">@Localizer["NumberInSeries"]</span>
-                        <span type="text" class="form-control">@Model.Number</span>
-                        <span class="input-group-text">/</span>
-                        @{
-                            if (@Model.SeriesOngoing)
-                            {
-                                <span class="form-control text-bg-success">@Localizer["Ongoing"]</span>
-                            }
-                            else
-                            {
-                                <span type="text" class="form-control">@Model.SeriesTotalVolumes</span>
-                            }
 
-                            if (Model.OneShot)
-                            {
-                                <span class="form-control text-bg-primary">@Localizer["SingleVolume"]</span>
+                    @if (!Model.SingleIssue && !Model.OneShot)
+                    {
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">@Localizer["NumberInSeries"]</span>
+
+                            @{
+
+                                if (Model.OneShot)
+                                {
+                                    <span class="form-control text-bg-primary">@Localizer["SingleVolume"]</span>
+                                }
+                                else
+                                {
+                                    <span type="text" class="form-control">@Model.Number</span>
+                                    <span class="input-group-text">/</span>
+
+                                    if (@Model.SeriesOngoing)
+                                    {
+                                        <span class="form-control text-bg-success">@Localizer["Ongoing"]</span>
+                                    }
+                                    else
+                                    {
+                                        <span type="text" class="form-control">@Model.SeriesTotalVolumes</span>
+                                    }
+                                }
                             }
-                        }
-                    </div>
+                        </div>
+                    }
                     @if (Model.Issues.Any())
                     {
                         <div class="input-group mb-3">
                             <span class="input-group-text">@Localizer["Issues"]</span>
                             <span type="text" class="form-control">@Model.Issues.Min(x=>x.Number) - @Model.Issues.Max(x=>x.Number)</span>
-                            <span class="input-group-text">/</span>
-                            @{
-                                if (@Model.SeriesOngoing)
-                                {
-                                    <span class="form-control text-bg-success">@Localizer["Ongoing"]</span>
-                                }
-                                else
-                                {
-                                    <span type="text" class="form-control">@Model.SeriesTotalIssues</span>
-                                }
 
-                                if (Model.OneShot)
+                            @{
+
+                                if (!Model.OneShot)
                                 {
-                                    <span class="form-control text-bg-primary">@Localizer["SingleVolume"]</span>
+                                    <span class="input-group-text">/</span>
+                                    if (@Model.SeriesOngoing)
+                                    {
+                                        <span class="form-control text-bg-success">@Localizer["Ongoing"]</span>
+                                    }
+                                    else
+                                    {
+                                        <span type="text" class="form-control">@Model.SeriesTotalIssues</span>
+                                    }
                                 }
                             }
                         </div>
@@ -270,7 +280,7 @@
                 </div>
             </form>
         </div>
-        
+
     </div>
 </div>
 <div class="modal-footer">

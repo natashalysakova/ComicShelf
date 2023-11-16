@@ -420,4 +420,13 @@
   <data name="URL" xml:space="preserve">
     <value>URL</value>
   </data>
+  <data name="Issue" xml:space="preserve">
+    <value>Глава</value>
+  </data>
+  <data name="OneShot" xml:space="preserve">
+    <value>Ваншот</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Тип</value>
+  </data>
 </root>

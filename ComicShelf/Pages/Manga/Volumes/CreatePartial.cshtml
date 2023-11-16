@@ -2,6 +2,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @using ComicShelf.Localization;
+@using Services.ViewModels;
 @inject LocalizationService Localizer
 
 @model ComicShelf.Pages.Volumes.IndexModel
@@ -10,7 +11,6 @@
     <div class="modal-content">
         <form method="post" id="create-form" asp-page-handler="Add" data-ajax-method="post" data-ajax="true" enctype="multipart/form-data" data-ajax-complete="createComplete" onreset="resetCreateForm()">
             <div class="modal-header">
-
                 <div class="modal-title display-6 col-9">
                     <input asp-for="NewVolume.SeriesName" class="form-control form-control-lg modal-input-form" list="datalistOptions" placeholder="Введіть назву серії" autocomplete="off" />
                     <datalist id="datalistOptions">
@@ -28,7 +28,6 @@
                 </div>
                 <button type="button" class="btn-close col-1" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body">
                 <div class="alert alert-danger" role="alert" style="display: none;" id="createAlert">
                 </div>
@@ -44,18 +43,32 @@
                     </div>
                     <div class="col-sm-7">
                         <div class="row mb-3">
+                            <div class="input-group">
+                                @foreach (var item in Model.VolumeTypes)
+                                {
+                                    if (item.Value == VolumeItemType.All.ToString())
+                                    {
+                                        continue;
+                                    }
+
+                                    var ch = item.Value == VolumeItemType.Volume.ToString() ? "checked" : string.Empty;
+
+                                    <label for="@("type" + item.Value)" class="input-group-text">@item.Text</label>
+                                    <div class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="@Localizer[item.Text + "Hint"]">
+                                        <input name="NewVolume.VolumeType" class="form-check-input mt-0" type="radio" value="@item.Value" id="@("type" + item.Value)" @ch />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-3">
                             @{
                                 var defaultTitle = $"{Localizer["Volume"].Value} 1";
                             }
                             <div class="input-group">
                                 <label asp-for="NewVolume.Title" class="input-group-text">@Localizer["Title"]</label>
                                 <input asp-for="NewVolume.Title" class="form-control" value="@defaultTitle" />
-                                <div class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="@Localizer["SingleVolumeHint"]">
-                                    <input asp-for="NewVolume.SingleVolume" class="form-check-input mt-0" type="checkbox"  />
-                                </div>
-                                <span class="input-group-text">@Localizer["SingleVolume"]</span>
-
-
                             </div>
                             <span asp-validation-for="NewVolume.Title" class="text-danger"></span>
                         </div>
@@ -152,15 +165,10 @@
                                 }
                             </div>
                         </div>
-
-
                     </div>
                 </div>
-
             </div>
-
             <div class="modal-footer">
-
                 <div class="container">
                     <div class="row">
                         <div class="col">

@@ -86,6 +86,7 @@ function resetFilters(e) {
     $('#Purchase_All').prop("checked", "checked")
     $('#Digitality_All').prop("checked", "checked")
     $('#Reading_All').prop("checked", "checked")
+    $('#VolumeTypes_All').prop("checked", "checked")
     $('#sortType').val(0)
     $('#search-field').val("")
     $('#sortDirection').attr('data-sort', "up");
@@ -107,7 +108,7 @@ function fillFilters() {
     var digitality = parseInt($('input[type=radio][name=digitality]:checked').val())
     var reading = parseInt($('input[type=radio][name=reading]:checked').val())
     var filter = parseInt($('input[type=radio][name=filter]:checked').val())
-
+    var volumeType = parseInt($('input[type=radio][name=volumeType]:checked').val())
 
     return {
         "filter": filter,
@@ -115,7 +116,8 @@ function fillFilters() {
         "direction": dir,
         "search": search,
         "digitality": digitality,
-        "reading": reading
+        "reading": reading,
+        "volumeType": volumeType
     };
 }
 
@@ -145,6 +147,8 @@ function fillFields(filters) {
     selectRadioButtonByValue('digitality', filters.digitality)
     selectRadioButtonByValue('reading', filters.reading)
     selectRadioButtonByValue('filter', filters.filter)
+    selectRadioButtonByValue('volumeType', filters.volumeType)
+    
 }
 
 // Function to compare JSON objects

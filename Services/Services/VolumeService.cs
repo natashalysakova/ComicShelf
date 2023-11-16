@@ -51,7 +51,7 @@ namespace Services.Services
             if (series == null)
             {
                 var newSeries = new SeriesCreateModel() { Name = model.SeriesName, Type = ComicType.Comics };
-                if (model.SingleVolume)
+                if (model.VolumeType == VolumeItemType.OneShot)
                 {
                     newSeries.TotalVolumes = 1;
                     newSeries.Ongoing = false;
@@ -129,7 +129,7 @@ namespace Services.Services
                 volume.Rating = model.Rating;
             }
 
-            if (model.SingleVolume)
+            if (model.VolumeType == VolumeItemType.OneShot)
             {
                 volume.Number = 1;
             }
@@ -146,40 +146,52 @@ namespace Services.Services
 
             volume.Series = series;
             volume.Authors = _authorService.GetAll(authorList);
-            volume.CreationDate = DateTime.Now;
-            volume.ModificationDate = DateTime.Now;
 
-            this.Add(volume);
-
-            
-            int maxChapter = 0;
-
-            foreach (var item in series.Volumes)
+            if (model.VolumeType == VolumeItemType.Issue)
             {
-                LoadCollection(item, x => x.Issues);
+                volume.SingleIssue = true;
 
-                foreach (var item1 in item.Issues)
-                {
-                    if (item1 is not Bonus && item1.Number > maxChapter)
-                    {
-                        maxChapter = item1.Number;
-                    }
-                }
-            }
-
-
-            for (int i = 0; i < model.NumberOfIssues; i++)
-            {
                 var issue = new Issue()
                 {
                     Volume = volume,
-                    Number = maxChapter + 1,
-                    Name = $"Chapter {maxChapter + 1}"
+                    Number = model.Number,
+                    Name = model.Title
                 };
 
                 _context.Issues.Add(issue);
-                maxChapter++;
             }
+            else
+            {
+                int maxChapter = 0;
+
+                foreach (var item in series.Volumes)
+                {
+                    LoadCollection(item, x => x.Issues);
+
+                    foreach (var item1 in item.Issues)
+                    {
+                        if (item1 is not Bonus && item1.Number > maxChapter)
+                        {
+                            maxChapter = item1.Number;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < model.NumberOfIssues; i++)
+                {
+                    var issue = new Issue()
+                    {
+                        Volume = volume,
+                        Number = maxChapter + 1,
+                        Name = $"Chapter {maxChapter + 1}"
+                    };
+
+                    volume.Issues.Add(issue);
+                    maxChapter++;
+                }
+            }
+
+            
             for (int i = 0; i < model.NumberOfBonusIssues; i++)
             {
                 var issue = new Bonus()
@@ -189,18 +201,20 @@ namespace Services.Services
                     Name = $"Bonus chapter {i + 1}"
                 };
 
-                _context.Issues.Add(issue);
+                volume.Issues.Add(issue);
             }
-            _context.SaveChanges();
 
 
             if (!series.Ongoing && series.Volumes.Count == series.TotalVolumes)
             {
                 series.Completed = true;
-                _seriesService.Update(series);
             }
 
-            return volume.Id;
+
+            volume.CreationDate = DateTime.Now;
+            volume.ModificationDate = DateTime.Now;
+
+            return Add(volume);
         }
 
         private IEnumerable<Issue> GenerateEmptyIssues(int issues, ComicType type)
@@ -405,6 +419,20 @@ namespace Services.Services
             ///<option value = "1" > За назвою </ option >
             ///<option value = "2" > За датою покупки</ option >
             ///<option value = "3" > Three </ option >
+            ///
+
+            switch (param.volumeType)
+            {
+                case VolumeItemType.Issue:
+                    filterd = filterd.Where(x=>x.SingleIssue);
+                    break;
+                case VolumeItemType.OneShot:
+                    filterd = filterd.Where(x => x.OneShot);
+                    break;
+                case VolumeItemType.Volume:
+                    filterd = filterd.Where(x => !x.OneShot && !x.SingleIssue);
+                    break;
+            }
 
             switch (param.sort)
             {
@@ -502,12 +530,22 @@ namespace Services.Services
                 maxBonusChapter++;
             }
 
+            volume.SingleIssue = issueNumber == 1;
+
             _context.SaveChanges();
         }
 
         public void DeleteIssue(int id)
         {
+            var issue = _issueService.GetById(id);
             _issueService.Remove(id);
+
+            var volume = GetById(issue.VolumeId);
+            LoadCollection(volume, x => x.Issues);
+
+            volume.SingleIssue = volume.Issues.Count(x => x.GetType() == typeof(Issue)) == 1;
+            _context.SaveChanges();
+
         }
     }
 }

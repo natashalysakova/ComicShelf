@@ -55,5 +55,22 @@ namespace Services.Services
             return base.GetAllEntities(tracking).Include(x => x.Publisher).Include(x=>x.Volumes).ThenInclude(x=>x.Issues);
         }
 
+        public override void Update(SeriesUpdateModel item)
+        {
+            if(item.TotalVolumes == 1 && !item.Ongoing)
+            {
+                var series = GetById(item.Id);
+                LoadCollection(series, x => x.Volumes);
+                var volume = series.Volumes.SingleOrDefault();
+                if (volume != null)
+                {
+                    volume.OneShot = true;
+                    SaveChanges();
+                }
+            }
+
+            base.Update(item);
+        }
+
     }
 }

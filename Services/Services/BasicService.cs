@@ -153,5 +153,10 @@ namespace Services.Services
         {
             return tracking ? dbSet : dbSet.AsNoTracking();
         }
+
+        protected void SaveChanges()
+        {
+            context.SaveChanges();
+        }
     }
 }

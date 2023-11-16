@@ -35,7 +35,7 @@ namespace ComicShelf.UnitTests
                 Rating = 5,
                 ReleaseDate = timestamp.AddDays(-1),
                 SeriesName = DataSet.Series.Name,
-                SingleVolume = true,
+                VolumeType = VolumeItemType.OneShot,
                 Status = Status.Completed,
                 Title = "Test",
             };
@@ -53,7 +53,7 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(model.PurchaseStatus, entity.PurchaseStatus);
             Assert.AreEqual(model.Rating, entity.Rating);
             Assert.AreEqual(model.ReleaseDate, entity.ReleaseDate);
-            Assert.AreEqual(model.SingleVolume, entity.OneShot);
+            Assert.AreEqual(model.VolumeType, entity.OneShot);
             Assert.AreEqual(model.Status, entity.Status);
             Assert.AreEqual(model.Title, entity.Title);
 

@@ -30,7 +30,8 @@ namespace Services.ViewModels
         public int SeriesTotalIssues { get; set; }
         public string SeriesType { get; set; }
         public int MalId { get; set; }
-        
+        public bool SingleIssue { get; set; }
+
         public IssueViewModel[] Issues { get; set; }
         public IssueViewModel[] BonusIssues { get; set; }
 

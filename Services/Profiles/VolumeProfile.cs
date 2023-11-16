@@ -14,7 +14,9 @@ namespace Services.Profiles
                 .ForSourceMember(x => x.Authors, act => act.DoNotValidate())
                 .ForSourceMember(x => x.NumberOfIssues, act => act.DoNotValidate())
                 .ForSourceMember(x => x.NumberOfBonusIssues, act => act.DoNotValidate())
-                .ForMember(x => x.OneShot, act => act.MapFrom(x => x.SingleVolume))
+                .ForSourceMember(x => x.VolumeType, act => act.DoNotValidate())
+                .ForMember(x => x.OneShot, act => act.MapFrom(x => x.VolumeType == VolumeItemType.OneShot))
+                .ForMember(x => x.SingleIssue, act => act.MapFrom(x => x.VolumeType == VolumeItemType.Issue))
                 .ForMember(x => x.Authors, act => act.Ignore());
 
 
