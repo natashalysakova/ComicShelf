@@ -47,12 +47,40 @@ namespace Services.Profiles
                 .ForMember(x => x.MalId, act => act.MapFrom(x => x.Series.MalId))
                 .ForMember(x => x.Issues, act => act.MapFrom(x => x.Issues.Where(y => y.GetType() == typeof(Issue))))
                 .ForMember(x => x.BonusIssues, act => act.MapFrom(x => x.Issues.OfType<Bonus>()))
-                ;
+                .ForMember(x=>x.IssuesRange, act => act.MapFrom(x=> FormatRanges(x.Issues.Where(x=>x.GetType() == typeof(Issue)).Select(y=>y.Number).OrderBy(x=>x).ToArray())));
         }
+
 
         private static bool HasError(Volume x)
         {
             return x.Expired();
+        }
+
+        private static string FormatRanges(int[] arr)
+        {
+            if(arr.Length == 0)
+                return string.Empty;
+
+            List<string> result = new List<string>();
+            int start = arr[0];
+            int end = arr[0];
+
+            foreach (int num in arr.Skip(1))
+            {
+                if (num == end + 1)
+                {
+                    end = num;
+                }
+                else
+                {
+                    result.Add(start == end ? start.ToString() : $"{start}-{end}");
+                    start = end = num;
+                }
+            }
+
+            result.Add(start == end ? start.ToString() : $"{start}-{end}");
+
+            return string.Join(", ", result);
         }
     }
 }

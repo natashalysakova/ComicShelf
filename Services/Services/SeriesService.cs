@@ -57,17 +57,25 @@ namespace Services.Services
 
         public override void Update(SeriesUpdateModel item)
         {
-            if(item.TotalVolumes == 1 && !item.Ongoing)
+            var series = GetById(item.Id);
+            LoadCollection(series, x => x.Volumes);
+
+            if (item.TotalVolumes == 1 && !item.Ongoing)
             {
-                var series = GetById(item.Id);
-                LoadCollection(series, x => x.Volumes);
                 var volume = series.Volumes.SingleOrDefault();
                 if (volume != null)
                 {
                     volume.OneShot = true;
-                    SaveChanges();
                 }
             }
+            else
+            {
+                foreach (var vol in series.Volumes)
+                {
+                    vol.OneShot = false;
+                }
+            }
+            SaveChanges();
 
             base.Update(item);
         }

@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Localization;
+using Services;
 
 namespace ComicShelf.Localization
 {
-    public class LocalizationService
+    public class LocalizationService : ILocalizationService
     {
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly ILogger _logger;

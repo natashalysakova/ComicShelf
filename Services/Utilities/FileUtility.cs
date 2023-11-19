@@ -89,7 +89,7 @@ public static class FileUtility
                 coverFile.CopyTo(fileStream);
             }
 
-            var urlPath = Path.Combine("~", destiantionFolder, filename);
+            var urlPath = Path.Combine(destiantionFolder, filename);
             return urlPath;
         }
         catch (Exception)

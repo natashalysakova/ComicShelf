@@ -1,7 +1,7 @@
 ﻿@using Backend.Models.Enums;
-@using ComicShelf.Localization;
+@using Services;
 @using Services.ViewModels;
-@inject LocalizationService Localizer
+@inject ILocalizationService Localizer
 
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -28,9 +28,13 @@
 
 </div>
 @{
-    if (!Model.OneShot)
+    if (!Model.OneShot && Model.Number != 0)
     {
         <div class="book-number" style="background-color:@Model.SeriesColor;">@Model.Number</div>
+    }
+    else if(Model.Number == 0)
+    {
+        <div class="book-number" style="background-color:@Model.SeriesColor;">@Localizer["BonusIssueShort"]</div>
     }
 }
 

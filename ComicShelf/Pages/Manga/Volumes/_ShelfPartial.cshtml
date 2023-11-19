@@ -1,9 +1,10 @@
-﻿@using Services.ViewModels;
+﻿@using Services;
+@using Services.ViewModels;
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model IEnumerable<VolumeViewModel>
-
+@inject ILocalizationService Localizer
 
 
 
@@ -25,6 +26,11 @@
             <partial name="_BookPartial" model="item" view-data="@ViewData" />
         </div>
 
+    }
+
+    @if (!Model.Any())
+    {
+        <h6>@Localizer["NothingFound"]</h6>
     }
 </div>
 

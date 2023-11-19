@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MySqlConnector;
+using Services;
 using Services.Profiles;
 using Services.Services;
 using System.Globalization;
@@ -113,8 +114,7 @@ internal class Program
             options.Filters.Add<ViewBagActionFilter>();
         });
 
-
-        builder.Services.AddSingleton(typeof(LocalizationService));
+        builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
         builder.Services.AddSingleton(typeof(EnumUtilities));
 
         builder.Services.AddSession(option =>

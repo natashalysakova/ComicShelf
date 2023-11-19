@@ -421,10 +421,10 @@
     <value>URL</value>
   </data>
   <data name="VolumeHint" xml:space="preserve">
-    <value></value>
+    <value>Select  this if it's volume with several chapters and it's not a single volume story</value>
   </data>
   <data name="SingleIssueHint" xml:space="preserve">
-    <value></value>
+    <value>Select if it's a single chapter</value>
   </data>
   <data name="OneShot" xml:space="preserve">
     <value>Oneshot</value>
@@ -434,5 +434,14 @@
   </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
+  </data>
+  <data name="BonusIssueShort" xml:space="preserve">
+    <value>B</value>
+  </data>
+  <data name="ChapterDefaultName" xml:space="preserve">
+    <value>Chapter</value>
+  </data>
+  <data name="BonusChapterDefaultName" xml:space="preserve">
+    <value>Bonus chapter</value>
   </data>
 </root>

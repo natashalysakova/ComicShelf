@@ -190,6 +190,9 @@ function findMatch(filters) {
 let previousSearch;
 function filter(e) {
 
+    $('#shelves').html('');
+    $('#spinner').css('visibility', 'visible')
+
     var filters;
 
     if (e != undefined && e.target.id == 'search-field') {
@@ -230,6 +233,7 @@ function filter(e) {
         data: filters
     }).done(function (result) {
         $('#shelves').html(result);
+        $('#spinner').css('visibility', 'collapse')
     });
 };
 

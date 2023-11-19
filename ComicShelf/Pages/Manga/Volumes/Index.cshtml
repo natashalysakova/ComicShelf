@@ -1,12 +1,12 @@
 ﻿@page "~/Manga"
-@using ComicShelf.Localization;
+@using Services;
 @using ComicShelf.Pages.Shared.Components;
 @using Microsoft.AspNetCore.Mvc.Localization;
 @using Newtonsoft.Json;
 @using Services.Services.Enums;
 @using Services.ViewModels;
 @model ComicShelf.Pages.Volumes.IndexModel
-@inject LocalizationService Localizer
+@inject ILocalizationService Localizer
 
 @{
     ViewData["Title"] = Localizer["MainPage"];
@@ -158,7 +158,11 @@
         <div class="row" id="shelves">
             <partial name="_ShelfPartial" model="@Model.Volumes" view-data="@ViewData" />
         </div>
-
+        <div class="d-flex justify-content-center" style="visibility: collapse; height: 100%; align-items:center;" id="spinner">
+            <div class="spinner-border" role="status" style="width: 5rem; height: 5rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
     </div>
 </div>
 

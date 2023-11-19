@@ -2,7 +2,7 @@
 using Backend.Models.Enums;
 using ComicShelf.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
+using Services;
 
 namespace ComicShelf.Utilities
 {
@@ -82,9 +82,9 @@ namespace ComicShelf.Utilities
         private Dictionary<PurchaseStatus, IEnumerable<SelectListItem>> transitionsCached = new Dictionary<PurchaseStatus, IEnumerable<SelectListItem>>();
         private Dictionary<string, IEnumerable<SelectListItem>> cached = new Dictionary<string, IEnumerable<SelectListItem>>();
 
-        private readonly LocalizationService localizer;
+        private readonly ILocalizationService localizer;
 
-        public EnumUtilities(LocalizationService localizer)
+        public EnumUtilities(ILocalizationService localizer)
         {
             this.localizer = localizer;
         }
@@ -107,7 +107,7 @@ namespace ComicShelf.Utilities
             return transitionsCached[status];
         }
 
-        private static IEnumerable<SelectListItem> GetEnumAsSelectItemList<T1>(LocalizationService localizer) where T1 : struct
+        private static IEnumerable<SelectListItem> GetEnumAsSelectItemList<T1>(ILocalizationService localizer) where T1 : struct
         {
             var type = typeof(T1);
             if (!type.IsEnum)

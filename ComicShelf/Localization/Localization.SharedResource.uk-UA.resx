@@ -429,4 +429,19 @@
   <data name="Type" xml:space="preserve">
     <value>Тип</value>
   </data>
+  <data name="BonusIssueShort" xml:space="preserve">
+    <value>Б</value>
+  </data>
+  <data name="ChapterDefaultName" xml:space="preserve">
+    <value>Розділ</value>
+  </data>
+  <data name="BonusChapterDefaultName" xml:space="preserve">
+    <value>Бонусний розділ</value>
+  </data>
+  <data name="SingleIssueHint" xml:space="preserve">
+    <value>Оберіть це, якщо це окрема глава</value>
+  </data>
+  <data name="VolumeHint" xml:space="preserve">
+    <value>Оберіть це, якщо це збірка з декількома розділами і вона не є окремою завершеною історією</value>
+  </data>
 </root>

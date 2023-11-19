@@ -1,10 +1,10 @@
 ﻿@using Backend.Models.Enums;
-@using ComicShelf.Localization;
+@using Services;
 @using Services.ViewModels;
 @using System.Linq.Expressions;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@inject LocalizationService Localizer
+@inject ILocalizationService Localizer
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -18,7 +18,7 @@
     <div class="row">
         <div class="modal-title display-6" id="exampleModalLabel">
             @Model.SeriesName
-            @if (!Model.OneShot)
+            @if (!Model.OneShot && Model.Number != 0)
             {
                 @Model.Number
             }
@@ -111,40 +111,37 @@
 
                     }
 
-                    @if (!Model.SingleIssue && !Model.OneShot)
+                    @if (!Model.OneShot && Model.Number != 0)
                     {
 
                         <div class="input-group mb-3">
                             <span class="input-group-text">@Localizer["NumberInSeries"]</span>
 
-                            @{
+                                <span type="text" class="form-control">@Model.Number</span>
+                                <span class="input-group-text">/</span>
 
-                                if (Model.OneShot)
+                                @if (@Model.SeriesOngoing)
                                 {
-                                    <span class="form-control text-bg-primary">@Localizer["SingleVolume"]</span>
+                                    <span class="form-control text-bg-success">@Localizer["Ongoing"]</span>
                                 }
                                 else
                                 {
-                                    <span type="text" class="form-control">@Model.Number</span>
-                                    <span class="input-group-text">/</span>
-
-                                    if (@Model.SeriesOngoing)
-                                    {
-                                        <span class="form-control text-bg-success">@Localizer["Ongoing"]</span>
-                                    }
-                                    else
-                                    {
-                                        <span type="text" class="form-control">@Model.SeriesTotalVolumes</span>
-                                    }
+                                    <span type="text" class="form-control">@Model.SeriesTotalVolumes</span>
                                 }
-                            }
                         </div>
                     }
+                    else if(Model.OneShot)
+                    {
+                        <span class="form-control text-bg-primary">@Localizer["SingleVolume"]</span>
+                    }
+
+
+
                     @if (Model.Issues.Any())
                     {
                         <div class="input-group mb-3">
                             <span class="input-group-text">@Localizer["Issues"]</span>
-                            <span type="text" class="form-control">@Model.Issues.Min(x=>x.Number) - @Model.Issues.Max(x=>x.Number)</span>
+                            <span type="text" class="form-control">@Model.IssuesRange</span>
 
                             @{
 

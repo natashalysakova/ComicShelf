@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Backend.Models;
 using Backend.Models.Enums;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
 using Services.Services.Enums;
@@ -17,14 +18,16 @@ namespace Services.Services
         private readonly AuthorsService _authorService;
         private readonly PublishersService _publishersService;
         private readonly IssueService _issueService;
+        private readonly ILocalizationService _localizationService;
 
-        public VolumeService(ComicShelfContext context, SeriesService seriesService, AuthorsService authorService, PublishersService publishersService, IssueService issueService, IMapper mapper) : base(context, mapper)
+        public VolumeService(ComicShelfContext context, SeriesService seriesService, AuthorsService authorService, PublishersService publishersService, IssueService issueService, ILocalizationService localizationService, IMapper mapper) : base(context, mapper)
         {
             _context = context;
             _seriesService = seriesService;
-            _authorService = authorService; 
+            _authorService = authorService;
             _publishersService = publishersService;
             _issueService = issueService;
+            _localizationService = localizationService;
         }
 
         public override IEnumerable<VolumeViewModel> GetAll()
@@ -41,7 +44,7 @@ namespace Services.Services
             volume.Issues = volume.Issues.OrderBy(x => x.Number).ToList();
             _seriesService.LoadReference(volume.Series, x => x.Publisher);
             _publishersService.LoadReference(volume.Series.Publisher, x => x.Country);
-            
+
             return _mapper.Map<VolumeViewModel>(volume);
         }
 
@@ -129,17 +132,14 @@ namespace Services.Services
                 volume.Rating = model.Rating;
             }
 
-            if (model.VolumeType == VolumeItemType.OneShot)
-            {
-                volume.Number = 1;
-            }
+
 
             _seriesService.LoadCollection(series, x => x.Volumes);
 
             if ((volume.PurchaseStatus is PurchaseStatus.Bought
                 or PurchaseStatus.Pirated
                 or PurchaseStatus.Gift
-                or PurchaseStatus.Free) && series.Volumes.Count > 0 && series.Volumes.All(x => x.Status == Status.Completed))
+                or PurchaseStatus.Free) && series.Volumes.Count > 0 && series.Volumes.All(x => x.Status == Status.Completed) && volume.Status == Status.NotStarted)
             {
                 volume.Status = Status.InQueue;
             }
@@ -147,10 +147,14 @@ namespace Services.Services
             volume.Series = series;
             volume.Authors = _authorService.GetAll(authorList);
 
+            if (model.VolumeType == VolumeItemType.OneShot)
+            {
+                volume.Number = 1;
+                volume.OneShot = true;
+            }
+
             if (model.VolumeType == VolumeItemType.Issue)
             {
-                volume.SingleIssue = true;
-
                 var issue = new Issue()
                 {
                     Volume = volume,
@@ -176,6 +180,7 @@ namespace Services.Services
                         }
                     }
                 }
+                var chapterName = _localizationService["ChapterDefaultName"];
 
                 for (int i = 0; i < model.NumberOfIssues; i++)
                 {
@@ -183,7 +188,7 @@ namespace Services.Services
                     {
                         Volume = volume,
                         Number = maxChapter + 1,
-                        Name = $"Chapter {maxChapter + 1}"
+                        Name = $"{chapterName} {maxChapter + 1}"
                     };
 
                     volume.Issues.Add(issue);
@@ -191,21 +196,24 @@ namespace Services.Services
                 }
             }
 
-            
+            volume.SingleIssue = volume.Issues.Count == 1;
+
+            var bonusChapterName = _localizationService["BonusChapterDefaultName"];
+
             for (int i = 0; i < model.NumberOfBonusIssues; i++)
             {
                 var issue = new Bonus()
                 {
                     Volume = volume,
                     Number = i + 1,
-                    Name = $"Bonus chapter {i + 1}"
+                    Name = $"{bonusChapterName} {i + 1}"
                 };
 
                 volume.Issues.Add(issue);
             }
 
 
-            if (!series.Ongoing && series.Volumes.Count == series.TotalVolumes)
+            if (!series.Ongoing && series.Volumes.Count(x=>x.Number > 0) == series.TotalVolumes)
             {
                 series.Completed = true;
             }
@@ -267,32 +275,28 @@ namespace Services.Services
                 item.CoverUrl = FileUtility.SaveOnServer(volumeToUpdate.CoverFile, item.Series.Name, item.Number);
             }
 
+            var series = _seriesService.GetById(item.SeriesId);
             if (volumeToUpdate.PurchaseStatus is PurchaseStatus.Bought
                 or PurchaseStatus.Pirated
                 or PurchaseStatus.Gift
                 or PurchaseStatus.Free)
             {
-                var series = _seriesService.GetById(item.SeriesId);
                 _seriesService.LoadCollection(series, x => x.Volumes);
 
                 var volumesExceptCurrent = series.Volumes.Except(new[] { item });
 
-                if (volumesExceptCurrent.Count() > 0 && volumesExceptCurrent.All(x => x.Status == Status.Completed))
+                if (volumesExceptCurrent.Count() > 0 && volumesExceptCurrent.All(x => x.Status == Status.Completed) && item.Status == Status.NotStarted)
                 {
                     item.Status = Status.InQueue;
                 }
             }
 
 
-            if (item.CreationDate == default)
-                item.CreationDate = DateTime.Now;
-
-            item.ModificationDate = DateTime.Now;
 
             if (item.SeriesId == 0)
                 item.SeriesId = _seriesService.GetByName(item.Series.Name).Id;
 
-            if(volumeToUpdate.Issues != null)
+            if (volumeToUpdate.Issues != null)
             {
                 item.Issues.AddRange(_mapper.Map<Issue[]>(volumeToUpdate.Issues));
             }
@@ -301,17 +305,37 @@ namespace Services.Services
                 item.Issues.AddRange(_mapper.Map<Issue[]>(volumeToUpdate.BonusIssues));
             }
 
+            item.OneShot = series.TotalVolumes == 1;
+            
+            if(
+                (volumeToUpdate.Issues != null && volumeToUpdate.Issues?.Length == 1) ||
+                (volumeToUpdate.Issues is null && volumeToUpdate.BonusIssues is not null && volumeToUpdate.BonusIssues.Length > 0))
+            {
+                item.SingleIssue = true;
+            }
+
+            if(volumeToUpdate.Issues is null && volumeToUpdate.BonusIssues is not null)
+            {
+                item.Number = 0;
+            }
+
+
+            if (item.CreationDate == default)
+                item.CreationDate = DateTime.Now;
+
+            item.ModificationDate = DateTime.Now;
+
             base.Update(item);
 
             if (item.PurchaseStatus != PurchaseStatus.Announced || item.PurchaseStatus != PurchaseStatus.GiftedAway)
             {
-                var series = _seriesService.GetById(item.SeriesId);
-                if (!series.Ongoing && series.Volumes.Count == series.TotalVolumes)
+                if (!series.Ongoing && series.Volumes.Count(x=>x.Number > 0) == series.TotalVolumes)
                 {
                     series.Completed = true;
                     _seriesService.Update(series);
                 }
             }
+
 
             if (item.Status == Status.Completed)
             {
@@ -424,7 +448,7 @@ namespace Services.Services
             switch (param.volumeType)
             {
                 case VolumeItemType.Issue:
-                    filterd = filterd.Where(x=>x.SingleIssue);
+                    filterd = filterd.Where(x => x.SingleIssue);
                     break;
                 case VolumeItemType.OneShot:
                     filterd = filterd.Where(x => x.OneShot);
@@ -504,6 +528,8 @@ namespace Services.Services
                 }
             }
 
+            var chapterName = _localizationService["ChapterDefaultName"];
+            var bonusChapterName = _localizationService["BonusChapterDefaultName"];
 
             for (int i = 0; i < issueNumber; i++)
             {
@@ -511,7 +537,7 @@ namespace Services.Services
                 {
                     Volume = volume,
                     Number = maxChapter + 1,
-                    Name = $"Chapter {maxChapter + 1}"
+                    Name = $"{chapterName} {maxChapter + 1}"
                 };
 
                 _context.Issues.Add(issue);
@@ -523,7 +549,7 @@ namespace Services.Services
                 {
                     Volume = volume,
                     Number = maxBonusChapter + 1,
-                    Name = $"Bonus chapter {maxBonusChapter + 1}"
+                    Name = $"{bonusChapterName} {maxBonusChapter + 1}"
                 };
 
                 _context.Issues.Add(issue);
