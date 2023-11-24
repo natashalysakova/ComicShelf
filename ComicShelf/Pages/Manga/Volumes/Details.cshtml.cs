@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using ComicShelf.Models;
+using Backend.Models;
 
 namespace ComicShelf.Pages.Volumes
 {
     public class DetailsModel : PageModel
     {
-        private readonly ComicShelf.Models.ComicShelfContext _context;
+        private readonly ComicShelfContext _context;
 
-        public DetailsModel(ComicShelf.Models.ComicShelfContext context)
+        public DetailsModel(ComicShelfContext context)
         {
             _context = context;
         }
