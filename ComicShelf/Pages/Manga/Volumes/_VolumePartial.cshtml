@@ -117,22 +117,25 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text">@Localizer["NumberInSeries"]</span>
 
-                                <span type="text" class="form-control">@Model.Number</span>
-                                <span class="input-group-text">/</span>
+                            <span type="text" class="form-control">@Model.Number</span>
+                            <span class="input-group-text">/</span>
 
-                                @if (@Model.SeriesOngoing)
-                                {
-                                    <span class="form-control text-bg-success">@Localizer["Ongoing"]</span>
-                                }
-                                else
-                                {
-                                    <span type="text" class="form-control">@Model.SeriesTotalVolumes</span>
-                                }
+                            @if (@Model.SeriesOngoing)
+                            {
+                                <span class="form-control text-bg-success">@Localizer["Ongoing"]</span>
+                            }
+                            else
+                            {
+                                <span type="text" class="form-control">@Model.SeriesTotalVolumes</span>
+                            }
                         </div>
                     }
-                    else if(Model.OneShot)
+                    else if (Model.OneShot)
                     {
-                        <span class="form-control text-bg-primary">@Localizer["SingleVolume"]</span>
+                        <div class="mb-3">
+                            <span class="form-control text-bg-primary">@Localizer["SingleVolume"]</span>
+                        </div>
+
                     }
 
 
