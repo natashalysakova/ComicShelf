@@ -19,9 +19,14 @@
                 <span asp-validation-for="Publisher.Name" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <select asp-for="SelectedCountry" asp-items="@Model.CountriesList" class="form-select"></select>
+                <select asp-for="Publisher.CountryId" asp-items="@Model.CountriesList" class="form-select"></select>
                 <label asp-for="Publisher.CountryId" class="control-label"></label>
-                <span asp-validation-for="SelectedCountry" class="text-danger"></span>
+                <span asp-validation-for="Publisher.CountryId" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Publisher.Url" class="form-control" placeholder="Url" />
+                <label asp-for="Publisher.Url" class="control-label"></label>
+                <span asp-validation-for="Publisher.Url" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <input type="submit" value="Create" class="btn btn-primary" />

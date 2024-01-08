@@ -32,10 +32,6 @@ namespace ComicShelf.Pages.Publishers
 
         [BindProperty]
         public PublisherCreateModel Publisher { get; set; }
-
-        [BindProperty]
-        [Required]
-        public string SelectedCountry { get; set; }
         public IEnumerable<SelectListItem> CountriesList { get; set; }
 
 
@@ -44,12 +40,6 @@ namespace ComicShelf.Pages.Publishers
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public IActionResult OnPostAsync()
         {
-            var country = _countryService.Get(int.Parse(SelectedCountry));
-            if (country != null)
-            {
-                Publisher.CountryId = country.Id;
-            }
-
             if (!ModelState.IsValid || Publisher == null)
             {
                 return Page();

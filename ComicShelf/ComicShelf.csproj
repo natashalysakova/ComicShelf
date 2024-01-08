@@ -14,15 +14,23 @@
   <ItemGroup>
     <Compile Remove="Content\**" />
     <Compile Remove="Data\**" />
+    <Compile Remove="Migrations\**" />
+    <Compile Remove="Pages\Publishers\**" />
     <Compile Remove="wwwroot\images\Series\**" />
     <Content Remove="Content\**" />
     <Content Remove="Data\**" />
+    <Content Remove="Migrations\**" />
+    <Content Remove="Pages\Publishers\**" />
     <Content Remove="wwwroot\images\Series\**" />
     <EmbeddedResource Remove="Content\**" />
     <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <EmbeddedResource Remove="Pages\Publishers\**" />
     <EmbeddedResource Remove="wwwroot\images\Series\**" />
     <None Remove="Content\**" />
     <None Remove="Data\**" />
+    <None Remove="Migrations\**" />
+    <None Remove="Pages\Publishers\**" />
     <None Remove="wwwroot\images\Series\**" />
   </ItemGroup>
 
@@ -36,7 +44,6 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
-    <Content Remove="Pages\Publishers\PublisherInputView.cshtml" />
     <Content Remove="Pages\Series\Create.cshtml" />
     <Content Remove="Pages\Series\Details.cshtml" />
     <Content Remove="Pages\Series\Edit.cshtml" />
@@ -69,16 +76,7 @@
     <PackageReference Include="MySql.Data" Version="8.1.0" />
     <PackageReference Include="MySqlConnector" Version="2.2.7" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
-    <PackageReference Include="UnidecodeSharpFork" Version="1.0.0" />
     <PackageReference Include="AutoMapper" Version="12.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\Publishers\PublisherInputView.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\Publishers\PublisherInputView.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -92,11 +90,6 @@
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
-    <None Include="Pages\Publishers\PublisherInputView.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>

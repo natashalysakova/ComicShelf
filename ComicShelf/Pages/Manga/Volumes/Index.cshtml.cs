@@ -17,9 +17,9 @@ namespace ComicShelf.Pages.Volumes
 {
     public class IndexModel : PageModel
     {
-        private readonly VolumeService _volumeService;
-        private readonly FilterService _filterService;
         private readonly EnumUtilities _enumUtilities;
+        private readonly FilterService _filterService;
+        private readonly VolumeService _volumeService;
         public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, FilterService filterService, EnumUtilities enumUtilities)
         {
             _volumeService = volumeService;
@@ -37,19 +37,6 @@ namespace ComicShelf.Pages.Volumes
             Filters = filterService.GetAllForView();
         }
 
-        [BindProperty]
-        public VolumeCreateModel NewVolume { get; set; } = default!;
-
-        public List<SelectListItem> Statuses { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> PurchaseStatuses { get; set; } = new List<SelectListItem>();
-        public List<int> Ratings { get; set; } = new List<int>();
-        public List<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> Series { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> Digitalities { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> VolumeTypes { get; set; } = new List<SelectListItem>();
-        public IEnumerable<IGrouping<string, FilterViewModel>> Filters { get; set; }
-
-        public IEnumerable<VolumeViewModel> Volumes { get; set; } = default!;
         public IEnumerable<VolumeViewModel> AnnouncedAndPreordered
         {
             get
@@ -57,13 +44,16 @@ namespace ComicShelf.Pages.Volumes
                 return Volumes.Where(x => x.PurchaseStatus == PurchaseStatus.Announced || x.PurchaseStatus == Backend.Models.Enums.PurchaseStatus.Preordered).ToList();
             }
         }
-        public IEnumerable<VolumeViewModel> WishList
-        {
-            get
-            {
-                return Volumes.Where(x => x.PurchaseStatus == Backend.Models.Enums.PurchaseStatus.Wishlist).ToList();
-            }
-        }
+
+        public List<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
+
+        public List<SelectListItem> Digitalities { get; set; } = new List<SelectListItem>();
+
+        public IEnumerable<IGrouping<string, FilterViewModel>> Filters { get; set; }
+
+        [BindProperty]
+        public VolumeCreateModel NewVolume { get; set; } = default!;
+
         public IEnumerable<VolumeViewModel> Purchased
         {
             get
@@ -72,8 +62,19 @@ namespace ComicShelf.Pages.Volumes
             }
         }
 
-
-
+        public List<SelectListItem> PurchaseStatuses { get; set; } = new List<SelectListItem>();
+        public List<int> Ratings { get; set; } = new List<int>();
+        public List<SelectListItem> Series { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> Statuses { get; set; } = new List<SelectListItem>();
+        public IEnumerable<VolumeViewModel> Volumes { get; set; } = default!;
+        public List<SelectListItem> VolumeTypes { get; set; } = new List<SelectListItem>();
+        public IEnumerable<VolumeViewModel> WishList
+        {
+            get
+            {
+                return Volumes.Where(x => x.PurchaseStatus == Backend.Models.Enums.PurchaseStatus.Wishlist).ToList();
+            }
+        }
         public void OnGetAsync()
         {
             //Volumes = await volumeService.GetAll().Include(x => x.Series).OrderBy(x => x.Series.Name).ThenBy(x => x.Number).ToListAsync();
@@ -88,25 +89,17 @@ namespace ComicShelf.Pages.Volumes
             SetCookies(filters);
         }
 
-
-        internal BookshelfParams FromCookies()
+        public IActionResult OnGetDeleteChapter(int id)
         {
-            var cookie = Request.Cookies["filters"];
-            if (cookie != null)
-            {
-                var fromCookie = JsonConvert.DeserializeObject<BookshelfParams>(cookie);
-                if (fromCookie != null)
-                {
-                    return fromCookie;
-                }
-            }
-
-            return new BookshelfParams();
+            _volumeService.DeleteIssue(id);
+            return StatusCode(200);
         }
 
-        private void SetCookies(BookshelfParams filters)
+        public PartialViewResult OnGetFiltered(BookshelfParams filters)
         {
-            Response.Cookies.Append("filters", JsonConvert.SerializeObject(filters));
+            Volumes = _volumeService.Filter(filters);
+            SetCookies(filters);
+            return Partial("_ShelfPartial", Volumes);
         }
 
         public PartialViewResult OnGetVolumeAsync(int id)
@@ -129,35 +122,6 @@ namespace ComicShelf.Pages.Volumes
             };
         }
 
-        public IActionResult OnPostChangeStatus(VolumeUpdateModel volumeToUpdate)
-        {
-            _volumeService.Update(volumeToUpdate);
-            var item = _volumeService.Get(volumeToUpdate.Id);
-            if (item != null)
-            {
-                //_volumeService.LoadReference(item, x => x.Series);
-                var partial = Partial("_BookPartial", item);
-                return partial;
-            }
-
-            return StatusCode(404);
-        }
-
-        public IActionResult OnPostAddChapters(int volumeId, int issueNumber, int bonusIssueNumber)
-        {
-            _volumeService.AddIssues(volumeId, issueNumber, bonusIssueNumber);
-
-            var volume = _volumeService.Get(volumeId);
-            return Partial("_ChaptersView", volume);
-        }
-
-        public IActionResult OnGetDeleteChapter(int id)
-        {
-            _volumeService.DeleteIssue(id);
-            return StatusCode(200);
-        }
-
-
         public IActionResult OnPostAddAsync()
         {
             if (!ModelState.IsValid || NewVolume == null)
@@ -176,11 +140,26 @@ namespace ComicShelf.Pages.Volumes
             return Partial("_ShelfPartial", Volumes);
         }
 
-        public PartialViewResult OnGetFiltered(BookshelfParams filters)
+        public IActionResult OnPostAddChapters(int volumeId, int issueNumber, int bonusIssueNumber)
         {
-            Volumes = _volumeService.Filter(filters);
-            SetCookies(filters);
-            return Partial("_ShelfPartial", Volumes);
+            _volumeService.AddIssues(volumeId, issueNumber, bonusIssueNumber);
+
+            var volume = _volumeService.Get(volumeId);
+            return Partial("_ChaptersView", volume);
+        }
+
+        public IActionResult OnPostChangeStatus(VolumeUpdateModel volumeToUpdate)
+        {
+            _volumeService.Update(volumeToUpdate);
+            var item = _volumeService.Get(volumeToUpdate.Id);
+            if (item != null)
+            {
+                //_volumeService.LoadReference(item, x => x.Series);
+                var partial = Partial("_BookPartial", item);
+                return partial;
+            }
+
+            return StatusCode(404);
         }
 
         public IActionResult OnPostSaveFilter(string filterName)
@@ -192,5 +171,24 @@ namespace ComicShelf.Pages.Volumes
             return new JsonResult(_filterService.GetAllForView());
         }
 
+        internal BookshelfParams FromCookies()
+        {
+            var cookie = Request.Cookies["filters"];
+            if (cookie != null)
+            {
+                var fromCookie = JsonConvert.DeserializeObject<BookshelfParams>(cookie);
+                if (fromCookie != null)
+                {
+                    return fromCookie;
+                }
+            }
+
+            return new BookshelfParams();
+        }
+
+        private void SetCookies(BookshelfParams filters)
+        {
+            Response.Cookies.Append("filters", JsonConvert.SerializeObject(filters));
+        }
     }
 }
