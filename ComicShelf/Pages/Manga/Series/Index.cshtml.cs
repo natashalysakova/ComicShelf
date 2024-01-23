@@ -20,7 +20,7 @@ namespace ComicShelf.Pages.Manga.Series
             _enumUtilities = enumUtilities;
             _publishersService = publishersService;
 
-            var p = _publishersService.GetAll();
+            var p = _publishersService.GetAll().OrderBy(x=>x.Name);
 
             Publishers = new SelectList(p, nameof(PublisherViewModel.Id), nameof(PublisherViewModel.Name));
 

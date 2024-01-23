@@ -178,6 +178,25 @@ internal class Program
         app.UseSession();
         app.MapRazorPages();
 
+        app.Use(async (context, next) =>
+        {
+            string path = context.Request.Path;
+
+            if (path.EndsWith(".gif") || path.EndsWith(".jpg") || path.EndsWith(".png"))
+            {
+                TimeSpan maxAge = new TimeSpan(30, 0, 0, 0);     //7 days
+                context.Response.Headers.Append("Cache-Control", "max-age=" + maxAge.TotalSeconds.ToString("0"));
+            }
+            else
+            {
+                //Request for views fall here.
+                context.Response.Headers.Append("Cache-Control", "no-cache");
+                context.Response.Headers.Append("Cache-Control", "private, no-store");
+
+            }
+            await next();
+        });
+
         app.Run();
     }
 

@@ -287,6 +287,7 @@ function changeStatusSuccess(e) {
     $('#PurchaseStatus').removeClass("text-danger");
 
     if (e.status == 200) {
+        
         // Get all elements with the class "update-on-status-change"
         var elements = document.querySelectorAll('.update-on-status-change');
 
@@ -299,6 +300,7 @@ function changeStatusSuccess(e) {
             setTimeout(function () {
                 element.classList.remove('text-success');
                 $('#detailModal').modal('hide');
+                filter();
             }, 1000);
         });
 

@@ -39,11 +39,12 @@
 <div class="modal-body">
 
     <div class="container-fluid">
+        @* data-ajax-mode="replace"
+        data-ajax-update="shelves"
+         *@
 
         <form method="post" id="updateForm"
               asp-page-handler="ChangeStatus" enctype="multipart/form-data" data-ajax-method="post" data-ajax="true"
-              data-ajax-mode="replace"
-              data-ajax-update="#book-@Model.Id"
               data-ajax-complete="changeStatusSuccess">
 
             <div class="row">

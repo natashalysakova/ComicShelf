@@ -12,6 +12,7 @@ using Services.Services;
 using Services.Services.Enums;
 using Services.ViewModels;
 using System.Net;
+using ComicShelf.Utilities;
 
 namespace ComicShelf.Pages.Volumes
 {
@@ -151,15 +152,7 @@ namespace ComicShelf.Pages.Volumes
         public IActionResult OnPostChangeStatus(VolumeUpdateModel volumeToUpdate)
         {
             _volumeService.Update(volumeToUpdate);
-            var item = _volumeService.Get(volumeToUpdate.Id);
-            if (item != null)
-            {
-                //_volumeService.LoadReference(item, x => x.Series);
-                var partial = Partial("_BookPartial", item);
-                return partial;
-            }
-
-            return StatusCode(404);
+            return this.StatusCode(HttpStatusCode.OK);
         }
 
         public IActionResult OnPostSaveFilter(string filterName)
