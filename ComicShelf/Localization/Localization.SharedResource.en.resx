@@ -369,9 +369,6 @@
   <data name="AllSeries" xml:space="preserve">
     <value>AllSeries</value>
   </data>
-  <data name="Vol" xml:space="preserve">
-    <value>Vol.</value>
-  </data>
   <data name="Total" xml:space="preserve">
     <value>Total</value>
   </data>
@@ -383,5 +380,8 @@
   </data>
   <data name="SeriesPlural" xml:space="preserve">
     <value>Series</value>
+  </data>
+  <data name="Vol" xml:space="preserve">
+    <value>V</value>
   </data>
 </root>

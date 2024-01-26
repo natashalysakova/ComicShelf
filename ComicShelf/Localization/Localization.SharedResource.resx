@@ -444,4 +444,7 @@
   <data name="BonusChapterDefaultName" xml:space="preserve">
     <value>Bonus chapter</value>
   </data>
+  <data name="NothingFound" xml:space="preserve">
+    <value>No results</value>
+  </data>
 </root>

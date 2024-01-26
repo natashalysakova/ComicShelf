@@ -444,4 +444,7 @@
   <data name="VolumeHint" xml:space="preserve">
     <value>Оберіть це, якщо це збірка з декількома розділами і вона не є окремою завершеною історією</value>
   </data>
+  <data name="NothingFound" xml:space="preserve">
+    <value>Нічого не знайдено</value>
+  </data>
 </root>
