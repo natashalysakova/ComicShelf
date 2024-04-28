@@ -43,22 +43,27 @@
                     </div>
                     <div class="col-sm-7">
                         <div class="row mb-3">
-                            <div class="input-group">
-                                @foreach (var item in Model.VolumeTypes)
+
+                            @foreach (var item in Model.VolumeTypes)
+                            {
+                                if (item.Value == VolumeItemType.All.ToString())
                                 {
-                                    if (item.Value == VolumeItemType.All.ToString())
-                                    {
-                                        continue;
-                                    }
-
-                                    var ch = item.Value == VolumeItemType.Volume.ToString() ? "checked" : string.Empty;
-
-                                    <label for="@("type" + item.Value)" class="input-group-text">@item.Text</label>
-                                    <div class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="@Localizer[item.Text + "Hint"]">
-                                        <input name="NewVolume.VolumeType" class="form-check-input mt-0" type="radio" value="@item.Value" id="@("type" + item.Value)" @ch />
-                                    </div>
+                                    continue;
                                 }
-                            </div>
+                                <div class="col-auto">
+                                    @{ var ch = item.Value == VolumeItemType.Volume.ToString() ? "checked" : string.Empty; }
+                                    <div class="input-group">
+
+                                        <div class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="@Localizer[item.Text + "Hint"]">
+                                            <input name="NewVolume.VolumeType" class="form-check-input mt-0" type="radio" value="@item.Value" id="@("type" + item.Value)" @ch />
+                                        </div>
+                                        <label for="@("type" + item.Value)" class="input-group-text">@item.Text</label>
+                                    </div>
+
+                                </div>
+
+                            }
+
                         </div>
 
 

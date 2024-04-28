@@ -88,6 +88,8 @@ namespace ComicShelf.Pages.Volumes
             ViewData["ReadingFilters"] = _enumUtilities.GetListOfValues<ReadingEnum>();
             ViewData["VolumeTypesFilters"] = _enumUtilities.GetListOfValues<VolumeItemType>();
             SetCookies(filters);
+
+            NewVolume = new VolumeCreateModel();
         }
 
         public IActionResult OnGetDeleteChapter(int id)

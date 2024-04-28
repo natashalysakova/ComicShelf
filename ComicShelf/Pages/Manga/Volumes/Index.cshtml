@@ -155,8 +155,10 @@
             </div>
 
         </div>
-        <div class="row" id="shelves">
-            <partial name="_ShelfPartial" model="@Model.Volumes" view-data="@ViewData" />
+        <div class="row">
+            <div id="shelves">
+                <partial name="_ShelfPartial" model="@Model.Volumes" view-data="@ViewData" />
+            </div>
         </div>
         <div class="d-flex justify-content-center" style="visibility: collapse; height: 100%; align-items:center;" id="spinner">
             <div class="spinner-border" role="status" style="width: 5rem; height: 5rem;">
