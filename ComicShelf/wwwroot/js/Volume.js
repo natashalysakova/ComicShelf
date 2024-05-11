@@ -310,8 +310,18 @@ function changeStatusSuccess(e) {
     }
 }
 
-function updateTitle(title) {
-    $('#NewVolume_Title').val(title + " " + $('#NewVolume_Number').val());
+function updateTitle(title, issue) {
+    var selectedRadio = $("input[type='radio'][name='NewVolume.VolumeType']:checked").val();
+
+    var newval;
+    if (selectedRadio == "Issue")
+        newval = issue + " " + $('#NewVolume_Number').val();
+    else if (selectedRadio == "Volume")
+        newval = title + " " + $('#NewVolume_Number').val();
+    else
+        newval = "Oneshot";
+
+    $('#NewVolume_Title').val(newval);
 }
 
 function switchCover() {

@@ -50,7 +50,7 @@ namespace Services.Services
             return string.Empty;
         }
 
-        protected override IQueryable<Series> GetAllEntities(bool tracking = false)
+        public override IQueryable<Series> GetAllEntities(bool tracking = false)
         {
             return base.GetAllEntities(tracking).Include(x => x.Publisher).Include(x=>x.Volumes).ThenInclude(x=>x.Issues);
         }

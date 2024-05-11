@@ -23,7 +23,7 @@
                 </div>
                 <label asp-for="NewVolume.Number" for="NewVolume_Number" class="modal-title display-6">#</label>
                 <div class="modal-title display-6 col-2">
-                    <input asp-for="NewVolume.Number" class="form-control form-control-lg modal-title display-6 modal-input-form" min="0" value="1" onchange="updateTitle('@Localizer["Volume"]')" />
+                    <input asp-for="NewVolume.Number" class="form-control form-control-lg modal-title display-6 modal-input-form" min="0" value="1" onchange="updateTitle('@Localizer["Volume"]', '@Localizer["Issue"]')" />
                     <span asp-validation-for="NewVolume.Number" class="text-danger"></span>
                 </div>
                 <button type="button" class="btn-close col-1" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -69,8 +69,8 @@
 
                         <div class="row mb-3">
                             @{
-                                var defaultTitle = $"{Localizer["Volume"].Value} 1";
-                            }
+                                string defaultTitle = $"{Localizer["Volume"].Value} 1";
+                             }
                             <div class="input-group">
                                 <label asp-for="NewVolume.Title" class="input-group-text">@Localizer["Title"]</label>
                                 <input asp-for="NewVolume.Title" class="form-control" value="@defaultTitle" />

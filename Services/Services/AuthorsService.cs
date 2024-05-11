@@ -37,7 +37,7 @@ namespace Services.Services
             return collection;
         }
 
-        protected override IQueryable<Author> GetAllEntities(bool tracking = false)
+        public override IQueryable<Author> GetAllEntities(bool tracking = false)
         {
             return base.GetAllEntities(tracking).Include(x => x.Volumes).ThenInclude(x => x.Series);
         }

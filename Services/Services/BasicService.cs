@@ -149,7 +149,7 @@ namespace Services.Services
             dbSet.Entry(item).State = EntityState.Detached;
         }
 
-        protected virtual IQueryable<T> GetAllEntities(bool tracking = false)
+        public virtual IQueryable<T> GetAllEntities(bool tracking = false)
         {
             return tracking ? dbSet : dbSet.AsNoTracking();
         }
