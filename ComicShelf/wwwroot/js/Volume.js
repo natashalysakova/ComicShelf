@@ -575,3 +575,8 @@ function addChaptersSuccess(e) {
 
     $("#addIssuesForm").trigger("reset");
 }
+
+function SearchBySeries(seriesName) {
+    $('#search-field').val(seriesName);
+    filter();
+}
