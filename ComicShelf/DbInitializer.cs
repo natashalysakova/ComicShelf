@@ -238,4 +238,22 @@ internal class DbInitializer
 
 
     }
+
+    internal void MigrateHistory()
+    {
+        if (_context.History.Any()) 
+            return;
+
+        foreach (var item in _context.Volumes)
+        {
+            item.History = new History()
+            {
+                PreorderedDate = item.PreorderDate,
+                PurchaseDate = item.PurchaseDate,
+                ReleaseDate = item.ReleaseDate
+            };
+        }
+
+        _context.SaveChanges();
+    }
 }

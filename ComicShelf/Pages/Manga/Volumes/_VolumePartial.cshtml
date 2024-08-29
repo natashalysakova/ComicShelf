@@ -281,7 +281,49 @@
                 </div>
             </form>
         </div>
+        @if(Model.History != null)
+        {
+@*         public DateTime? AnnouncedDate { get; set; }
+        public DateTime? WishlistedDate { get; set; }
+        public DateTime? PreorderedDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
+        public DateTime? PurchaseDate { get; set; }
+        public DateTime? ReadDate { get; set; }
+        public DateTime? GivedAwayDate { get; set; }
+ *@
+            <div id="history">
+                <p>History</p>
+                @if(Model.History.AnnouncedDate != null)
+                {
+                    <p>Анонсовано @Model.History.AnnouncedDate </p>
+                }
+                @if(Model.History.WishlistedDate != null)
+                {
+                    <p>Додано в бажане @Model.History.WishlistedDate </p>
+                }
 
+                @if (Model.History.PreorderedDate != null)
+                {
+                    <p>Передзамовлено @Model.History.PreorderedDate </p>
+                }
+                @if (Model.History.ReleaseDate != null)
+                {
+                    <p>Дата релізу @Model.History.ReleaseDate </p>
+                }
+                @if (Model.History.PurchaseDate != null)
+                {
+                    <p>Куплено @Model.History.PurchaseDate </p>
+                }
+                @if (Model.History.ReadDate != null)
+                {
+                    <p>Прочитано @Model.History.ReadDate </p>
+                }
+                @if (Model.History.GivedAwayDate != null)
+                {
+                    <p>Не на поличці @Model.History.GivedAwayDate </p>
+                }
+            </div>
+        }
     </div>
 </div>
 <div class="modal-footer">

@@ -1,5 +1,9 @@
 ﻿using Backend.Migrations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
+using Microsoft.VisualStudio.Web.CodeGeneration.Design;
+using MySqlConnector;
 
 
 namespace Backend.Models
@@ -16,6 +20,8 @@ namespace Backend.Models
         public virtual DbSet<Publisher> Publishers { get; set; }
         public virtual DbSet<Series> Series { get; set; }
         public virtual DbSet<Volume> Volumes { get; set; }
+        public virtual DbSet<History> History { get; set; }
+
         public virtual DbSet<Filter> Filters { get; set; }
         public virtual DbSet<Anime> Anime { get; set; }
         public virtual DbSet<Item> Items { get; set; }
@@ -53,6 +59,58 @@ namespace Backend.Models
 
             
 
+        }
+    }
+
+    public class BoberDbContextFactory : IDesignTimeDbContextFactory<ComicShelfContext>
+    {
+        public ComicShelfContext CreateDbContext(string[] args)
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("devsettings.json")
+                .Build();
+
+            var optionsBuilder = new DbContextOptionsBuilder<ComicShelfContext>();
+
+            string? connectionString = configuration.GetConnectionString("db");
+            if (connectionString == null)
+            {
+                throw new NullReferenceException(nameof(connectionString));
+            }
+            var serverVersion = GetServerVersion(connectionString);
+            _ = optionsBuilder.UseMySql(connectionString, serverVersion);
+            return new ComicShelfContext(optionsBuilder.Options);
+        }
+
+        private static ServerVersion GetServerVersion(string? connectionString)
+        {
+            ServerVersion? version = default;
+
+            do
+            {
+                try
+                {
+                    Console.WriteLine("connecting to " + connectionString);
+                    version = ServerVersion.AutoDetect(connectionString);
+                    Console.WriteLine("Success");
+                }
+                catch (MySqlException ex)
+                {
+                    if (ex.Message.Contains("Unable to connect to any of the specified MySQL hosts"))
+                    {
+                        Console.WriteLine(ex.Message);
+                        Console.WriteLine("Trying in 5 seconds");
+                        Thread.Sleep(5000);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            while (version is null);
+            return version;
         }
     }
 }

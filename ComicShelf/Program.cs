@@ -159,6 +159,7 @@ internal class Program
                 //dbInitializer.RestoreImagesFromDB();
                 dbInitializer.FillFlags();
                 dbInitializer.FillColors();
+                dbInitializer.MigrateHistory();
             }
             catch (Exception ex)
             {

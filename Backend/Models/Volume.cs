@@ -30,6 +30,8 @@ namespace Backend.Models
         public int SeriesId { get; set; }
         public virtual Series Series { get; set; }
 
+        public virtual History History { get; set; }
+
         public virtual ICollection<Author> Authors { get; set; } = new List<Author>();
         public virtual ICollection<Issue> Issues { get; set; } = new List<Issue>();
 

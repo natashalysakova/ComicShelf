@@ -41,6 +41,7 @@ namespace Services.Services
             LoadReference(volume, x => x.Series);
             LoadCollection(volume, x => x.Authors);
             LoadCollection(volume, x => x.Issues);
+            LoadReference(volume, x => x.History);
             volume.Issues = volume.Issues.OrderBy(x => x.Number).ToList();
             _seriesService.LoadReference(volume.Series, x => x.Publisher);
             _publishersService.LoadReference(volume.Series.Publisher, x => x.Country);

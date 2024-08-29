@@ -36,6 +36,8 @@ namespace Services.ViewModels
         public IssueViewModel[] Issues { get; set; }
         public IssueViewModel[] BonusIssues { get; set; }
 
+        public HistoryViewModel History { get; set; }
+
         public bool HasError { get; set; }
     }
 }
