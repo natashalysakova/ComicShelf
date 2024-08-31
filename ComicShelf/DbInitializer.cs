@@ -28,7 +28,7 @@ internal class DbInitializer
         var unknownCountry = _context.Countries.Single(x => x.Name == unknown);
         if (!_context.Publishers.Any(x => x.Name == unknown))
         {
-            _context.Publishers.Add(new Publisher() { Country = unknownCountry, Name = unknown });
+            _context.Publishers.Add(new Publisher() { Country = unknownCountry, Name = unknown, Url = string.Empty });
             _context.SaveChanges();
         }
 
@@ -148,14 +148,14 @@ internal class DbInitializer
         var us = _context.Countries.Single(x => x.Name == "United States");
         var publisers = new Publisher[]
         {
-            new Publisher(){ Name = "NashaIdea", Country = ukraine },
-            new Publisher(){ Name = "Mal'opus", Country =ukraine },
-            new Publisher(){ Name = "Mimir Media", Country = ukraine },
-            new Publisher(){ Name = "Vovkulaka", Country = ukraine },
-            new Publisher(){ Name = "Marvel", Country = us },
-            new Publisher(){ Name = "DC Comics", Country = us },
-            new Publisher(){ Name = "Dark Horse", Country = us },
-            new Publisher(){ Name = "РМ", Country = ukraine }
+            new Publisher(){ Name = "NashaIdea", Country = ukraine, Url = string.Empty },
+            new Publisher(){ Name = "Mal'opus", Country =ukraine, Url = string.Empty },
+            new Publisher(){ Name = "Mimir Media", Country = ukraine, Url = string.Empty },
+            new Publisher(){ Name = "Vovkulaka", Country = ukraine, Url = string.Empty },
+            new Publisher(){ Name = "Marvel", Country = us, Url = string.Empty },
+            new Publisher(){ Name = "DC Comics", Country = us, Url = string.Empty },
+            new Publisher(){ Name = "Dark Horse", Country = us, Url = string.Empty },
+            new Publisher(){ Name = "РМ", Country = ukraine, Url = string.Empty }
         };
 
         foreach (var publisher in publisers)
