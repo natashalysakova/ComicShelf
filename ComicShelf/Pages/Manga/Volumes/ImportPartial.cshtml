@@ -5,15 +5,24 @@
 }
 @model ComicShelf.Pages.Volumes.IndexModel
 
+<div class="container">
+    <form method="post" id="import-form" asp-page-handler="ParseUrl" data-ajax-method="post" data-ajax="true" enctype="multipart/form-data" data-ajax-complete="importComplete" data-ajax-begin="importBegin">
+        <div class="row modal-footer">
+            <div class="col-2">
+                <label for="importUrl">Імпорт з сайту</label>
+            </div>
+            <div class="col">
+                <input name="importUrl" type="url" class="form-control" placeholder="Введіть url" autocomplete="off" />
+            </div>
+            <div class="col-2">
+                <button class="btn btn-success" type="submit">Загрузити</button>
+            </div>
+            <div class="col-1">
+                <div class="spinner-border" id="import-spinner" role="status" style="display: none;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
 
-<form method="post" id="import-form" asp-page-handler="ParseUrl" data-ajax-method="post" data-ajax="true" enctype="multipart/form-data" data-ajax-complete="importComplete">
-    <div class="row">
-        <div class="col-md-6">
-            <input asp-for="ImportUrl" type="url" class="form-control" placeholder="Введіть url" autocomplete="off" />
         </div>
-        <div class="col-md-1">
-            <button class="btn btn-info" type="submit">Загрузити</button>
-
-        </div>
-    </div>
-</form>
+    </form>
+</div>

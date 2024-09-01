@@ -19,14 +19,17 @@ namespace ComicShelf.Pages.Volumes
     public class IndexModel : PageModel
     {
         private readonly EnumUtilities _enumUtilities;
+        private readonly IConfiguration _configuration;
+        private readonly PublishersService _publishersService;
         private readonly FilterService _filterService;
         private readonly VolumeService _volumeService;
-        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, FilterService filterService, EnumUtilities enumUtilities)
+        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, FilterService filterService, EnumUtilities enumUtilities, IConfiguration configuration, PublishersService publishersService)
         {
             _volumeService = volumeService;
             _filterService = filterService;
             _enumUtilities = enumUtilities;
-
+            _configuration = configuration;
+            _publishersService = publishersService;
             Statuses.AddRange(_enumUtilities.GetSelectItemList<Status>());
             PurchaseStatuses.AddRange(_enumUtilities.GetSelectItemList<PurchaseStatus>());
             Ratings.AddRange(_enumUtilities.GetRatings());
@@ -57,8 +60,8 @@ namespace ComicShelf.Pages.Volumes
         [BindProperty]
         public VolumeCreateModel NewVolume { get; set; } = default!;
 
-        [BindProperty]
-        public string ImportUrl { get; set; } = default!;
+        //[BindProperty]
+        //public string ImportUrl { get; set; } = default!;
 
         public IEnumerable<VolumeViewModel> Purchased
         {
@@ -191,17 +194,17 @@ namespace ComicShelf.Pages.Volumes
             Response.Cookies.Append("filters", JsonConvert.SerializeObject(filters));
         }
 
-        public IActionResult OnPostParseUrl(string url)
+        public async Task<IActionResult> OnPostParseUrl(string importUrl)
         {
-            PublisherParsers.PublisherParsersFactory factory = new PublisherParsers.PublisherParsersFactory();
-            var parser = factory.CreateParser(url);
+            PublisherParsers.PublisherParsersFactory factory = new PublisherParsers.PublisherParsersFactory(_configuration, _publishersService);
+            var parser = factory.CreateParser(importUrl);
 
             if (parser == null)
             {
                 return this.StatusCode(HttpStatusCode.NotFound);
             }
 
-            var data = parser.Parse();
+            var data = await parser.Parse();
 
             return new JsonResult(data);
 

@@ -1,214 +1,103 @@
 ﻿using AngleSharp;
 using AngleSharp.Common;
+using AngleSharp.Dom;
+using AngleSharp.Html;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
+using Backend.Models.Enums;
 using HtmlAgilityPack;
 using Services.Services;
+using System.Text;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace ComicShelf.PublisherParsers
 {
     public interface IPublisherParser
     {
-        ParsedInfo Parse();
+        Task<ParsedInfo> Parse();
     }
 
     public abstract class BaseParser : IPublisherParser
     {
-        protected BaseParser(string url)
+        protected BaseParser(string url, IConfiguration configuration)
         {
             this.url = url;
+            _configuration = configuration;
         }
-        protected BaseParser(string url, PublishersService publishers) : this(url)
+
+
+        protected BaseParser(string url, IConfiguration configuration, PublishersService publishers) : this(url, configuration)
         {
             _publishers = publishers;
         }
 
-        public ParsedInfo Parse()
+        public async Task<ParsedInfo> Parse()
         {
+            //var config = new Configuration().WithDefaultLoader();
+            //var document = await BrowsingContext.New(config).OpenAsync(url);
+
             var html = GetUrlHtml().Result;
             var parser = new HtmlParser();
             var document = parser.ParseDocument(html);
 
             var title = GetTitle(document);
-            int volumeNumber = GetVolumeNumber(document);
-            string series = GetSeries(document);
-            string cover = GetCover(document);
-            var parsed = new ParsedInfo(title, GetAuthors(document), volumeNumber, series, cover);
+            var volumeNumber = GetVolumeNumber(document);
+            var series = GetSeries(document);
+            var cover = GetCover(document);
+            var release = GetReleaseDate(document);
+            var publisher = GetPublisher(document);
+            var status = release > DateTime.Today ? PurchaseStatus.Announced : PurchaseStatus.Wishlist;
+            var type = GetBookType();
+            var parsed = new ParsedInfo(title, GetAuthors(document), volumeNumber, series, cover, release.HasValue ? release.Value.ToString("yyyy-MM-dd") : null, publisher, type.ToString(), status.ToString());
 
             return parsed;
 
         }
 
-        protected abstract string GetTitle(IHtmlDocument document);
-        protected abstract string GetSeries(IHtmlDocument document);
-        protected abstract int GetVolumeNumber(IHtmlDocument document);
-        protected abstract string GetAuthors(IHtmlDocument document);
-        protected abstract string GetCover(IHtmlDocument document);
+        protected abstract string GetTitle(IDocument document);
+        protected abstract string GetSeries(IDocument document);
+        protected abstract int GetVolumeNumber(IDocument document);
+        protected abstract string GetAuthors(IDocument document);
+        protected abstract string GetCover(IDocument document);
+        protected abstract DateTime? GetReleaseDate(IDocument document);
+        protected virtual string GetPublisher(IDocument document)
+        {
+            return PublisherName;
+        }
+
+        protected abstract VolumeType GetBookType();
+
         protected abstract string PublisherName { get; }
 
         protected string url;
         private readonly PublishersService _publishers;
-
-
+        protected readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
 
         protected async Task<string> GetUrlHtml()
         {
             HttpClient client = new HttpClient();
-            string page = await client.GetStringAsync(url);
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36");
+            string page = string.Empty;
+            bool isForbidden = true;
+            do
+            {
+                try
+                {
+                    page = await client.GetStringAsync(url);
+                    isForbidden = false;
+                }
+                catch (Exception)
+                {
+                    //await Task.Delay(1000);
+                    Console.WriteLine("retry");
+                }
+            } while (isForbidden);
+
+
             return page;
         }
     }
 
-    public class MalopusParser : BaseParser
-    {
-        public MalopusParser(string url) : base(url)
-        {
-        }
-
-        protected override string PublisherName => "Mal'opus";
-
-        protected override string GetAuthors(IHtmlDocument document)
-        {
-            var nodes = document.QuerySelectorAll(".rm-product-attr-list-item");
-
-            foreach (var item in nodes)
-            {
-                var divs = item.ChildNodes.Where(x => x.NodeName == "DIV");
-                var node = divs.FirstOrDefault(x => x.TextContent == "Автор");
-
-                if (node is null)
-                {
-                    continue;
-                }
-
-                return divs.Last().TextContent;
-            }
-
-            return string.Empty;
-        }
-
-        protected override string GetCover(IHtmlDocument document)
-        {
-            var node = document.QuerySelector(".oct-gallery > img.img-fluid");
-            var attribute = node.Attributes["src"];
-            return attribute.Value;
-        }
-
-        protected override string GetSeries(IHtmlDocument document)
-        {
-            var nodes = document.QuerySelectorAll(".rm-product-center-info-item-title");
-            var node = nodes.First(x => x.InnerHtml == "Серія:");
-            return node.NextElementSibling.TextContent.Trim([' ', '\n']);
-        }
-
-        protected override string GetTitle(IHtmlDocument document)
-        {
-            var node = document.QuerySelector(".rm-product-title > h1");
-            var title = node.InnerHtml.Substring(node.InnerHtml.LastIndexOf('.')+1).Trim();
-
-
-            return title;
-        }
-
-        protected override int GetVolumeNumber(IHtmlDocument document)
-        {
-            var node = document.QuerySelector(".rm-product-title > h1");
-            var title = node.InnerHtml.Substring(node.InnerHtml.LastIndexOf('.') + 1).Trim();
-
-            var whitespace = title.IndexOf(' ');
-            var nextWhiteSpace = title.IndexOf(' ', whitespace +1);
-            string volume;
-            if(nextWhiteSpace == -1)
-            {
-                volume = title.Substring(whitespace + 1).Trim();
-            }
-            else
-            {
-                volume = title.Substring(whitespace + 1, nextWhiteSpace - whitespace).Trim();
-            }
-            return int.Parse(volume);
-        }
-    }
-
-    public class NashaIdeaParser : BaseParser
-    {
-
-
-        public NashaIdeaParser(string url) : base(url)
-        {
-        }
-
-        protected override string PublisherName => "NashaIdea";
-
-        protected override string GetAuthors(IHtmlDocument document)
-        {
-            return string.Empty;
-        }
-
-        protected override string GetCover(IHtmlDocument document)
-        {
-            var node = document.QuerySelectorAll(".woocommerce-product-gallery__image > a").First();
-            var attribute = node.Attributes["href"];
-            return attribute.Value;
-        }
-
-        protected override string GetSeries(IHtmlDocument document)
-        {
-            var tag = document.QuerySelector("h1.product_title");
-            var title = tag.InnerHtml;
-
-            var volIndex = title.IndexOf("Том");
-            if (volIndex == -1)
-            {
-                return title.Trim();
-            }
-            else
-            {
-                var series = title.Substring(0, volIndex).Trim([' ', ',', '.']) ;
-                return series;
-            }
-        }
-
-        protected override string GetTitle(IHtmlDocument document)
-        {
-            var tag = document.QuerySelector("h1.product_title");
-            var title = tag.InnerHtml;
-
-            var volIndex = title.IndexOf("Том");
-            if (volIndex == -1)
-            {
-                return title.Trim();
-            }
-            else
-            {
-                return title.Substring(volIndex).Trim();
-            }
-        }
-
-        protected override int GetVolumeNumber(IHtmlDocument document)
-        {
-            var tag = document.QuerySelector("h1.product_title");
-            var title = tag.InnerHtml;
-
-            var volIndex = title.IndexOf("Том");
-            var nextWord = title.IndexOf(" ", volIndex + 3);
-
-            var nextWhitespace = title.IndexOf(" ", nextWord + 1);
-
-            string volume;
-            if (nextWhitespace == -1)
-            {
-                volume = title.Substring(nextWord).Trim();
-            }
-            else
-            {
-                volume = title.Substring(nextWord, nextWhitespace - nextWord).Trim();
-            }
-
-
-            return int.Parse(volume);
-        }
-    }
-
-    public record ParsedInfo(string title, string authors, int volumeNumber, string series, string cover);
+    public record ParsedInfo(string title, string authors, int volumeNumber, string series, string cover, string? release, string publisher, string type, string status);
 }

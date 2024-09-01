@@ -1,17 +1,32 @@
 ﻿
+using Services.Services;
+
 namespace ComicShelf.PublisherParsers
 {
     public class PublisherParsersFactory
     {
-        internal IPublisherParser? CreateParser(string url)
+        private readonly IConfiguration _configuration;
+        private readonly PublishersService _publishersService;
+
+        public PublisherParsersFactory(IConfiguration configuration, PublishersService publishersService)
         {
-            if (url.StartsWith("https://nashaidea.com/"))
+            _configuration = configuration;
+            _publishersService = publishersService;
+        }
+
+        public IPublisherParser? CreateParser(string url)
+        {
+            if (url.StartsWith("https://nashaidea.com/product/"))
             {
-                return new NashaIdeaParser(url);
+                return new NashaIdeaParser(url, _configuration);
             }
             if (url.StartsWith("https://malopus.com.ua/"))
             {
-                return new NashaIdeaParser(url);
+                return new MalopusParser(url, _configuration);
+            }
+            if (url.StartsWith("https://www.kobo.com/"))
+            {
+                return new KoboParser(url, _configuration);
             }
 
             return default;

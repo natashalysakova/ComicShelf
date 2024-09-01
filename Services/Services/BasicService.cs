@@ -24,6 +24,10 @@ namespace Services.Services
             dbSet = context.Set<T>();
         }
 
+        protected BasicService()
+        {
+        }
+
         public virtual int Add(CM item)
         {
             var model = _mapper.Map<T>(item);
