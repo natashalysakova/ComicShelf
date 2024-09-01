@@ -38,6 +38,8 @@ namespace ComicShelf.Pages.Volumes
             Filters = filterService.GetAllForView();
         }
 
+
+
         public IEnumerable<VolumeViewModel> AnnouncedAndPreordered
         {
             get
@@ -54,6 +56,9 @@ namespace ComicShelf.Pages.Volumes
 
         [BindProperty]
         public VolumeCreateModel NewVolume { get; set; } = default!;
+
+        [BindProperty]
+        public string ImportUrl { get; set; } = default!;
 
         public IEnumerable<VolumeViewModel> Purchased
         {
@@ -184,6 +189,22 @@ namespace ComicShelf.Pages.Volumes
         private void SetCookies(BookshelfParams filters)
         {
             Response.Cookies.Append("filters", JsonConvert.SerializeObject(filters));
+        }
+
+        public IActionResult OnPostParseUrl(string url)
+        {
+            PublisherParsers.PublisherParsersFactory factory = new PublisherParsers.PublisherParsersFactory();
+            var parser = factory.CreateParser(url);
+
+            if (parser == null)
+            {
+                return this.StatusCode(HttpStatusCode.NotFound);
+            }
+
+            var data = parser.Parse();
+
+            return new JsonResult(data);
+
         }
     }
 }
