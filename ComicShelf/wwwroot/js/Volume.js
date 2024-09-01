@@ -580,3 +580,68 @@ function SearchBySeries(seriesName) {
     $('#search-field').val(seriesName);
     filter();
 }
+
+function importComplete(data) {
+
+    $("#import-spinner").hide();
+
+    if (data.status == 200) {
+        var resp = data.responseJSON;
+        $('#NewVolume_SeriesName').val(resp.series);
+        $('#NewVolume_Title').val(resp.title);
+
+        if (resp.volumeNumber >= 0) {
+            $('#NewVolume_Number').val(resp.volumeNumber);
+        }
+        else {
+            $('#NewVolume_Number').val(0);
+            $('#typeOneShot').prop("checked", true);
+        }
+
+        $('#NewVolume_Authors').val(resp.authors);
+        $('#NewVolume_ReleaseDate').val(resp.release);
+        handleCoverInput(resp.cover);
+
+        $('#NewVolume_Digitality').val(resp.type).change();
+        if ($('#new-PurchaseStatus').val() == "Announced") {
+            $('#new-PurchaseStatus').val(resp.status).change();
+        }
+    }
+    else {
+        console.error(data.responseText);
+    }
+}
+
+
+async function handleCoverInput(coverUrl) {
+    const designFile = await createFile(coverUrl);
+    const input = document.querySelector('#NewVolume_CoverFile');
+    const dt = new DataTransfer();
+    dt.items.add(designFile);
+    input.files = dt.files;
+    const event = new Event("change", {
+        bubbles: !0,
+    });
+    input.dispatchEvent(event);
+}
+async function createFile(url) {
+
+    try {
+        let response = await fetch(url);
+
+        let data = await response.blob();
+        let metadata = {
+            type: "image/png",
+        };
+        var filename = url.split('/').pop()
+        return new File([data], filename, metadata);
+
+
+    } catch (e) {
+        navigator.clipboard.writeText(url)
+    }
+}
+
+function importBegin(data) {
+    $("#import-spinner").show();
+}

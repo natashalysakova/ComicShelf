@@ -13,6 +13,8 @@ namespace Services.Services
         {
         }
 
+        public PublishersService() : base() { }
+
         public PublisherViewModel? GetByName(string trimmedItem)
         {
             return _mapper.Map<PublisherViewModel>(dbSet.FirstOrDefault(x => x.Name == trimmedItem));

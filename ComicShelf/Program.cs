@@ -13,7 +13,7 @@ using Services.Services;
 using System.Globalization;
 
 namespace ComicShelf;
-internal class Program
+public class Program
 {
     private static void Main(string[] args)
     {
@@ -134,7 +134,6 @@ internal class Program
         var app = builder.Build();
 
         var mapper = app.Services.GetService<IMapper>();
-
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
