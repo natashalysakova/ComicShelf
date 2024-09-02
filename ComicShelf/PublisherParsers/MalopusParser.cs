@@ -8,11 +8,7 @@ namespace ComicShelf.PublisherParsers
 {
     public class MalopusParser : BaseParser
     {
-        public MalopusParser(string url, IConfiguration configuration) : base(url, configuration)
-        {
-        }
-
-        protected override string PublisherName => "Mal'opus";
+        public override string SiteUrl => "https://malopus.com.ua/";
 
         protected override string GetAuthors(IDocument document)
         {
@@ -248,6 +244,11 @@ namespace ComicShelf.PublisherParsers
             }
 
             return string.Empty;
+        }
+
+        protected override string GetPublisher(IDocument document)
+        {
+            return "Mal'opus";
         }
     }
 }

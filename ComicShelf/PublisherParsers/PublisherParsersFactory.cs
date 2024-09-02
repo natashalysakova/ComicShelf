@@ -1,30 +1,32 @@
 ﻿
 using Services.Services;
+using System.Reflection;
 
 namespace ComicShelf.PublisherParsers
 {
     public class PublisherParsersFactory
     {
-        private readonly IConfiguration _configuration;
+        private readonly IEnumerable<IPublisherParser> _parsers;
 
-        public PublisherParsersFactory(IConfiguration configuration)
+        public PublisherParsersFactory()
         {
-            _configuration = configuration;
+            _parsers = [
+                new NashaIdeaParser(),
+                new MalopusParser(),
+                new AmazonParser(),
+                new KoboParser()
+                ];
         }
 
         public IPublisherParser? CreateParser(string url)
         {
-            if (url.StartsWith("https://nashaidea.com/product/"))
+            foreach (var parser in _parsers)
             {
-                return new NashaIdeaParser(url, _configuration);
-            }
-            if (url.StartsWith("https://malopus.com.ua/"))
-            {
-                return new MalopusParser(url, _configuration);
-            }
-            if (url.StartsWith("https://www.kobo.com/"))
-            {
-                return new KoboParser(url, _configuration);
+                if (url.StartsWith(parser.SiteUrl))
+                {
+                    parser.SetUrl(url);
+                    return parser;
+                }
             }
 
             return default;

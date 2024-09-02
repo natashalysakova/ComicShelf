@@ -15,28 +15,26 @@ namespace ComicShelf.PublisherParsers
     public interface IPublisherParser
     {
         Task<ParsedInfo> Parse();
+        string SiteUrl { get; }
+        void SetUrl(string url);
     }
 
     public abstract class BaseParser : IPublisherParser
     {
-        protected BaseParser(string url, IConfiguration configuration)
+        private string url;
+        public void SetUrl(string url)
         {
             this.url = url;
-            _configuration = configuration;
         }
 
 
-        protected BaseParser(string url, IConfiguration configuration, PublishersService publishers) : this(url, configuration)
-        {
-            _publishers = publishers;
-        }
 
         public async Task<ParsedInfo> Parse()
         {
             //var config = new Configuration().WithDefaultLoader();
             //var document = await BrowsingContext.New(config).OpenAsync(url);
 
-            var html = GetUrlHtml().Result;
+            var html = await GetUrlHtml(url);
             var parser = new HtmlParser();
             var document = parser.ParseDocument(html);
 
@@ -68,20 +66,13 @@ namespace ComicShelf.PublisherParsers
         protected abstract int GetTotalVolumes(IDocument document);
         protected abstract string? GetSeriesStatus(IDocument document);
         protected abstract string? GetOriginalSeriesName(IDocument document);
-        protected virtual string GetPublisher(IDocument document)
-        {
-            return PublisherName;
-        }
+        protected abstract string GetPublisher(IDocument document);
 
         protected abstract VolumeType GetBookType();
 
-        protected abstract string PublisherName { get; }
+        public abstract string SiteUrl { get; }
 
-        protected string url;
-        private readonly PublishersService _publishers;
-        protected readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
-
-        protected async Task<string> GetUrlHtml()
+        protected async Task<string> GetUrlHtml(string url)
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
@@ -105,6 +96,7 @@ namespace ComicShelf.PublisherParsers
 
             return page;
         }
+
     }
 
     public record ParsedInfo(string title, string authors, int volumeNumber, string series, string cover, string? release, string publisher, string type, string status, string isbn, int totalVolumes, string? seriesStatus, string? originalSeriesName);

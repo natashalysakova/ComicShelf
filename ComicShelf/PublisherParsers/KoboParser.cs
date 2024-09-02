@@ -6,11 +6,7 @@ namespace ComicShelf.PublisherParsers
 {
     internal class KoboParser : BaseParser
     {
-        public KoboParser(string url, IConfiguration configuration) : base(url, configuration)
-        {
-        }
-
-        protected override string PublisherName => "Kobo";
+        public override string SiteUrl => "https://www.kobo.com/";
 
         protected override string GetAuthors(IDocument document)
         {

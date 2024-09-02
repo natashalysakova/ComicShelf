@@ -13,24 +13,25 @@ using Services.Services.Enums;
 using Services.ViewModels;
 using System.Net;
 using ComicShelf.Utilities;
+using ComicShelf.PublisherParsers;
 
 namespace ComicShelf.Pages.Volumes
 {
     public class IndexModel : PageModel
     {
         private readonly EnumUtilities _enumUtilities;
-        private readonly IConfiguration _configuration;
+        private readonly IEnumerable<IPublisherParser> _parsers;
         private readonly FilterService _filterService;
         private readonly VolumeService _volumeService;
         private readonly SeriesService _seriesService;
 
-        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, FilterService filterService, EnumUtilities enumUtilities, IConfiguration configuration)
+        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, FilterService filterService, EnumUtilities enumUtilities, IEnumerable<IPublisherParser> parsers)
         {
             _volumeService = volumeService;
             _seriesService = seriesService;
             _filterService = filterService;
             _enumUtilities = enumUtilities;
-            _configuration = configuration;
+            _parsers = parsers;
             Statuses.AddRange(_enumUtilities.GetSelectItemList<Status>());
             PurchaseStatuses.AddRange(_enumUtilities.GetSelectItemList<PurchaseStatus>());
             Ratings.AddRange(_enumUtilities.GetRatings());
@@ -202,7 +203,7 @@ namespace ComicShelf.Pages.Volumes
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
 
-            PublisherParsers.PublisherParsersFactory factory = new PublisherParsers.PublisherParsersFactory(_configuration);
+            var factory = new PublisherParsersFactory();
             var parser = factory.CreateParser(importUrl);
 
             if (parser == null)

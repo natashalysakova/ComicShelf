@@ -9,12 +9,7 @@ namespace ComicShelf.PublisherParsers
     public class NashaIdeaParser : BaseParser
     {
 
-
-        public NashaIdeaParser(string url, IConfiguration configuration) : base(url, configuration)
-        {
-        }
-
-        protected override string PublisherName => "NashaIdea";
+        public override string SiteUrl => "https://nashaidea.com/";
 
         protected override string GetAuthors(IDocument document)
         {
@@ -230,6 +225,11 @@ namespace ComicShelf.PublisherParsers
         protected override string? GetOriginalSeriesName(IDocument document)
         {
             return null;
+        }
+
+        protected override string GetPublisher(IDocument document)
+        {
+            return "NashaIdea";
         }
 
         (int number, string[] names)[] monthes = [

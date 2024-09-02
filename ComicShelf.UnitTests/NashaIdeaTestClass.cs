@@ -3,6 +3,7 @@ using ComicShelf.PublisherParsers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Services.Services;
 using Services.ViewModels;
 using System;
@@ -16,25 +17,15 @@ using System.Threading.Tasks;
 namespace ComicShelf.Parsers
 {
     [TestClass]
-    public class ParserTests
+    public class NashaIdeaTestClass
     {
-        private PublisherParsersFactory _publisherParsersFactory;
-
-
-        public ParserTests()
-        {
-            IServiceCollection services = new ServiceCollection();
-            var configuration = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
-
-            _publisherParsersFactory = new PublisherParsersFactory(configuration);
-        }
 
         [TestMethod]
         public async Task NashaIdeaPreorderTest()
         {
 
 
-            var parser = _publisherParsersFactory.CreateParser("https://nashaidea.com/product/friren-tom-2/");
+            var parser = new PublisherParsersFactory().CreateParser("https://nashaidea.com/product/friren-tom-2/");
 
             Assert.IsNotNull(parser);
 
@@ -59,7 +50,7 @@ namespace ComicShelf.Parsers
         [TestMethod]
         public async Task NashaIdeaTest()
         {
-            var parser = _publisherParsersFactory.CreateParser("https://nashaidea.com/product/chi-tom-10/");
+            var parser = new PublisherParsersFactory().CreateParser("https://nashaidea.com/product/chi-tom-10/");
 
             Assert.IsNotNull(parser);
 
@@ -83,7 +74,7 @@ namespace ComicShelf.Parsers
         [TestMethod]
         public async Task NashaIdeaOneShotTest()
         {
-            var parser = _publisherParsersFactory.CreateParser("https://nashaidea.com/product/vitaiemo-v-koto-kafe/");
+            var parser = new PublisherParsersFactory().CreateParser("https://nashaidea.com/product/vitaiemo-v-koto-kafe/");
 
             Assert.IsNotNull(parser);
 
@@ -108,7 +99,7 @@ namespace ComicShelf.Parsers
         [TestMethod]
         public async Task NashaIdeaFinishedTest()
         {
-            var parser = _publisherParsersFactory.CreateParser("https://nashaidea.com/product/proshhavaj-troyandovyj-sade-tom-3/");
+            var parser = new PublisherParsersFactory().CreateParser("https://nashaidea.com/product/proshhavaj-troyandovyj-sade-tom-3/");
 
             Assert.IsNotNull(parser);
 
@@ -135,21 +126,11 @@ namespace ComicShelf.Parsers
     [TestClass]
     public class MalopusTestClass
     {
-        private PublisherParsersFactory _publisherParsersFactory;
-
-        public MalopusTestClass()
-        {
-            IServiceCollection services = new ServiceCollection();
-            var configuration = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
-
-            _publisherParsersFactory = new PublisherParsersFactory(configuration);
-        }
-
 
         [TestMethod]
         public async Task MalopusTest()
         {
-            var parser = _publisherParsersFactory.CreateParser("https://malopus.com.ua/manga/manga-cya-porcelyanova-lyalechka-zakohalasya-tom-5");
+            var parser = new PublisherParsersFactory().CreateParser("https://malopus.com.ua/manga/manga-cya-porcelyanova-lyalechka-zakohalasya-tom-5");
 
             Assert.IsNotNull(parser);
 
@@ -173,7 +154,7 @@ namespace ComicShelf.Parsers
         [TestMethod]
         public async Task MalopusPreorderTest()
         {
-            var parser = _publisherParsersFactory.CreateParser("https://malopus.com.ua/manga/dungeon-meshi-omnibus1");
+            var parser = new PublisherParsersFactory().CreateParser("https://malopus.com.ua/manga/dungeon-meshi-omnibus1");
 
             Assert.IsNotNull(parser);
 
@@ -198,7 +179,7 @@ namespace ComicShelf.Parsers
         [TestMethod]
         public async Task MalopusOneShotTest()
         {
-            var parser = _publisherParsersFactory.CreateParser("https://malopus.com.ua/manga/nijigahara-holograph");
+            var parser = new PublisherParsersFactory().CreateParser("https://malopus.com.ua/manga/nijigahara-holograph");
 
             Assert.IsNotNull(parser);
 
@@ -225,21 +206,10 @@ namespace ComicShelf.Parsers
     [TestClass]
     public class KoboTestClass
     {
-        private PublisherParsersFactory _publisherParsersFactory;
-
-        public KoboTestClass()
-        {
-                IServiceCollection services = new ServiceCollection();
-                var configuration = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
-
-                _publisherParsersFactory = new PublisherParsersFactory(configuration);
-            
-        }
-
         [TestMethod]
         public async Task KoboTest()
         {
-            var parser = _publisherParsersFactory.CreateParser("https://www.kobo.com/ww/en/ebook/pretty-guardian-sailor-moon-eternal-edition-9");
+            var parser = new PublisherParsersFactory().CreateParser("https://www.kobo.com/ww/en/ebook/pretty-guardian-sailor-moon-eternal-edition-9");
 
             Assert.IsNotNull(parser);
 
@@ -257,13 +227,14 @@ namespace ComicShelf.Parsers
             Assert.AreEqual("9781646595792", result.isbn);
             Assert.AreEqual(-1, result.totalVolumes);
             Assert.AreEqual(null, result.seriesStatus);
+            Assert.AreEqual(null, result.originalSeriesName);
 
         }
 
         [TestMethod]
         public async Task KoboPreorderTest()
         {
-            var parser = _publisherParsersFactory.CreateParser("https://www.kobo.com/ww/en/ebook/spy-x-family-vol-13");
+            var parser = new PublisherParsersFactory().CreateParser("https://www.kobo.com/ww/en/ebook/spy-x-family-vol-13");
 
             Assert.IsNotNull(parser);
 
@@ -282,13 +253,14 @@ namespace ComicShelf.Parsers
             Assert.AreEqual("9781974753246", result.isbn);
             Assert.AreEqual(-1, result.totalVolumes);
             Assert.AreEqual(null, result.seriesStatus);
+            Assert.AreEqual(null, result.originalSeriesName);
 
         }
 
         [TestMethod]
         public async Task KoboOneShotTest()
         {
-            var parser = _publisherParsersFactory.CreateParser("https://www.kobo.com/ww/en/ebook/a-girl-on-the-shore");
+            var parser = new PublisherParsersFactory().CreateParser("https://www.kobo.com/ww/en/ebook/a-girl-on-the-shore");
 
             Assert.IsNotNull(parser);
 
@@ -308,6 +280,85 @@ namespace ComicShelf.Parsers
             Assert.AreEqual(-1, result.totalVolumes);
             Assert.AreEqual(null, result.seriesStatus);
             Assert.AreEqual(null, result.originalSeriesName);
+
+        }
+    }
+
+    [TestClass]
+    public class AmazonTestClass
+    {
+        [TestMethod]
+        public async Task AmazonTest()
+        {
+            var parser = new PublisherParsersFactory().CreateParser("https://www.amazon.com/dp/B08924QLFH/");
+
+            Assert.IsNotNull(parser);
+
+            var result = await parser.Parse();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Volume 1", result.title);
+            Assert.AreEqual("Rent-A-Girlfriend", result.series);
+            Assert.AreEqual("Reiji Miyajima", result.authors);
+            Assert.AreEqual(1, result.volumeNumber);
+            Assert.AreEqual("https://m.media-amazon.com/images/I/81oObjb7cwL._SL1500_.jpg", result.cover);
+            Assert.AreEqual("2020-06-02", result.release);
+            Assert.AreEqual("Kodansha Comics", result.publisher);
+            Assert.AreEqual("Digital", result.type);
+            Assert.AreEqual("B08924QLFH", result.isbn);
+            Assert.AreEqual(-1, result.totalVolumes);
+            Assert.AreEqual(null, result.seriesStatus);
+            Assert.AreEqual(null, result.originalSeriesName);
+        }
+
+        [TestMethod]
+        public async Task AmazonPreorderTest()
+        {
+            var parser = new PublisherParsersFactory().CreateParser("https://www.amazon.com/gp/product/B0D7Z8TGNQ");
+
+            Assert.IsNotNull(parser);
+
+            var result = await parser.Parse();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Volume 8", result.title);
+            Assert.AreEqual("[Oshi no Ko]", result.series);
+            Assert.AreEqual("Aka Akasaka,Mengo Yokoyari", result.authors);
+            Assert.AreEqual(8, result.volumeNumber);
+            Assert.AreEqual(string.Empty, result.cover);
+            Assert.AreEqual("2024-11-19", result.release);
+            Assert.AreEqual("Yen Press", result.publisher);
+            Assert.AreEqual("Digital", result.type);
+            Assert.AreEqual("B0D7Z8TGNQ", result.isbn);
+            Assert.AreEqual(-1, result.totalVolumes);
+            Assert.AreEqual(null, result.seriesStatus);
+            Assert.AreEqual(null, result.originalSeriesName);
+
+        }
+
+        [TestMethod]
+        public async Task AmazonOneShotTest()
+        {
+            var parser = new PublisherParsersFactory().CreateParser("https://www.amazon.com/dp/B01N0LT06V");
+
+            Assert.IsNotNull(parser);
+
+            var result = await parser.Parse();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Nijigahara Holograph", result.title);
+            Assert.AreEqual("Nijigahara Holograph", result.series);
+            Assert.AreEqual("Inio Asano", result.authors);
+            Assert.AreEqual(-1, result.volumeNumber);
+            Assert.AreEqual("https://m.media-amazon.com/images/I/91lxpgZLQOL._SL1500_.jpg", result.cover);
+            Assert.AreEqual("2014-03-19", result.release);
+            Assert.AreEqual("Fantagraphics", result.publisher);
+            Assert.AreEqual("Digital", result.type);
+            Assert.AreEqual("B01N0LT06V", result.isbn);
+            Assert.AreEqual(-1, result.totalVolumes);
+            Assert.AreEqual(null, result.seriesStatus);
+            Assert.AreEqual(null, result.originalSeriesName);
+
 
         }
     }
