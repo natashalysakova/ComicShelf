@@ -9,5 +9,7 @@ namespace Services.ViewModels
         public int TotalVolumes { get; set; }
         public bool Completed { get; set; }
         public bool Ongoing { get; set; }
+        public string? PublisherName { get; set; }
+        public string? OriginalName { get; set; }
     }
 }

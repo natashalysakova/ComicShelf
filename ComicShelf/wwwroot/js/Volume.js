@@ -227,7 +227,7 @@ function filter(e) {
 
 
     $.ajax({
-        url: "/Manga?handler=Filtered",
+        url: "?handler=Filtered",
         type: 'GET',
         cache: false,
         data: filters
@@ -285,6 +285,7 @@ function refillFilterDropdown(e) {
 
 function changeStatusSuccess(e) {
     $('#PurchaseStatus').removeClass("text-danger");
+    $("#update-spinner").hide();
 
     if (e.status == 200) {
         
@@ -300,10 +301,10 @@ function changeStatusSuccess(e) {
             setTimeout(function () {
                 element.classList.remove('text-success');
                 $('#detailModal').modal('hide');
-                filter();
+                
             }, 1000);
         });
-
+        filter();
     }
     else {
         $('#PurchaseStatus').addClass("text-danger");
@@ -341,7 +342,7 @@ function switchCover() {
 function createComplete(xnr) {
 
     console.log("createComplete");
-
+    $('#import-spinner').hide();
     if (xnr.status == 200) {
         $('#createAlert').hide();
 
@@ -487,16 +488,26 @@ function resetCreateForm() {
         resetPreview('new-volume-cover');
         purchaseStatusChanged('PurchaseStatus', 'new');
         readingStatusChanged('Status', 'new');
+        $('#NewVolume_CoverToDownload').val("");
+        $('#NewVolume_Publisher').val("");
+        $('#importUrl').val("");
+        $('#imported-publisher').hide();
+        $('#imported-isbn').hide();
+
 
     }, 10);
 
 }
 
 function showNewPreview(event) {
-    if (event.target.files.length > 0) {
+    if (event.target.files != null) {
         var src = URL.createObjectURL(event.target.files[0]);
         var preview = document.getElementById("new-volume-cover");
         preview.src = src;
+    }
+    else if (event.target.value != undefined) {
+        var preview = document.getElementById("new-volume-cover");
+        preview.src = event.target.value;
     }
 }
 
@@ -592,9 +603,10 @@ function importComplete(data) {
 
         if (resp.volumeNumber >= 0) {
             $('#NewVolume_Number').val(resp.volumeNumber);
+            $('#typeVolume').prop("checked", true);
         }
         else {
-            $('#NewVolume_Number').val(0);
+            $('#NewVolume_Number').val(1);
             $('#typeOneShot').prop("checked", true);
         }
 
@@ -606,7 +618,17 @@ function importComplete(data) {
         if ($('#new-PurchaseStatus').val() == "Announced") {
             $('#new-PurchaseStatus').val(resp.status).change();
         }
-    }
+
+        $('#NewVolume_PublisherName').val(resp.publisher);
+        $('#imported-publisher').show();
+
+        $('#NewVolume_ISBN').val(resp.isbn);
+        $('#imported-isbn').show();
+
+        $('#NewVolume_TotalVolumes').val(resp.totalVolumes);
+        $('#NewVolume_SeriesStatus').val(resp.seriesStatus);
+        $('#NewVolume_SeriesOriginalName').val(resp.originalSeriesName);
+    }   
     else {
         console.error(data.responseText);
     }
@@ -614,7 +636,18 @@ function importComplete(data) {
 
 
 async function handleCoverInput(coverUrl) {
+
+    $('#NewVolume_CoverToDownload').val(coverUrl).change();
+    retutn;
+
+
+
+
     const designFile = await createFile(coverUrl);
+
+    if (designFile == null)
+        return;
+
     const input = document.querySelector('#NewVolume_CoverFile');
     const dt = new DataTransfer();
     dt.items.add(designFile);
@@ -639,29 +672,30 @@ async function createFile(url) {
 
     } catch (e) {
 
-        if (window.isSecureContext && navigator.clipboard) {
-            navigator.clipboard.writeText(url);
-        } else {
-            unsecuredCopyToClipboard(url);
-        }
+        $('#NewVolume_CoverToDownload').val(url).change();
+        return null;
     }
 }
 
 function importBegin(data) {
     $("#import-spinner").show();
 }
+function updateBegin(data) {
+    $("#update-spinner").show();
+}
 
+function fillAuthors(source) {
+    $("#import-spinner").show();
 
-function unsecuredCopyToClipboard(text) {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-        document.execCommand('copy');
-    } catch (err) {
-        console.error('Unable to copy to clipboard', err);
-    }
-    document.body.removeChild(textArea);
+    var seriesName = $(source).val();
+
+    $.ajax({
+        url: "?handler=SeriesAuthor&series=" + seriesName,
+        type: 'GET',
+        cache: false
+    }).done(function (result) {
+        $("#import-spinner").hide();
+        $('#NewVolume_Authors').val(result);
+
+    });
 }

@@ -20,16 +20,17 @@ namespace ComicShelf.Pages.Volumes
     {
         private readonly EnumUtilities _enumUtilities;
         private readonly IConfiguration _configuration;
-        private readonly PublishersService _publishersService;
         private readonly FilterService _filterService;
         private readonly VolumeService _volumeService;
-        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, FilterService filterService, EnumUtilities enumUtilities, IConfiguration configuration, PublishersService publishersService)
+        private readonly SeriesService _seriesService;
+
+        public IndexModel(VolumeService volumeService, SeriesService seriesService, AuthorsService authorsService, FilterService filterService, EnumUtilities enumUtilities, IConfiguration configuration)
         {
             _volumeService = volumeService;
+            _seriesService = seriesService;
             _filterService = filterService;
             _enumUtilities = enumUtilities;
             _configuration = configuration;
-            _publishersService = publishersService;
             Statuses.AddRange(_enumUtilities.GetSelectItemList<Status>());
             PurchaseStatuses.AddRange(_enumUtilities.GetSelectItemList<PurchaseStatus>());
             Ratings.AddRange(_enumUtilities.GetRatings());
@@ -137,10 +138,10 @@ namespace ComicShelf.Pages.Volumes
         {
             if (!ModelState.IsValid || NewVolume == null)
             {
-                return StatusCode(400, "Fill mandatory fields");
+                return StatusCode(400, "Fill mandatory fields " + string.Join(',', ModelState.Where(x=>x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Select(x=>x.Key)));
             }
 
-            if (NewVolume.NumberOfIssues > 1 && _volumeService.Exists(NewVolume.SeriesName, NewVolume.Number))
+            if (_volumeService.Exists(NewVolume.SeriesName, NewVolume.Number))
             {
                 return StatusCode(409, $"{NewVolume.SeriesName} Volume #{NewVolume.Number} already exists");
             }
@@ -196,7 +197,12 @@ namespace ComicShelf.Pages.Volumes
 
         public async Task<IActionResult> OnPostParseUrl(string importUrl)
         {
-            PublisherParsers.PublisherParsersFactory factory = new PublisherParsers.PublisherParsersFactory(_configuration, _publishersService);
+            if (string.IsNullOrEmpty(importUrl))
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+
+            PublisherParsers.PublisherParsersFactory factory = new PublisherParsers.PublisherParsersFactory(_configuration);
             var parser = factory.CreateParser(importUrl);
 
             if (parser == null)
@@ -208,6 +214,17 @@ namespace ComicShelf.Pages.Volumes
 
             return new JsonResult(data);
 
+        }
+
+        public IActionResult OnGetSeriesAuthor(string series)
+        {
+            var author = _seriesService.GetSeriesAuthor(series);
+            if (author is null)
+            {
+                return StatusCode(StatusCodes.Status404NotFound);
+            }
+
+            return Content(author);
         }
     }
 }

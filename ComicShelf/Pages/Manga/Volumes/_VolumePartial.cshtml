@@ -45,7 +45,7 @@
 
         <form method="post" id="updateForm"
               asp-page-handler="ChangeStatus" enctype="multipart/form-data" data-ajax-method="post" data-ajax="true"
-              data-ajax-complete="changeStatusSuccess">
+              data-ajax-complete="changeStatusSuccess" data-ajax-begin="updateBegin">
 
             <div class="row">
                 <div class="col-lg-5 mb-3">
@@ -332,6 +332,12 @@
             <div class="col">
                 <a asp-page="./Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger float-start"><i class="bi bi-trash"></i></a>
             </div>
+            <div class="col-1">
+                <div class="spinner-border" id="update-spinner" role="status" style="display: none;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+           
             <div class="col-lg-4 col-6">
                 @*                <div class="text-end">
                 <small>@Localizer["Created"] @Model.CreationDate</small><br />
@@ -343,6 +349,7 @@
                 @*                <a asp-page="./Edit" asp-route-id="@Model.Id" class="btn btn-primary float-end">Edit</a>
                 *@
             </div>
+            
         </div>
     </div>
 </div>

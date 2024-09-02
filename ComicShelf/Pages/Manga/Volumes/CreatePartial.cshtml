@@ -9,10 +9,10 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-        <form method="post" id="create-form" asp-page-handler="Add" data-ajax-method="post" data-ajax="true" enctype="multipart/form-data" data-ajax-complete="createComplete" onreset="resetCreateForm()">
+        <form method="post" id="create-form" asp-page-handler="Add" data-ajax-method="post" data-ajax="true" enctype="multipart/form-data" data-ajax-complete="createComplete" onreset="resetCreateForm()" data-ajax-begin="importBegin">
             <div class="modal-header">
                 <div class="modal-title display-6 col-9">
-                    <input asp-for="NewVolume.SeriesName" class="form-control form-control-lg modal-input-form" list="datalistOptions" placeholder="Введіть назву серії" autocomplete="off" />
+                    <input asp-for="NewVolume.SeriesName" class="form-control form-control-lg modal-input-form" list="datalistOptions" placeholder="Введіть назву серії" autocomplete="off" onchange="fillAuthors(this)" />
                     <datalist id="datalistOptions">
                         @foreach (var item in Model.Series)
                         {
@@ -39,7 +39,10 @@
                         <div class="mb-3 input-group">
                             <input asp-for="NewVolume.CoverFile" type="file" accept="image/*" class="form-control" onchange="showNewPreview(event);" />
                         </div>
+                        <input asp-for="NewVolume.CoverToDownload" type="url" onchange="showNewPreview(event);" style="display:none" />
                         <span asp-validation-for="NewVolume.CoverFile" class="text-danger"></span>
+
+
                     </div>
                     <div class="col-sm-7">
                         <div class="row mb-3">
@@ -51,7 +54,9 @@
                                     continue;
                                 }
                                 <div class="col-auto">
-                                    @{ var ch = item.Value == VolumeItemType.Volume.ToString() ? "checked" : string.Empty; }
+                                    @{
+                                        var ch = item.Value == VolumeItemType.Volume.ToString() ? "checked" : string.Empty;
+                                    }
                                     <div class="input-group">
 
                                         <div class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="@Localizer[item.Text + "Hint"]">
@@ -70,7 +75,7 @@
                         <div class="row mb-3">
                             @{
                                 string defaultTitle = $"{Localizer["Volume"].Value} 1";
-                             }
+                            }
                             <div class="input-group">
                                 <label asp-for="NewVolume.Title" class="input-group-text">@Localizer["Title"]</label>
                                 <input asp-for="NewVolume.Title" class="form-control" value="@defaultTitle" />
@@ -89,6 +94,19 @@
                             }
                         </datalist>
                         <span asp-validation-for="NewVolume.Authors" class="text-danger"></span>
+
+                        <div class="mb-3 input-group" style="display:none" id="imported-publisher">
+                            <label asp-for="NewVolume.PublisherName"  class="input-group-text">@Localizer["Publisher"]</label>
+                            <input asp-for="NewVolume.PublisherName" class="form-control" type="text"  />
+                        </div>
+                        <div class="mb-3 input-group" style="display:none" id="imported-isbn">
+                            <label asp-for="NewVolume.ISBN" class="input-group-text">@Localizer["ISBN"]</label>
+                            <input asp-for="NewVolume.ISBN" class="form-control" type="text" />
+                        </div>
+
+                        <input asp-for="NewVolume.TotalVolumes" type="number"  style="display:none" />
+                        <input asp-for="NewVolume.SeriesStatus" type="text" style="display:none" />
+                        <input asp-for="NewVolume.SeriesOriginalName" type="text" style="display:none" />
 
 
                         <div class="mb-3 input-group">

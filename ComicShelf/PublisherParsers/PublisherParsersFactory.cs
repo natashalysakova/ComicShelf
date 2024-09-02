@@ -6,12 +6,10 @@ namespace ComicShelf.PublisherParsers
     public class PublisherParsersFactory
     {
         private readonly IConfiguration _configuration;
-        private readonly PublishersService _publishersService;
 
-        public PublisherParsersFactory(IConfiguration configuration, PublishersService publishersService)
+        public PublisherParsersFactory(IConfiguration configuration)
         {
             _configuration = configuration;
-            _publishersService = publishersService;
         }
 
         public IPublisherParser? CreateParser(string url)

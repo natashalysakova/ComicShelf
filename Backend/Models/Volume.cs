@@ -27,6 +27,8 @@ namespace Backend.Models
         public bool OneShot { get; set; }
         public bool SingleIssue { get; set; }
 
+        public string? ISBN { get; set; }
+
         public int SeriesId { get; set; }
         public virtual Series Series { get; set; }
 

@@ -24,6 +24,7 @@ namespace Services.ViewModels
         public DateTime? PreorderDate { get; set; } = DateTime.Today;
         public IFormFile? CoverFile { get; set; }
         public string? CoverUrl { get; set; }
+        public string? CoverToDownload { get; set; }
 
         public string[] Authors { get; set; }
         public VolumeType Digitality { get; set; }
@@ -31,6 +32,12 @@ namespace Services.ViewModels
         public int NumberOfIssues { get; set; } = 0;
         public int NumberOfBonusIssues { get; set; } = 0;
         public VolumeItemType VolumeType { get; set; }
+
+        public string? PublisherName { get; set; }
+        public int TotalVolumes { get; set; }
+        public string? SeriesStatus { get; set; }
+        public string? ISBN { get; set; }
+        public string? SeriesOriginalName { get; set; }
     }
 
     public enum VolumeItemType

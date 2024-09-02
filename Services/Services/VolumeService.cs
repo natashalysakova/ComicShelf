@@ -54,7 +54,7 @@ namespace Services.Services
             var series = _seriesService.GetByName(model.SeriesName);
             if (series == null)
             {
-                var newSeries = new SeriesCreateModel() { Name = model.SeriesName, Type = ComicType.Comics };
+                var newSeries = new SeriesCreateModel() { Name = model.SeriesName, Type = ComicType.Manga, PublisherName = model.PublisherName, OriginalName = model.SeriesOriginalName };
                 if (model.VolumeType == VolumeItemType.OneShot)
                 {
                     newSeries.TotalVolumes = 1;
@@ -65,8 +65,35 @@ namespace Services.Services
                         newSeries.Completed = true;
                     }
                 }
+                else
+                {
+                    newSeries.TotalVolumes = model.TotalVolumes;
+                    if (model.SeriesStatus == "ongoing")
+                    {
+                        newSeries.Ongoing = true;
+                    }
+                }
                 var id = _seriesService.Add(newSeries);
                 series = _seriesService.GetById(id);
+            }
+            else
+            {
+                if (series.TotalVolumes < model.TotalVolumes)
+                {
+                    series.TotalVolumes = model.TotalVolumes;
+                }
+
+                if (series.Ongoing && model.SeriesStatus == "finished")
+                {
+                    series.Ongoing = false;
+                }
+
+                if (string.IsNullOrEmpty(series.OriginalName) && !string.IsNullOrEmpty(model.SeriesOriginalName))
+                {
+                    series.OriginalName = model.SeriesOriginalName;
+                }
+
+                SaveChanges();
             }
 
             var authorList = new List<int>();
@@ -107,6 +134,8 @@ namespace Services.Services
 
             if (model.CoverFile is not null)
                 model.CoverUrl = FileUtility.SaveOnServer(model.CoverFile, series.Name, model.Number);
+            else if (model.CoverToDownload is not null)
+                model.CoverUrl = FileUtility.DownloadFileFromWeb(model.CoverToDownload, series.Name, model.Number);
             else
                 model.CoverUrl = "images\\static\\no-cover.png";
 
@@ -214,7 +243,7 @@ namespace Services.Services
             }
 
 
-            if (!series.Ongoing && series.Volumes.Count(x=>x.Number > 0) == series.TotalVolumes)
+            if (!series.Ongoing && series.Volumes.Count(x => x.Number > 0) == series.TotalVolumes)
             {
                 series.Completed = true;
             }
@@ -307,15 +336,15 @@ namespace Services.Services
             }
 
             item.OneShot = series.TotalVolumes == 1;
-            
-            if(
+
+            if (
                 (volumeToUpdate.Issues != null && volumeToUpdate.Issues?.Length == 1) ||
                 (volumeToUpdate.Issues is null && volumeToUpdate.BonusIssues is not null && volumeToUpdate.BonusIssues.Length > 0))
             {
                 item.SingleIssue = true;
             }
 
-            if(volumeToUpdate.Issues is null && volumeToUpdate.BonusIssues is not null)
+            if (volumeToUpdate.Issues is null && volumeToUpdate.BonusIssues is not null)
             {
                 item.Number = 0;
             }
@@ -330,7 +359,7 @@ namespace Services.Services
 
             if (item.PurchaseStatus != PurchaseStatus.Announced || item.PurchaseStatus != PurchaseStatus.GiftedAway)
             {
-                if (!series.Ongoing && series.Volumes.Count(x=>x.Number > 0) == series.TotalVolumes)
+                if (!series.Ongoing && series.Volumes.Count(x => x.Number > 0) == series.TotalVolumes)
                 {
                     series.Completed = true;
                     _seriesService.Update(series);

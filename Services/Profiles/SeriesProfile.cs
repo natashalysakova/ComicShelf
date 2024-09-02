@@ -8,7 +8,9 @@ namespace Services.Profiles
     {
         public SeriesProfile()
         {
-            CreateMap<SeriesCreateModel, Series>(MemberList.Source);
+            CreateMap<SeriesCreateModel, Series>(MemberList.Source)
+                .ForSourceMember(x=>x.PublisherName, act=>act.DoNotValidate());
+
 
             CreateMap<SeriesUpdateModel, Series>()
                 .ForMember(x => x.ComplimentColor, act => { act.Ignore(); })

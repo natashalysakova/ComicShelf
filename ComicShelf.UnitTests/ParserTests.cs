@@ -1,6 +1,5 @@
 ﻿using Backend.Models.Enums;
 using ComicShelf.PublisherParsers;
-using Jint.Parser.Ast;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,27 +13,20 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComicShelf.UnitTests
+namespace ComicShelf.Parsers
 {
     [TestClass]
     public class ParserTests
     {
         private PublisherParsersFactory _publisherParsersFactory;
 
-        List<PublisherViewModel> _publisherViewModels = [
-            new PublisherViewModel() { Name = "NashaIdea", Id = 2},
-            new PublisherViewModel() { Name = "Mal'opus", Id = 3}
-        ];
 
         public ParserTests()
         {
             IServiceCollection services = new ServiceCollection();
             var configuration = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
 
-            var publisherService = new Moq.Mock<PublishersService>();
-            publisherService.Setup(x => x.GetAll()).Returns(_publisherViewModels);
-
-            _publisherParsersFactory = new PublisherParsersFactory(configuration, publisherService.Object);
+            _publisherParsersFactory = new PublisherParsersFactory(configuration);
         }
 
         [TestMethod]
@@ -57,6 +49,9 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual("2024-09-15", result.release);
             Assert.AreEqual("NashaIdea", result.publisher);
             Assert.AreEqual("Physical", result.type);
+            Assert.AreEqual("978-617-8396-49-7", result.isbn);
+            Assert.AreEqual(13, result.totalVolumes);
+            Assert.AreEqual("ongoing", result.seriesStatus);
 
 
         }
@@ -79,6 +74,9 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("NashaIdea", result.publisher);
             Assert.AreEqual("Physical", result.type);
+            Assert.AreEqual("978-617-8396-46-6", result.isbn);
+            Assert.AreEqual(12, result.totalVolumes);
+            Assert.AreEqual("finished", result.seriesStatus);
 
         }
 
@@ -100,8 +98,53 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("NashaIdea", result.publisher);
             Assert.AreEqual("Physical", result.type);
+            Assert.AreEqual("978-617-8109-88-2", result.isbn);
+            Assert.AreEqual(1, result.totalVolumes);
+            Assert.AreEqual("oneshot", result.seriesStatus);
 
         }
+
+
+        [TestMethod]
+        public async Task NashaIdeaFinishedTest()
+        {
+            var parser = _publisherParsersFactory.CreateParser("https://nashaidea.com/product/proshhavaj-troyandovyj-sade-tom-3/");
+
+            Assert.IsNotNull(parser);
+
+            var result = await parser.Parse();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Том 3", result.title);
+            Assert.AreEqual("Прощавай, трояндовий саде", result.series);
+            Assert.AreEqual("", result.authors);
+            Assert.AreEqual(3, result.volumeNumber);
+            Assert.AreEqual("https://nashaidea.com/wp-content/uploads/2024/08/mrg03-x1080.jpg", result.cover);
+            Assert.AreEqual(null, result.release);
+            Assert.AreEqual("NashaIdea", result.publisher);
+            Assert.AreEqual("Physical", result.type);
+            Assert.AreEqual("978-617-8396-55-8", result.isbn);
+            Assert.AreEqual(3, result.totalVolumes);
+            Assert.AreEqual("finished", result.seriesStatus);
+
+        }
+
+
+    }
+
+    [TestClass]
+    public class MalopusTestClass
+    {
+        private PublisherParsersFactory _publisherParsersFactory;
+
+        public MalopusTestClass()
+        {
+            IServiceCollection services = new ServiceCollection();
+            var configuration = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+
+            _publisherParsersFactory = new PublisherParsersFactory(configuration);
+        }
+
 
         [TestMethod]
         public async Task MalopusTest()
@@ -121,7 +164,10 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("Mal'opus", result.publisher);
             Assert.AreEqual("Physical", result.type);
-
+            Assert.AreEqual("978-617-8168-12-4", result.isbn);
+            Assert.AreEqual(13, result.totalVolumes);
+            Assert.AreEqual("ongoing", result.seriesStatus);
+            Assert.AreEqual("Sono Bisque Doll wa Koi wo Suru", result.originalSeriesName);
         }
 
         [TestMethod]
@@ -142,6 +188,10 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual("2025-01-31", result.release);
             Assert.AreEqual("Mal'opus", result.publisher);
             Assert.AreEqual("Physical", result.type);
+            Assert.AreEqual("978-617-8168-27-8", result.isbn);
+            Assert.AreEqual(7, result.totalVolumes);
+            Assert.AreEqual("finished", result.seriesStatus);
+            Assert.AreEqual("Dungeon Meshi", result.originalSeriesName);
 
         }
 
@@ -163,12 +213,13 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("Mal'opus", result.publisher);
             Assert.AreEqual("Physical", result.type);
+            Assert.AreEqual("978-617-8168-11-7", result.isbn);
+            Assert.AreEqual(1, result.totalVolumes);
+            Assert.AreEqual("oneshot", result.seriesStatus);
+            Assert.AreEqual("Nijigahara Holograph", result.originalSeriesName);
 
 
         }
-
-
-        
     }
 
     [TestClass]
@@ -176,30 +227,12 @@ namespace ComicShelf.UnitTests
     {
         private PublisherParsersFactory _publisherParsersFactory;
 
-        List<PublisherViewModel> _publisherViewModels = [
-            new PublisherViewModel() { Name = "NashaIdea", Id = 2},
-            new PublisherViewModel() { Name = "Mal'opus", Id = 3},
-            new PublisherViewModel() { Name = "Seven Seas Entertainment", Id = 5 },
-            new PublisherViewModel() { Name = "Kodansha Comics", Id = 6 },
-            new PublisherViewModel() { Name = "VIZ Media", Id = 7 }
-        ];
-
-        //[TestInitialize]
-        //public async Task Startup()
-        //{
-        //    await Task.Delay(10000);
-        //}
-
-
         public KoboTestClass()
         {
                 IServiceCollection services = new ServiceCollection();
                 var configuration = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
 
-                var publisherService = new Moq.Mock<PublishersService>();
-                publisherService.Setup(x => x.GetAll()).Returns(_publisherViewModels);
-
-                _publisherParsersFactory = new PublisherParsersFactory(configuration, publisherService.Object);
+                _publisherParsersFactory = new PublisherParsersFactory(configuration);
             
         }
 
@@ -221,6 +254,10 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual("2020-11-17", result.release);
             Assert.AreEqual("Kodansha Comics", result.publisher);
             Assert.AreEqual("Digital", result.type);
+            Assert.AreEqual("9781646595792", result.isbn);
+            Assert.AreEqual(-1, result.totalVolumes);
+            Assert.AreEqual(null, result.seriesStatus);
+
         }
 
         [TestMethod]
@@ -242,6 +279,9 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual("VIZ Media", result.publisher);
             Assert.AreEqual("Digital", result.type);
 
+            Assert.AreEqual("9781974753246", result.isbn);
+            Assert.AreEqual(-1, result.totalVolumes);
+            Assert.AreEqual(null, result.seriesStatus);
 
         }
 
@@ -264,6 +304,10 @@ namespace ComicShelf.UnitTests
             Assert.AreEqual("Kodansha USA", result.publisher);
             Assert.AreEqual("Digital", result.type);
 
+            Assert.AreEqual("9781942993766", result.isbn);
+            Assert.AreEqual(-1, result.totalVolumes);
+            Assert.AreEqual(null, result.seriesStatus);
+            Assert.AreEqual(null, result.originalSeriesName);
 
         }
     }

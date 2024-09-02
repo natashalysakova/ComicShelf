@@ -9,10 +9,12 @@ namespace Services.Services
     public class SeriesService : BasicService<Series, SeriesViewModel, SeriesCreateModel, SeriesUpdateModel>
     {
         private readonly PublishersService _publishersService;
+        private readonly CountryService _countryService;
 
-        public SeriesService(ComicShelfContext context, PublishersService service, IMapper mapper) : base(context, mapper)
+        public SeriesService(ComicShelfContext context, PublishersService service, CountryService countryService, IMapper mapper) : base(context, mapper)
         {
             _publishersService = service;
+            _countryService = countryService;
         }
 
 
@@ -22,7 +24,24 @@ namespace Services.Services
             var color = ColorUtility.GetRandomColor(minSaturation: 50, minValue: 50);
             var complementary = ColorUtility.GetOppositeColor(color);
             var entity = _mapper.Map<Series>(model);
-            entity.Publisher = _publishersService.GetUnknownn();
+
+            if (model.PublisherName == null)
+            {
+                entity.Publisher = _publishersService.GetUnknownn();
+            }
+            else
+            {
+                var publisher = _publishersService.GetByName(model.PublisherName);
+                if (publisher == null)
+                {
+                    entity.PublisherId = _publishersService.Add(new PublisherCreateModel() { Name = model.PublisherName, Url = string.Empty, CountryId = _countryService.GetUnknownn().Id });
+                }
+                else
+                {
+                    entity.PublisherId = publisher.Id;
+                }
+            }
+
             entity.Color = ColorUtility.HexConverter(color);
             entity.ComplimentColor = ColorUtility.HexConverter(complementary);
 
@@ -80,5 +99,20 @@ namespace Services.Services
             base.Update(item);
         }
 
+        public string? GetSeriesAuthor(string series)
+        {
+            var entity = this.dbSet.Include(x=>x.Volumes).ThenInclude(x=>x.Authors).SingleOrDefault(x => x.Name == series);
+
+            if(entity == null)
+                return null;
+
+            var lastVolume = entity.Volumes.SingleOrDefault(x => x.Number == entity.Volumes.Max(x=>x.Number));
+            if (lastVolume == null)
+                return null;
+
+            return string.Join(',', lastVolume.Authors.Select(x=>x.Name));
+
+
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AngleSharp.Browser;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
+using Backend.Models;
 using Backend.Models.Enums;
 
 namespace ComicShelf.PublisherParsers
@@ -67,7 +68,7 @@ namespace ComicShelf.PublisherParsers
 
             var volIndex = title.IndexOf("Том");
 
-            if(volIndex == -1)
+            if (volIndex == -1)
                 return volIndex;
 
             var nextWord = title.IndexOf(" ", volIndex + 3);
@@ -113,7 +114,7 @@ namespace ComicShelf.PublisherParsers
         {
             if (text.Contains('–'))
             {
-                text = text.Substring(text.LastIndexOf('–')+1).Trim([' ', '.', '.', '!']);
+                text = text.Substring(text.LastIndexOf('–') + 1).Trim([' ', '.', '.', '!']);
             }
 
             string? month = default;
@@ -143,7 +144,7 @@ namespace ComicShelf.PublisherParsers
 
             var year = DateTime.Today.Month > monthNumber.number ? DateTime.Today.Year + 1 : DateTime.Today.Year;
 
-            if(day == 0)
+            if (day == 0)
                 day = DateTime.DaysInMonth(year, monthNumber.number);
 
 
@@ -153,6 +154,82 @@ namespace ComicShelf.PublisherParsers
         protected override VolumeType GetBookType()
         {
             return VolumeType.Physical;
+        }
+
+        protected override string GetISBN(IDocument document)
+        {
+            var node = document.QuerySelector(".book-product-table-ibn");
+            var text = node.TextContent.Substring(node.TextContent.IndexOf(":") + 1).Trim();
+            return text;
+        }
+
+        protected override int GetTotalVolumes(IDocument document)
+        {
+            var nodes = document.QuerySelectorAll(".book-product-table-data-weight");
+
+            //var volumeNode = nodes.SingleOrDefault(x => x.TextContent.Contains("Кількість томів"));
+
+            //if (volumeNode != null)
+            //{
+            //    return int.Parse(volumeNode.TextContent.Substring(volumeNode.TextContent.IndexOf(':') + 1).Trim());
+            //}
+
+            var oldNode = nodes.SingleOrDefault(x => x.TextContent.Contains("Статус серії"));
+
+            var split = oldNode.TextContent.Split([',', '.', ' ', '-'], StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item2 in split)
+            {
+                if (item2.Contains("Однотомник"))
+                {
+                    return 1;
+                }
+
+                if(item2 == "завершена")
+                {
+                    var volumeNode = nodes.SingleOrDefault(x => x.TextContent.Contains("Кількість томів"));
+
+                    if (volumeNode != null)
+                    {
+                        return int.Parse(volumeNode.TextContent.Substring(volumeNode.TextContent.IndexOf(':') + 1).Trim());
+                    }
+                }
+
+                int.TryParse(item2.Trim(), out var volume);
+                if (volume != 0)
+                {
+                    return volume;
+                }
+            }
+
+            return -1;
+        }
+
+        protected override string? GetSeriesStatus(IDocument document)
+        {
+            var node = document.QuerySelectorAll(".book-product-table-data-weight");
+            foreach (var item in node)
+            {
+                if (item.TextContent.Contains("Статус серії:"))
+                {
+                    if (item.TextContent.Contains("Однотомник"))
+                    {
+                        return "oneshot";
+                    }
+
+                    if (item.TextContent.Contains("Серія незавершена"))
+                    {
+                        return "ongoing";
+                    }
+
+                    return "finished";
+                }
+            }
+            return null;
+        }
+
+        protected override string? GetOriginalSeriesName(IDocument document)
+        {
+            return null;
         }
 
         (int number, string[] names)[] monthes = [

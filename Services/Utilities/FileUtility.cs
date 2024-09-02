@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
+using System.Security.Policy;
 using UnidecodeSharpFork;
 
 public static class FileUtility
@@ -154,5 +156,41 @@ public static class FileUtility
 
         }
         return coverUrl;
+    }
+
+    internal static string? DownloadFileFromWeb(string url, string seriesName, int volumeNumber)
+    {
+        var extention = new FileInfo(url).Extension;
+        var escapedSeriesName = seriesName.Unidecode().Replace(Path.GetInvalidFileNameChars(), string.Empty);
+        var destiantionFolder = Path.Combine(imageDir, "Series", escapedSeriesName);
+        var filename = $"{escapedSeriesName} {volumeNumber} {url.GetHashCode()}{extention}";
+
+        try
+        {
+            using (var client = new HttpClient())
+            {
+                using (var response = client.GetAsync(url))
+                {
+                    byte[] imageBytes =
+                        response.Result.Content.ReadAsByteArrayAsync().Result;
+
+                    var localDirectory = Path.Combine(serverRoot, destiantionFolder);
+                    var localPath = Path.Combine(localDirectory, filename);
+
+                    if (!Directory.Exists(localDirectory))
+                        Directory.CreateDirectory(localDirectory);
+
+                    System.IO.File.WriteAllBytes(localPath, imageBytes);
+
+                }
+            }
+
+            var urlPath = Path.Combine(destiantionFolder, filename);
+            return urlPath;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }

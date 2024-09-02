@@ -161,5 +161,93 @@ namespace ComicShelf.PublisherParsers
         {
             return VolumeType.Physical;
         }
+
+        protected override string GetISBN(IDocument document)
+        {
+            var nodes = document.QuerySelectorAll(".rm-product-tabs-attributtes-list-item");
+
+            foreach (var node in nodes)
+            {
+                if (node.Children[0].TextContent.Contains("ISBN"))
+                {
+                    return node.Children[1].TextContent.Trim();
+                }
+            }
+
+            return string.Empty;
+        }
+
+        protected override int GetTotalVolumes(IDocument document)
+        {
+            var nodes = document.QuerySelectorAll(".rm-product-tabs-attributtes-list-item");
+
+            foreach (var node in nodes)
+            {
+                if (node.Children[0].TextContent.Contains("Кількість томів"))
+                {
+                    var text = node.Children[1].TextContent;
+
+                    if (text.Contains('/'))
+                    {
+                        return int.Parse(text.Split('/', StringSplitOptions.RemoveEmptyEntries).First());
+                    }
+                    else if (text.Contains('(') && text.Contains(')'))
+                    {
+                        var indexopen = text.IndexOf('(') + 1;
+                        var indexclose = text.IndexOf(')');
+                        return int.Parse(text.Substring(indexopen, indexclose - indexopen));
+                    }
+                    else
+                    {
+                        return int.Parse(text);
+                    }
+                }
+            }
+
+            return -1;
+        }
+
+        protected override string? GetSeriesStatus(IDocument document)
+        {
+            var nodes = document.QuerySelectorAll(".rm-product-tabs-attributtes-list-item");
+
+            foreach (var node in nodes)
+            {
+                if (node.Children[0].TextContent.Contains("Кількість томів"))
+                {
+                    var text = node.Children[1].TextContent;
+
+                    if (text.Contains("онґоїнґ"))
+                    {
+                        return "ongoing";
+                    }
+                    else if (text == "1")
+                    {
+                        return "oneshot";
+                    }
+                    else
+                    {
+                        return "finished";
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        protected override string? GetOriginalSeriesName(IDocument document)
+        {
+            var nodes = document.QuerySelectorAll(".rm-product-tabs-attributtes-list-item");
+
+            foreach (var node in nodes)
+            {
+                if (node.Children[0].TextContent.Contains("Оригінальна назва"))
+                {
+                    return node.Children[1].TextContent.Trim();
+                }
+            }
+
+            return string.Empty;
+        }
     }
 }

@@ -116,5 +116,35 @@ namespace ComicShelf.PublisherParsers
         {
             return VolumeType.Digital;
         }
+
+        protected override string GetISBN(IDocument document)
+        {
+            var nodes = document.QuerySelectorAll(".bookitem-secondary-metadata > ul > li");
+
+            foreach (var node in nodes)
+            {
+                if (node.TextContent.Contains("ISBN:"))
+                {
+                    return node.Children[0].TextContent;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        protected override int GetTotalVolumes(IDocument document)
+        {
+            return -1;
+        }
+
+        protected override string? GetSeriesStatus(IDocument document)
+        {
+            return null;
+        }
+
+        protected override string? GetOriginalSeriesName(IDocument document)
+        {
+            return null;
+        }
     }
 }

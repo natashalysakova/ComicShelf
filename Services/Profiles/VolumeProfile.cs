@@ -15,9 +15,15 @@ namespace Services.Profiles
                 .ForSourceMember(x => x.NumberOfIssues, act => act.DoNotValidate())
                 .ForSourceMember(x => x.NumberOfBonusIssues, act => act.DoNotValidate())
                 .ForSourceMember(x => x.VolumeType, act => act.DoNotValidate())
+                .ForSourceMember(x => x.CoverToDownload, act => act.DoNotValidate())
+                .ForSourceMember(x => x.PublisherName, act => act.DoNotValidate())
+                .ForSourceMember(x => x.TotalVolumes, act => act.DoNotValidate())
+                .ForSourceMember(x => x.SeriesStatus, act => act.DoNotValidate())
+                .ForSourceMember(x => x.SeriesOriginalName, act => act.DoNotValidate())
                 .ForMember(x => x.OneShot, act => act.MapFrom(x => x.VolumeType == VolumeItemType.OneShot))
                 .ForMember(x => x.SingleIssue, act => act.MapFrom(x => x.VolumeType == VolumeItemType.Issue))
                 .ForMember(x => x.Authors, act => act.Ignore());
+
 
 
             CreateMap<VolumeUpdateModel, Volume>(MemberList.Source)
@@ -47,7 +53,7 @@ namespace Services.Profiles
                 .ForMember(x => x.MalId, act => act.MapFrom(x => x.Series.MalId))
                 .ForMember(x => x.Issues, act => act.MapFrom(x => x.Issues.Where(y => y.GetType() == typeof(Issue))))
                 .ForMember(x => x.BonusIssues, act => act.MapFrom(x => x.Issues.OfType<Bonus>()))
-                .ForMember(x=>x.IssuesRange, act => act.MapFrom(x=> FormatRanges(x.Issues.Where(x=>x.GetType() == typeof(Issue)).Select(y=>y.Number).OrderBy(x=>x).ToArray())));
+                .ForMember(x => x.IssuesRange, act => act.MapFrom(x => FormatRanges(x.Issues.Where(x => x.GetType() == typeof(Issue)).Select(y => y.Number).OrderBy(x => x).ToArray())));
         }
 
 
@@ -58,7 +64,7 @@ namespace Services.Profiles
 
         private static string FormatRanges(int[] arr)
         {
-            if(arr.Length == 0)
+            if (arr.Length == 0)
                 return string.Empty;
 
             List<string> result = new List<string>();

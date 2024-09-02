@@ -48,7 +48,11 @@ namespace ComicShelf.PublisherParsers
             var publisher = GetPublisher(document);
             var status = release > DateTime.Today ? PurchaseStatus.Announced : PurchaseStatus.Wishlist;
             var type = GetBookType();
-            var parsed = new ParsedInfo(title, GetAuthors(document), volumeNumber, series, cover, release.HasValue ? release.Value.ToString("yyyy-MM-dd") : null, publisher, type.ToString(), status.ToString());
+            var isbn = GetISBN(document);
+            var totalVol = GetTotalVolumes(document);
+            var seriesStatus = GetSeriesStatus(document);
+            var originalSeriesName = GetOriginalSeriesName(document);
+            var parsed = new ParsedInfo(title, GetAuthors(document), volumeNumber, series, cover, release.HasValue ? release.Value.ToString("yyyy-MM-dd") : null, publisher, type.ToString(), status.ToString(), isbn, totalVol, seriesStatus, originalSeriesName);
 
             return parsed;
 
@@ -60,6 +64,10 @@ namespace ComicShelf.PublisherParsers
         protected abstract string GetAuthors(IDocument document);
         protected abstract string GetCover(IDocument document);
         protected abstract DateTime? GetReleaseDate(IDocument document);
+        protected abstract string GetISBN(IDocument document);
+        protected abstract int GetTotalVolumes(IDocument document);
+        protected abstract string? GetSeriesStatus(IDocument document);
+        protected abstract string? GetOriginalSeriesName(IDocument document);
         protected virtual string GetPublisher(IDocument document)
         {
             return PublisherName;
@@ -99,5 +107,5 @@ namespace ComicShelf.PublisherParsers
         }
     }
 
-    public record ParsedInfo(string title, string authors, int volumeNumber, string series, string cover, string? release, string publisher, string type, string status);
+    public record ParsedInfo(string title, string authors, int volumeNumber, string series, string cover, string? release, string publisher, string type, string status, string isbn, int totalVolumes, string? seriesStatus, string? originalSeriesName);
 }
