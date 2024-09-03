@@ -198,8 +198,9 @@ function filter(e) {
 
         if (currentValue == previousSearch) {
             return;
-        } else {
-            previousSearch = currentValue;
+
+        if (currentValue.length == 1) {
+            return;
         }
     }
 
@@ -222,6 +223,8 @@ function filter(e) {
         filters = fillFilters();
     }
     findMatch(filters);
+
+    previousSearch = filters.search;
 
     $('#shelves').html('');
     $('#spinner').css('visibility', 'visible')
