@@ -290,7 +290,7 @@ namespace ComicShelf.Parsers
         [TestMethod]
         public async Task AmazonTest()
         {
-            var parser = new PublisherParsersFactory().CreateParser("https://www.amazon.com/dp/B08924QLFH/");
+            var parser = new PublisherParsersFactory().CreateParser("https://www.amazon.com/dp/B08FVLVXX6/");
 
             Assert.IsNotNull(parser);
 
@@ -298,14 +298,14 @@ namespace ComicShelf.Parsers
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Volume 1", result.title);
-            Assert.AreEqual("Rent-A-Girlfriend", result.series);
-            Assert.AreEqual("Reiji Miyajima", result.authors);
+            Assert.AreEqual("Solo Leveling", result.series);
+            Assert.AreEqual("DUBU", result.authors);
             Assert.AreEqual(1, result.volumeNumber);
-            Assert.AreEqual("https://m.media-amazon.com/images/I/81oObjb7cwL._SL1500_.jpg", result.cover);
-            Assert.AreEqual("2020-06-02", result.release);
-            Assert.AreEqual("Kodansha Comics", result.publisher);
+            Assert.AreEqual("https://m.media-amazon.com/images/I/81y9XvteVOL._SL1500_.jpg", result.cover);
+            Assert.AreEqual("2021-03-02", result.release);
+            Assert.AreEqual("Yen Press", result.publisher);
             Assert.AreEqual("Digital", result.type);
-            Assert.AreEqual("B08924QLFH", result.isbn);
+            Assert.AreEqual("B08FVLVXX6", result.isbn);
             Assert.AreEqual(-1, result.totalVolumes);
             Assert.AreEqual(null, result.seriesStatus);
             Assert.AreEqual(null, result.originalSeriesName);

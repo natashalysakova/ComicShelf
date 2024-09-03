@@ -37,22 +37,30 @@ namespace ComicShelf.PublisherParsers
             var html = await GetUrlHtml(url);
             var parser = new HtmlParser();
             var document = parser.ParseDocument(html);
+            try
+            {
+                var title = GetTitle(document);
+                var volumeNumber = GetVolumeNumber(document);
+                var series = GetSeries(document);
+                var cover = GetCover(document);
+                var release = GetReleaseDate(document);
+                var publisher = GetPublisher(document);
+                var status = release > DateTime.Today ? PurchaseStatus.Announced : PurchaseStatus.Wishlist;
+                var type = GetBookType();
+                var isbn = GetISBN(document);
+                var totalVol = GetTotalVolumes(document);
+                var seriesStatus = GetSeriesStatus(document);
+                var originalSeriesName = GetOriginalSeriesName(document);
+                var parsed = new ParsedInfo(title, GetAuthors(document), volumeNumber, series, cover, release.HasValue ? release.Value.ToString("yyyy-MM-dd") : null, publisher, type.ToString(), status.ToString(), isbn, totalVol, seriesStatus, originalSeriesName);
+                return parsed;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine(html);
+                throw;
+            }
 
-            var title = GetTitle(document);
-            var volumeNumber = GetVolumeNumber(document);
-            var series = GetSeries(document);
-            var cover = GetCover(document);
-            var release = GetReleaseDate(document);
-            var publisher = GetPublisher(document);
-            var status = release > DateTime.Today ? PurchaseStatus.Announced : PurchaseStatus.Wishlist;
-            var type = GetBookType();
-            var isbn = GetISBN(document);
-            var totalVol = GetTotalVolumes(document);
-            var seriesStatus = GetSeriesStatus(document);
-            var originalSeriesName = GetOriginalSeriesName(document);
-            var parsed = new ParsedInfo(title, GetAuthors(document), volumeNumber, series, cover, release.HasValue ? release.Value.ToString("yyyy-MM-dd") : null, publisher, type.ToString(), status.ToString(), isbn, totalVol, seriesStatus, originalSeriesName);
 
-            return parsed;
 
         }
 
@@ -100,4 +108,15 @@ namespace ComicShelf.PublisherParsers
     }
 
     public record ParsedInfo(string title, string authors, int volumeNumber, string series, string cover, string? release, string publisher, string type, string status, string isbn, int totalVolumes, string? seriesStatus, string? originalSeriesName);
+
+
+    [Serializable]
+    public class DocumentParseException : Exception
+    {
+        public IDocument Document { get; }
+        public DocumentParseException(string selector, IDocument document) : base(selector)
+        {
+            Document = document;
+        }
+    }
 }
