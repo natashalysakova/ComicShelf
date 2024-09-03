@@ -198,6 +198,7 @@ function filter(e) {
 
         if (currentValue == previousSearch) {
             return;
+        }
 
         if (currentValue.length == 1) {
             return;
