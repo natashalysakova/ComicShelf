@@ -187,7 +187,7 @@ function findMatch(filters) {
     selectElement.value = 0;
 }
 
-let previousSearch;
+let previousSearch = "";
 function filter(e) {
 
 
