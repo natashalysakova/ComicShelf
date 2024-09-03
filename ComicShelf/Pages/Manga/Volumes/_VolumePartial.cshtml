@@ -17,7 +17,7 @@
 <div class="modal-header">
     <div class="row">
         <div class="modal-title display-6" id="exampleModalLabel">
-            <button class="title-btn" data-bs-dismiss="modal" onclick="SearchBySeries('@Model.SeriesName')">@Model.SeriesName</button>
+            <button class="title-btn" data-bs-dismiss="modal" onclick="SearchBySeries(this)">@Model.SeriesName</button>
             @if (!Model.OneShot && Model.Number != 0)
             {
                 @Model.Number

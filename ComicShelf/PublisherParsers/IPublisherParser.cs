@@ -33,10 +33,10 @@ namespace ComicShelf.PublisherParsers
         {
             //var config = new Configuration().WithDefaultLoader();
             //var document = await BrowsingContext.New(config).OpenAsync(url);
-
             var html = await GetUrlHtml(url);
             var parser = new HtmlParser();
             var document = parser.ParseDocument(html);
+
             try
             {
                 var title = GetTitle(document);
@@ -84,25 +84,32 @@ namespace ComicShelf.PublisherParsers
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
+
+            //client.DefaultRequestHeaders.Add("Accept-language", "en-GB,en;q=0.9");
+            //client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
+            //client.DefaultRequestHeaders.Add("Cache-Control", "max-age=0");
+            //client.DefaultRequestHeaders.Add("Connection", "keep-alive");
+
             client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36");
             string page = string.Empty;
-            bool isForbidden = true;
+            int retry = 0;
+            int maxretry = 10;
             do
             {
                 try
                 {
                     page = await client.GetStringAsync(url);
-                    isForbidden = false;
+                    return page;
                 }
                 catch (Exception)
                 {
-                    //await Task.Delay(1000);
+                    await Task.Delay(1000);
                     Console.WriteLine("retry");
+                    retry += 1;
                 }
-            } while (isForbidden);
+            } while (retry < maxretry);
 
-
-            return page;
+            throw new Exception("Cannot access website");
         }
 
     }

@@ -90,6 +90,9 @@ namespace ComicShelf.PublisherParsers
                 return -1;
             var text = node.TextContent;
             var firstWhiteSpace = text.IndexOf(" ");
+            if (firstWhiteSpace == -1)
+                return -1;
+
             var secondWhitespace = text.IndexOf(" ", firstWhiteSpace + 1);
             var volume = text.Substring(firstWhiteSpace, secondWhitespace - firstWhiteSpace).Trim();
 

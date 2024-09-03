@@ -190,8 +190,6 @@ function findMatch(filters) {
 let previousSearch;
 function filter(e) {
 
-    $('#shelves').html('');
-    $('#spinner').css('visibility', 'visible')
 
     var filters;
 
@@ -224,6 +222,9 @@ function filter(e) {
         filters = fillFilters();
     }
     findMatch(filters);
+
+    $('#shelves').html('');
+    $('#spinner').css('visibility', 'visible')
 
 
     $.ajax({
@@ -587,8 +588,8 @@ function addChaptersSuccess(e) {
     $("#addIssuesForm").trigger("reset");
 }
 
-function SearchBySeries(seriesName) {
-    $('#search-field').val(seriesName);
+function SearchBySeries(source) {
+    $('#search-field').val(source.textContent);
     filter();
 }
 
@@ -693,9 +694,9 @@ function fillAuthors(source) {
         url: "?handler=SeriesAuthor&series=" + seriesName,
         type: 'GET',
         cache: false
-    }).done(function (result) {
+    }).always(function (result) {
         $("#import-spinner").hide();
+    }).done(function (result) {
         $('#NewVolume_Authors').val(result);
-
     });
 }

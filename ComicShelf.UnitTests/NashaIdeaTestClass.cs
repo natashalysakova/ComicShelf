@@ -232,6 +232,33 @@ namespace ComicShelf.Parsers
         }
 
         [TestMethod]
+        public async Task KoboTest2()
+        {
+            var parser = new PublisherParsersFactory().CreateParser("https://www.kobo.com/ww/en/ebook/spy-x-family-family-portrait");
+
+            Assert.IsNotNull(parser);
+
+            var result = await parser.Parse();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Spy x Family: Family Portrait", result.title);
+            Assert.AreEqual("Spy x Family Novels", result.series);
+            Assert.AreEqual("Aya Yajima", result.authors);
+            Assert.AreEqual(-1, result.volumeNumber);
+            Assert.AreEqual("https://cdn.kobo.com/book-images/a28d0839-b608-49ab-9f79-e100fef90c0f/353/569/90/False/spy-x-family-family-portrait.jpg", result.cover);
+            Assert.AreEqual("2023-12-26", result.release);
+            Assert.AreEqual("VIZ Media", result.publisher);
+            Assert.AreEqual("Digital", result.type);
+
+            Assert.AreEqual("9781974742691", result.isbn);
+            Assert.AreEqual(-1, result.totalVolumes);
+            Assert.AreEqual(null, result.seriesStatus);
+            Assert.AreEqual(null, result.originalSeriesName);
+
+
+        }
+
+        [TestMethod]
         public async Task KoboPreorderTest()
         {
             var parser = new PublisherParsersFactory().CreateParser("https://www.kobo.com/ww/en/ebook/spy-x-family-vol-13");
