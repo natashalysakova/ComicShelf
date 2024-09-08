@@ -170,7 +170,8 @@ namespace ComicShelf.PublisherParsers
             //}
 
             var oldNode = nodes.SingleOrDefault(x => x.TextContent.Contains("Статус серії"));
-
+            if(oldNode == null) 
+                return -1;
             var split = oldNode.TextContent.Split([',', '.', ' ', '-'], StringSplitOptions.RemoveEmptyEntries);
             foreach (var item2 in split)
             {
