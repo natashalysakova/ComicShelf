@@ -22,6 +22,7 @@ public class Program
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
 
+        builder.Configuration.AddEnvironmentVariables();
 
         if (builder.Environment.IsDevelopment())
         {
@@ -32,13 +33,12 @@ public class Program
             builder.Configuration.AddJsonFile("connectionString.json");
         }
 
-
-
         // Add services to the container.
         builder.Services.AddRazorPages();
 
         //"server={ip};user id={db};password={password};database={dbName}"
-        var connectionString = builder.Configuration["mariaDbConnectionString"];
+        //var connectionString = builder.Configuration["mariaDbConnectionString"];
+        var connectionString = builder.Configuration.GetConnectionString("db");
 
         ServerVersion version = default;
 

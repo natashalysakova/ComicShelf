@@ -18,18 +18,18 @@ namespace ComicShelf.PublisherParsers
                 ];
         }
 
-        public IPublisherParser? CreateParser(string url)
+    public IPublisherParser? CreateParser(string url)
+    {
+        foreach (var parser in _parsers)
         {
-            foreach (var parser in _parsers)
+            if (url.StartsWith(parser.SiteUrl))
             {
-                if (url.StartsWith(parser.SiteUrl))
-                {
-                    parser.SetUrl(url);
-                    return parser;
-                }
+                parser.SetUrl(url);
+                return parser;
             }
-
-            return default;
         }
+
+        return default;
     }
+}
 }

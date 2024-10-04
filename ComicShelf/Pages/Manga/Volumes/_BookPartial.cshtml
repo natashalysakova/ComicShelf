@@ -9,50 +9,63 @@
 @model VolumeViewModel
 
 @{
-    var expired = Model.Expired ? "expired" : string.Empty;
+    var errorClass = Model.HasError ? "bg-danger" : string.Empty;
 }
+<form method="get"
+      asp-page-handler="Volume" data-ajax-method="get" data-ajax="true"
+      data-ajax-mode="replace"
+      data-ajax-update="#detail-modal-content"
+      data-ajax-complete="detailsLoaded">
+    <input type="number" name="id" value="@Model.Id" hidden>
+    <button id="btn_@Model.Id" type="submit" hidden></button>
+</form>
+<div class="book @errorClass" onclick="$('#btn_@Model.Id').click()" data-bs-toggle="modal" data-bs-target="#detailModal" id="book-@Model.Id">
 
-<img class="book-cover" src="~/@Model.CoverUrl" onerror="this.onerror=null; if (this.src != '/images/static/no-cover.png') this.src = '/images/static/no-cover.png';" alt="">
-<div class="book-header">
-    <div class="book-title @expired"></div>
-    <div class="book-text">
-        @Model.SeriesName
-        @{
-            if (!Model.OneShot)
-            {
-                <br>
-                @Model.Title
+    @{
+        var expired = Model.Expired ? "expired" : string.Empty;
+    }
+
+    <img class="book-cover" src="~/@Model.CoverUrl" onerror="this.onerror=null; if (this.src != '/images/static/no-cover.png') this.src = '/images/static/no-cover.png';" alt="">
+    <div class="book-header">
+        <div class="book-title @expired"></div>
+        <div class="book-text">
+            @Model.SeriesName
+            @{
+                if (!Model.OneShot)
+                {
+                    <br>
+                    @Model.Title
+                }
             }
+        </div>
+
+    </div>
+    @{
+        if (!Model.OneShot && Model.Number != 0)
+        {
+            <div class="book-number" style="background-color:@Model.SeriesColor;">@Model.Number</div>
         }
-    </div>
+        else if (Model.Number == 0)
+        {
+            <div class="book-number" style="background-color:@Model.SeriesColor;">@Localizer["BonusIssueShort"]</div>
+        }
+    }
 
+    @if (Model.PurchaseStatus == PurchaseStatus.Announced || Model.PurchaseStatus == PurchaseStatus.Preordered || Model.PurchaseStatus == PurchaseStatus.Wishlist)
+    {
+        <div class="book-badge book-badge-@Model.PurchaseStatus.ToString().ToLower()">@Localizer[Model.PurchaseStatus.ToString()]</div>
+
+        if (Model.ReleaseDate.HasValue && Model.PurchaseStatus != PurchaseStatus.Wishlist)
+        {
+            <div class=" book-badge badge-date @expired">@Model.ReleaseDate.Value.ToShortDateString()</div>
+        }
+    }
+    @if (Model.Rating != 0)
+    {
+        <div class="star">
+            <span class="number">@Model.Rating</span>
+        </div>
+    }
 </div>
-@{
-    if (!Model.OneShot && Model.Number != 0)
-    {
-        <div class="book-number" style="background-color:@Model.SeriesColor;">@Model.Number</div>
-    }
-    else if(Model.Number == 0)
-    {
-        <div class="book-number" style="background-color:@Model.SeriesColor;">@Localizer["BonusIssueShort"]</div>
-    }
-}
-
-@if (Model.PurchaseStatus == PurchaseStatus.Announced || Model.PurchaseStatus == PurchaseStatus.Preordered || Model.PurchaseStatus == PurchaseStatus.Wishlist)
-{
-    <div class="book-badge book-badge-@Model.PurchaseStatus.ToString().ToLower()">@Localizer[Model.PurchaseStatus.ToString()]</div>
-
-    if (Model.ReleaseDate.HasValue && Model.PurchaseStatus != PurchaseStatus.Wishlist)
-    {
-        <div class=" book-badge badge-date @expired">@Model.ReleaseDate.Value.ToShortDateString()</div>
-    }
-}
-@if (Model.Rating != 0)
-{
-    <div class="star">
-        <span class="number">@Model.Rating</span>
-    </div>
-}
-
 
 

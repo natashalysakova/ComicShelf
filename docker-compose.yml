@@ -1,0 +1,35 @@
+version: '3.4'
+services:
+  comicshelf:
+    image: ${DOCKER_REGISTRY-}comicshelf
+    build:
+      context: .
+      dockerfile: ComicShelf/Dockerfile
+    ports:
+      - 5297:8080
+    networks:
+      - shelf-network
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8080
+    env_file:
+      - .env
+
+  db:
+    container_name: shelf-db
+    image: mariadb:latest
+    ports:
+      - 3306:3306
+    networks:
+      - shelf-network
+    volumes:
+      - dbdata:/var/lib/mysql
+    env_file:
+      - .env
+
+networks:
+  shelf-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local

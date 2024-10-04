@@ -615,7 +615,13 @@ function importComplete(data) {
             $('#typeOneShot').prop("checked", true);
         }
 
-        $('#NewVolume_Authors').val(resp.authors);
+        if (resp.authors.length === 0) {
+            fillAuthors(resp.series);
+        }
+        else {
+            $('#NewVolume_Authors').val(resp.authors);
+        }
+
         $('#NewVolume_ReleaseDate').val(resp.release);
         handleCoverInput(resp.cover);
 
@@ -692,7 +698,12 @@ function updateBegin(data) {
 function fillAuthors(source) {
     $("#import-spinner").show();
 
-    var seriesName = $(source).val();
+
+    if (typeof source === 'string') {
+        var seriesName = source
+    } else {
+        var seriesName = $(source).val();
+    }
 
     $.ajax({
         url: "?handler=SeriesAuthor&series=" + seriesName,

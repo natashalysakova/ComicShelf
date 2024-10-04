@@ -34,6 +34,7 @@ namespace ComicShelf.Utilities
                 new List<PurchaseStatus>()
                 {
                     PurchaseStatus.Wishlist,
+                    PurchaseStatus.Preordered,
                     PurchaseStatus.Bought,
                     PurchaseStatus.Pirated,
                     PurchaseStatus.Gift,

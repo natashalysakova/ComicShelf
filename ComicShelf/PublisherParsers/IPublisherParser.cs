@@ -8,6 +8,7 @@ using Backend.Models.Enums;
 using HtmlAgilityPack;
 using Services.Services;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace ComicShelf.PublisherParsers
@@ -26,8 +27,6 @@ namespace ComicShelf.PublisherParsers
         {
             this.url = url;
         }
-
-
 
         public async Task<ParsedInfo> Parse()
         {
@@ -51,7 +50,9 @@ namespace ComicShelf.PublisherParsers
                 var totalVol = GetTotalVolumes(document);
                 var seriesStatus = GetSeriesStatus(document);
                 var originalSeriesName = GetOriginalSeriesName(document);
-                var parsed = new ParsedInfo(title, GetAuthors(document), volumeNumber, series, cover, release.HasValue ? release.Value.ToString("yyyy-MM-dd") : null, publisher, type.ToString(), status.ToString(), isbn, totalVol, seriesStatus, originalSeriesName);
+                var authors = GetAuthors(document);
+
+                var parsed = new ParsedInfo(title, authors, volumeNumber, series, cover, release.HasValue ? release.Value.ToString("yyyy-MM-dd") : null, publisher, type.ToString(), status.ToString(), isbn, totalVol, seriesStatus, originalSeriesName);
                 return parsed;
             }
             catch (Exception)
@@ -114,7 +115,7 @@ namespace ComicShelf.PublisherParsers
 
     }
 
-    public record ParsedInfo(string title, string authors, int volumeNumber, string series, string cover, string? release, string publisher, string type, string status, string isbn, int totalVolumes, string? seriesStatus, string? originalSeriesName);
+    public record ParsedInfo(string title, string? authors, int volumeNumber, string series, string cover, string? release, string publisher, string type, string status, string isbn, int totalVolumes, string? seriesStatus, string? originalSeriesName);
 
 
     [Serializable]

@@ -3,6 +3,7 @@ using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Backend.Models;
 using Backend.Models.Enums;
+using Services.Services;
 
 namespace ComicShelf.PublisherParsers
 {

@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /ComicShelf/Properties/PublishProfiles/deployOnSynyak.sh
 /ComicShelf/connectionString.json
 /Backend/devsettings.json
+/ComicShelf/wwwroot/images/countries
