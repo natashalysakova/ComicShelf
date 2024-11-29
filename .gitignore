@@ -367,3 +367,4 @@ FodyWeavers.xsd
 /ComicShelf/connectionString.json
 /Backend/devsettings.json
 /ComicShelf/wwwroot/images/countries
+/ComicShelf/wwwroot/lib/*/
