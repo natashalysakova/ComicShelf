@@ -8,6 +8,8 @@ services:
       - shelf-network
     environment:
       - ASPNETCORE_HTTP_PORTS=8080
+    volumes:
+      - images:/app/wwwroot/images:rw
     env_file:
       - .env
 
@@ -29,4 +31,6 @@ networks:
 
 volumes:
   dbdata:
+    driver: local
+  images:
     driver: local
