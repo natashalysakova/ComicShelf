@@ -1,6 +1,6 @@
 services:
   comic_shelf:
-    image: comic-shelf:latest
+    image: ghcr.io/natashalysakova/comic-shelf:latest
     build:
       context: .
       dockerfile: ComicShelf/Dockerfile
