@@ -139,10 +139,18 @@ internal class DbInitializer
                 continue;
 
             Console.WriteLine(code);
+            try
+            {
+                FileUtility.SaveFlagFromCDN(code, out string png, out string svg);
 
-            FileUtility.SaveFlagFromCDN(code, out string png, out string svg);
+                _context.Countries.Add(new Country() { FlagPNG = png, FlagSVG = svg, Name = country, CountryCode = code });
 
-            _context.Countries.Add(new Country() { FlagPNG = png, FlagSVG = svg, Name = country, CountryCode = code });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return;
+            }
         }
         _context.SaveChanges();
 
