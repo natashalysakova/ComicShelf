@@ -24,14 +24,14 @@ public class Program
 
         builder.Configuration.AddEnvironmentVariables();
 
-        if (builder.Environment.IsDevelopment())
-        {
-            builder.Configuration.AddUserSecrets<Program>();
-        }
-        else
-        {
-            builder.Configuration.AddJsonFile("connectionString.json");
-        }
+        //if (builder.Environment.IsDevelopment())
+        //{
+        //    builder.Configuration.AddUserSecrets<Program>();
+        //}
+        //else
+        //{
+        //    builder.Configuration.AddJsonFile("connectionString.json");
+        //}
 
         // Add services to the container.
         builder.Services.AddRazorPages();
