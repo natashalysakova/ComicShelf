@@ -1,10 +1,7 @@
-version: '3.4'
 services:
-  comicshelf:
-    image: ${DOCKER_REGISTRY-}comicshelf
-    build:
-      context: .
-      dockerfile: ComicShelf/Dockerfile
+  comic_shelf:
+    container_name: shelf-backend
+    image: ghcr.io/natashalysakova/comic-shelf:latest
     ports:
       - 5297:8080
     networks:

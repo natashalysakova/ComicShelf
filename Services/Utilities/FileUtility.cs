@@ -5,11 +5,13 @@ using UnidecodeSharpFork;
 
 public static class FileUtility
 {
-#if DEBUG
-    const string serverRoot = "..\\ComicShelf\\wwwroot";
-#else
-    const string serverRoot = "/volume1/web/publish/wwwroot";
-#endif
+// #if DEBUG
+//     const string serverRoot = "..\\ComicShelf\\wwwroot";
+// #else
+//     const string serverRoot = "/volume1/web/publish/wwwroot";
+// #endif
+
+    private const string serverRoot = "wwwroot/";
 
     const string imageDir = "images";
 

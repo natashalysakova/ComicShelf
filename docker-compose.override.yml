@@ -1,7 +1,6 @@
-version: '3.4'
-
 services:
-  comicshelf:
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+  comic_shelf:
+    image: comic-shelf:latest
+    build:
+      context: .
+      dockerfile: ComicShelf/Dockerfile

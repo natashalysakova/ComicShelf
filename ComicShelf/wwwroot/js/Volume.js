@@ -601,7 +601,7 @@ function importComplete(data) {
 
     $("#import-spinner").hide();
 
-    if (data.status == 200) {
+    if (data.status === 200) {
         var resp = data.responseJSON;
         $('#NewVolume_SeriesName').val(resp.series);
         $('#NewVolume_Title').val(resp.title);
