@@ -11,7 +11,7 @@ public static class FileUtility
 //     const string serverRoot = "/volume1/web/publish/wwwroot";
 // #endif
 
-    private const string serverRoot = "wwwroot/";
+    private const string serverRoot = "wwwroot";
 
     const string imageDir = "images";
 
@@ -40,7 +40,8 @@ public static class FileUtility
     {
         extention = new FileInfo(url).Extension;
         var escapedSeriesName = seriesName.Unidecode().Replace(Path.GetInvalidFileNameChars(), string.Empty);
-        var destiantionFolder = $"{imageDir}\\{escapedSeriesName}";
+        var destiantionFolder = Path.Combine(imageDir, escapedSeriesName);
+
         var filename = $"{escapedSeriesName} {volumeNumber}{extention}";
         var urlPath = Path.Combine(destiantionFolder, filename);
 
@@ -108,7 +109,9 @@ public static class FileUtility
             $"https://flagcdn.com/{countryCode}.svg",
             $"https://flagcdn.com/40x30/{countryCode}.png" };
 
-        var destiantionFolder = $"{imageDir}\\countries";
+        var destiantionFolder = Path.Combine(imageDir, "countries");
+        var localDirectory = Path.Combine(serverRoot, destiantionFolder);
+
 
         foreach (var url in urls)
         {
@@ -122,7 +125,6 @@ public static class FileUtility
                     byte[] imageBytes =
                         response.Result.Content.ReadAsByteArrayAsync().Result;
 
-                    var localDirectory = Path.Combine(serverRoot, destiantionFolder);
                     var localPath = Path.Combine(localDirectory, filename);
 
                     if (!Directory.Exists(localDirectory))

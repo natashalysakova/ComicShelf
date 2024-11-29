@@ -138,6 +138,8 @@ internal class DbInitializer
             if (code.Length != 2)
                 continue;
 
+            Console.WriteLine(code);
+
             FileUtility.SaveFlagFromCDN(code, out string png, out string svg);
 
             _context.Countries.Add(new Country() { FlagPNG = png, FlagSVG = svg, Name = country, CountryCode = code });
