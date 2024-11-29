@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Services.Services;
 using Services.Services.Enums;
+using System.Diagnostics.Metrics;
 using System.Globalization;
 
 internal class DbInitializer
@@ -139,10 +140,18 @@ internal class DbInitializer
                 continue;
 
             Console.WriteLine(code);
+            try
+            {
+                FileUtility.SaveFlagFromCDN(code, out string png, out string svg);
 
-            FileUtility.SaveFlagFromCDN(code, out string png, out string svg);
+                _context.Countries.Add(new Country() { FlagPNG = png, FlagSVG = svg, Name = country, CountryCode = code });
 
-            _context.Countries.Add(new Country() { FlagPNG = png, FlagSVG = svg, Name = country, CountryCode = code });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return;
+            }
         }
         _context.SaveChanges();
 
@@ -184,18 +193,26 @@ internal class DbInitializer
 
     internal void FillFlags()
     {
-        foreach (var item in _context.Countries)
+        try
         {
-            if (String.IsNullOrEmpty(item.FlagPNG) || String.IsNullOrEmpty(item.FlagSVG))
+            foreach (var item in _context.Countries)
             {
-                item.CountryCode = item.CountryCode.ToLower();
-                FileUtility.SaveFlagFromCDN(item.CountryCode, out string png, out string svg);
-                item.FlagPNG = png;
-                item.FlagSVG = svg;
+                if (String.IsNullOrEmpty(item.FlagPNG) || String.IsNullOrEmpty(item.FlagSVG))
+                {
+                    item.CountryCode = item.CountryCode.ToLower();
+                    FileUtility.SaveFlagFromCDN(item.CountryCode, out string png, out string svg);
+                    item.FlagPNG = png;
+                    item.FlagSVG = svg;
+                }
             }
-        }
 
-        _context.SaveChanges();
+            _context.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+            return;
+        }
     }
 
     internal void RestoreImagesFromDB()
