@@ -15,7 +15,7 @@ services:
     container_name: shelf-db
     image: mariadb:latest
     ports:
-      - 3306:3306
+      - 3308:3306
     networks:
       - shelf-network
     volumes:
