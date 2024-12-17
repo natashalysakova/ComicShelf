@@ -12,6 +12,7 @@ services:
       - images:/app/wwwroot/images:rw
     env_file:
       - .env
+    restart: always
 
   db:
     container_name: shelf-db
@@ -24,6 +25,7 @@ services:
       - dbdata:/var/lib/mysql
     env_file:
       - .env
+    restart: always
 
 networks:
   shelf-network:
