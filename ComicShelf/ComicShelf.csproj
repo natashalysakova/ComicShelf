@@ -64,7 +64,6 @@
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.1.2" />
-    <PackageReference Include="BuildWebCompiler2022" Version="1.14.10" />
     <PackageReference Include="EfCore.SchemaCompare" Version="8.0.4" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.65" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.4" />

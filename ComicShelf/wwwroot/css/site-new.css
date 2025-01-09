@@ -182,7 +182,7 @@ body .modal-open {
   width: auto;
   left: 0;
   top: 0;
-  line-height: 15px;
+  line-height: 0px;
   padding: 10px;
   border-radius: 0 25px 25px 0;
   color: white;
