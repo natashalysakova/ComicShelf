@@ -145,14 +145,22 @@ namespace Services.Services
             {
                 case PurchaseStatus.Announced:
                     volume.ReleaseDate = model.ReleaseDate;
+                    volume.PurchaseDate = default;
+                    volume.PreorderDate = default;
                     break;
                 case PurchaseStatus.Preordered:
                     volume.ReleaseDate = model.ReleaseDate;
                     volume.PreorderDate = model.PreorderDate;
+                    volume.PurchaseDate = default;
                     break;
                 case PurchaseStatus.Wishlist:
+                    volume.ReleaseDate = default;
+                    volume.PreorderDate = default;
+                    volume.PurchaseDate = default;
                     break;
                 default:
+                    volume.ReleaseDate = default;
+                    volume.PreorderDate = default;
                     volume.PurchaseDate = model.PurchaseDate;
                     break;
             }

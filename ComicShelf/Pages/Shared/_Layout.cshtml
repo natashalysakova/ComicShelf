@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
+    <base href="~/" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ComicShelf</title>
@@ -39,12 +40,12 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-page="/Manga/Volumes/Index">@Localizer["ComiscAndManga"]</a>
                         </li>
-@*                        <li class="nav-item">
-                            <a class="nav-link" asp-page="/Anime/Index">@Localizer["Anime"]</a>
+                       <li class="nav-item">
+                            <a class="nav-link" asp-page="/Manga/Stats">@Localizer["Stats"]</a>
                         </li>
-                        <li class="nav-item">
+@*                         <li class="nav-item">
                             <a class="nav-link" asp-page="/Beer/Index">@Localizer["Beer"]</a>
-                        </li>*@
+                        </li> *@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">@Localizer["ServiceData"]</a>
                             <ul class="dropdown-menu">
@@ -125,9 +126,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    <script src="_framework/blazor.server.js"></script>
+    <script src="_framework/aspnetcore-browser-refresh.js"></script>
 </body>
 </html>
-
-<base href="~/" />
-<script src="_framework/blazor.server.js"></script>
-<script src="_framework/aspnetcore-browser-refresh.js"></script>

@@ -34,8 +34,8 @@ public class Program
         //}
 
         // Add services to the container.
-        builder.Services.AddRazorPages();
-
+        builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+        builder.Services.AddServerSideBlazor();
         //"server={ip};user id={db};password={password};database={dbName}"
         //var connectionString = builder.Configuration["mariaDbConnectionString"];
         var connectionString = builder.Configuration.GetConnectionString("db");

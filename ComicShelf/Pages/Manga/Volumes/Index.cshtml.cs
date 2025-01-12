@@ -176,7 +176,7 @@ namespace ComicShelf.Pages.Volumes
             return new JsonResult(_filterService.GetAllForView());
         }
 
-        internal BookshelfParams FromCookies()
+        public BookshelfParams FromCookies()
         {
             var cookie = Request.Cookies["filters"];
             if (cookie != null)

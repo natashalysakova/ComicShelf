@@ -1,0 +1,98 @@
+﻿@page
+@using Services
+@model ComicShelf.Pages.Manga.StatsModel
+@inject ILocalizationService Localizer
+@{
+}
+
+
+
+<label asp-for="Filters.Year" class="input-group-text">@Localizer["Year"]</label>
+<select asp-for="Filters.Year" class="form-select" asp-items="@Model.Years"></select>
+
+
+<div style="background-color: azure;">
+    <canvas id="ordersCanvas"></canvas>
+    <canvas id="collectionCanvas"></canvas>
+</div>
+<h2>Preorders</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Series</th>
+            <th>Title</th>
+            <th>PreorderDate</th>
+            <th>PurchaseDate</th>
+            <th>Valid</th>
+        </tr>
+    </thead>
+    @foreach (var item in Model.Volumes)
+    {
+        <tr>
+            <td>@item.Series.Name</td>
+            <td>@item.Title</td>
+            <td>@item.PreorderDate</td>
+            <td>@item.PurchaseDate</td>
+            <td>
+                @if(item.PreorderDate > item.PurchaseDate){
+                    <p>false</p>
+                }
+                else if (item.PreorderDate == item.PurchaseDate)
+                {
+                    <p>SAME</p>
+                }
+                else 
+                {
+                    <p>ok</p>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+@section scripts {
+    <script src="~/lib/chatjs/chart.umd.min.js"></script>
+    <script defer>
+        const ctx = document.getElementById('ordersCanvas');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.MonthLables)),
+                datasets: [{
+                    label: '# of purchases',
+                    data: @Html.Raw(Json.Serialize(Model.PurchsedByMonth))
+                },
+                {
+                    label: '# of preorders',
+                    data: @Html.Raw(Json.Serialize(Model.PreorderedByMonth))
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const ctx2 = document.getElementById('collectionCanvas');
+        var myChart2 = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.MonthLables)),
+                datasets: [{
+                    label: 'total library',
+                    data: @Html.Raw(Json.Serialize(Model.CollectionGrowth))
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

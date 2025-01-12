@@ -649,7 +649,7 @@ function importComplete(data) {
 async function handleCoverInput(coverUrl) {
 
     $('#NewVolume_CoverToDownload').val(coverUrl).change();
-    retutn;
+    return;
 
 
 

@@ -1,5 +1,4 @@
-﻿
-using Services.Services;
+﻿using Services.Services;
 using System.Reflection;
 
 namespace ComicShelf.PublisherParsers
@@ -14,7 +13,8 @@ namespace ComicShelf.PublisherParsers
                 new NashaIdeaParser(),
                 new MalopusParser(),
                 new AmazonParser(),
-                new KoboParser()
+                new KoboParser(),
+                new LantsutaParser()
                 ];
         }
 
