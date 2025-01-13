@@ -5,12 +5,8 @@
 @{
 }
 
-
-
-<label asp-for="Filters.Year" class="input-group-text">@Localizer["Year"]</label>
-<select asp-for="Filters.Year" class="form-select" asp-items="@Model.Years"></select>
-
-
+@* <select asp-for="Filters.Year" class="form-select" asp-items="@Model.Years"></select>
+ *@
 <div style="background-color: azure;">
     <canvas id="ordersCanvas"></canvas>
     <canvas id="collectionCanvas"></canvas>
@@ -26,7 +22,7 @@
             <th>Valid</th>
         </tr>
     </thead>
-    @foreach (var item in Model.Volumes)
+    @foreach (var item in Model.Volumes.Where(x=>x.PreorderDate!= null).OrderBy(x=>x.PreorderDate))
     {
         <tr>
             <td>@item.Series.Name</td>

@@ -34,8 +34,8 @@ public class Program
         //}
 
         // Add services to the container.
-        builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-        builder.Services.AddServerSideBlazor();
+        builder.Services.AddRazorPages();
+
         //"server={ip};user id={db};password={password};database={dbName}"
         //var connectionString = builder.Configuration["mariaDbConnectionString"];
         var connectionString = builder.Configuration.GetConnectionString("db");
@@ -171,9 +171,7 @@ public class Program
         app.UseStatusCodePages();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
         app.UseRouting();
-        //app.MapBlazorHub();
         app.UseAuthorization();
         app.UseSession();
         app.MapRazorPages();

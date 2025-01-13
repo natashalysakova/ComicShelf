@@ -67,7 +67,7 @@ namespace ComicShelf.Pages.Manga
                 MonthLables.Add(date);
 
                 PurchsedByMonth.Add(Volumes.Where(x => x.PurchaseDate.HasValue && x.PurchaseDate!.Value.Year == dateToAdd.Year && x.PurchaseDate!.Value.Month == dateToAdd.Month).Count());
-                PreorderedByMonth.Add(Volumes.Where(x => x.PreorderDate.HasValue && x.PreorderDate <= x.PurchaseDate && x.PreorderDate!.Value.Year == dateToAdd.Year && x.PreorderDate!.Value.Month == dateToAdd.Month).Count());
+                PreorderedByMonth.Add(Volumes.Where(x => x.PreorderDate.HasValue && x.PreorderDate!.Value.Year == dateToAdd.Year && x.PreorderDate!.Value.Month == dateToAdd.Month).Count());
 
                 dateToAdd = dateToAdd.AddMonths(1);
 
