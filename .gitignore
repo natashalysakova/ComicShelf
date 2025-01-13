@@ -368,3 +368,4 @@ FodyWeavers.xsd
 /Backend/devsettings.json
 /ComicShelf/wwwroot/images/countries
 /ComicShelf/wwwroot/lib/*/
+/.env
