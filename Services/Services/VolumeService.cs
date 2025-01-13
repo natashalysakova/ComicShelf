@@ -306,6 +306,10 @@ namespace Services.Services
             {
                 item.PreorderDate = volumeToUpdate.PreorderDate;
             }
+            else if (volumeToUpdate.PurchaseStatus is PurchaseStatus.Bought || volumeToUpdate.PurchaseStatus is PurchaseStatus.GiftedAway && volumeToUpdate.PreorderDate == default)
+            {
+                item.PreorderDate = default;
+            }
 
             if (volumeToUpdate.CoverFile is not null)
             {

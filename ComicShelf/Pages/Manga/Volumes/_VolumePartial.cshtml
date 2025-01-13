@@ -176,14 +176,14 @@
                         <select asp-for="@Model.PurchaseStatus" asp-items="(IEnumerable<SelectListItem>)@ViewData["PurchaseStatuses"]" class="form-select update-on-status-change" onchange="purchaseStatusChanged(this)"></select>
                     </div>
 
-                    <div class="input-group mb-3" id="purchase-date">
-                        <label asp-for="@Model.PurchaseDate" class="input-group-text">@Localizer["PurchaseDate"]</label>
-                        <input asp-for="@Model.PurchaseDate" class="form-control update-on-status-change" type="date" />
-                    </div>
 
                     <div class="input-group mb-3" id="preorder-date">
                         <label asp-for="@Model.PreorderDate" class="input-group-text">@Localizer["PreorderDate"]</label>
                         <input asp-for="@Model.PreorderDate" class="form-control update-on-status-change" type="date" />
+                    </div>
+                    <div class="input-group mb-3" id="purchase-date">
+                        <label asp-for="@Model.PurchaseDate" class="input-group-text">@Localizer["PurchaseDate"]</label>
+                        <input asp-for="@Model.PurchaseDate" class="form-control update-on-status-change" type="date" />
                     </div>
                     <div class="input-group mb-3" id="release-date">
                         <label asp-for="@Model.ReleaseDate" class="input-group-text">@Localizer["ReleaseDate"]</label>
@@ -281,16 +281,8 @@
                 </div>
             </form>
         </div>
-        @if(Model.History != null)
+        @*      @if(Model.History != null)
         {
-@*         public DateTime? AnnouncedDate { get; set; }
-        public DateTime? WishlistedDate { get; set; }
-        public DateTime? PreorderedDate { get; set; }
-        public DateTime? ReleaseDate { get; set; }
-        public DateTime? PurchaseDate { get; set; }
-        public DateTime? ReadDate { get; set; }
-        public DateTime? GivedAwayDate { get; set; }
- *@
             <div id="history">
                 <p>History</p>
                 @if(Model.History.AnnouncedDate != null)
@@ -324,7 +316,7 @@
                 }
             </div>
         }
-    </div>
+ *@    </div>
 </div>
 <div class="modal-footer">
     <div class="container">
@@ -337,7 +329,7 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-           
+
             <div class="col-lg-4 col-6">
                 @*                <div class="text-end">
                 <small>@Localizer["Created"] @Model.CreationDate</small><br />
@@ -349,7 +341,7 @@
                 @*                <a asp-page="./Edit" asp-route-id="@Model.Id" class="btn btn-primary float-end">Edit</a>
                 *@
             </div>
-            
+
         </div>
     </div>
 </div>

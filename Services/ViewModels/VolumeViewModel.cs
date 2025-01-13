@@ -10,9 +10,9 @@ namespace Services.ViewModels
         public VolumeType Digitality { get; internal set; }
         public Status Status { get; internal set; }
         public int Rating { get; internal set; }
-        public DateTime PurchaseDate { get; internal set; }
+        public DateTime? PurchaseDate { get; internal set; }
         public DateTime? ReleaseDate { get; internal set; }
-        public DateTime PreorderDate { get; internal set; }
+        public DateTime? PreorderDate { get; internal set; }
         public string CoverUrl { get; internal set; }
         public string SeriesName { get; set; }
         public string SeriesOriginalName { get; set; }

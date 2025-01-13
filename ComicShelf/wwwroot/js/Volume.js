@@ -455,8 +455,8 @@ function purchaseStatusChanged(purchseStatus, prefix) {
             fieldVisibility('rating-select', false, prefix);
             break;
         default:
-            fieldVisibility("release-date", false, prefix);
-            fieldVisibility("preorder-date", false, prefix);
+            fieldVisibility("release-date", true, prefix);
+            fieldVisibility("preorder-date", true, prefix);
             fieldVisibility("purchase-date", true, prefix);
             fieldVisibility("reading-status", true, prefix);
             break;
