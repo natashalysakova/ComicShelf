@@ -432,6 +432,7 @@ function purchaseStatusChanged(purchseStatus, prefix) {
     }
 
     var value = $(purchseStatus).find(":selected").val();
+
     switch (value) {
         case "Announced":
             fieldVisibility("release-date", true, prefix);
@@ -439,6 +440,8 @@ function purchaseStatusChanged(purchseStatus, prefix) {
             fieldVisibility("purchase-date", false, prefix);
             fieldVisibility("reading-status", false, prefix);
             fieldVisibility('rating-select', false, prefix);
+
+            SetTodayDate("#ReleaseDate");
             break;
         case "Preordered":
             fieldVisibility("release-date", true, prefix);
@@ -446,6 +449,9 @@ function purchaseStatusChanged(purchseStatus, prefix) {
             fieldVisibility("purchase-date", false, prefix);
             fieldVisibility("reading-status", false, prefix);
             fieldVisibility('rating-select', false, prefix);
+
+            SetTodayDate("#PreorderDate");
+            SetTodayDate("#ReleaseDate");
             break;
         case "Wishlist":
             fieldVisibility("release-date", false, prefix);
@@ -453,16 +459,39 @@ function purchaseStatusChanged(purchseStatus, prefix) {
             fieldVisibility("purchase-date", false, prefix);
             fieldVisibility("reading-status", false, prefix);
             fieldVisibility('rating-select', false, prefix);
+
+            SetTodayDate("#ReleaseDate");
             break;
         default:
             fieldVisibility("release-date", true, prefix);
             fieldVisibility("preorder-date", true, prefix);
             fieldVisibility("purchase-date", true, prefix);
             fieldVisibility("reading-status", true, prefix);
+            fieldVisibility('rating-select', true, prefix);
+
+            SetTodayDate("#PurchaseDate");
+            SetTodayDate("#PreorderDate");
+            SetTodayDate("#ReleaseDate");
             break;
     }
 }
 
+function GetTodayDate() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var dd = String(today.getDate()).padStart(2, '0');
+    var formattedDate = yyyy + '-' + mm + '-' + dd;
+    return formattedDate;
+}
+
+function SetTodayDate(inputId) {
+    var todaysDate = GetTodayDate();
+    var releaseDate = $(inputId).val();
+    if (releaseDate == '') {
+        $(inputId).val(todaysDate);
+    }
+}
 
 function readingStatusChanged(list, prefix) {
 
