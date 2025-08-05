@@ -36,7 +36,7 @@ namespace ComicShelf.Parsers
             Assert.AreEqual("Проводжальниця Фрірен", result.series);
             Assert.AreEqual("", result.authors);
             Assert.AreEqual(2, result.volumeNumber);
-            Assert.AreEqual("https://nashaidea.com/wp-content/uploads/2024/07/fri02-x1080.jpg", result.cover);
+            Assert.AreEqual("https://nashaidea.com/wp-content/uploads/2024/07/fri02-x1080.webp", result.cover);
             Assert.AreEqual("2024-09-15", result.release);
             Assert.AreEqual("NashaIdea", result.publisher);
             Assert.AreEqual("Physical", result.type);
@@ -61,7 +61,7 @@ namespace ComicShelf.Parsers
             Assert.AreEqual("Чi “Життя однієї киці”", result.series);
             Assert.AreEqual("", result.authors);
             Assert.AreEqual(10, result.volumeNumber);
-            Assert.AreEqual("https://nashaidea.com/wp-content/uploads/2024/07/chi10-x1080.jpg", result.cover);
+            Assert.AreEqual("https://nashaidea.com/wp-content/uploads/2024/07/chi10-x1080.webp", result.cover);
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("NashaIdea", result.publisher);
             Assert.AreEqual("Physical", result.type);
@@ -85,7 +85,7 @@ namespace ComicShelf.Parsers
             Assert.AreEqual("Вітаємо в кото-кафе", result.series);
             Assert.AreEqual("", result.authors);
             Assert.AreEqual(-1, result.volumeNumber);
-            Assert.AreEqual("https://nashaidea.com/wp-content/uploads/2023/10/cat-flat.jpg", result.cover);
+            Assert.AreEqual("https://nashaidea.com/wp-content/uploads/2023/10/cat-flat.webp", result.cover);
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("NashaIdea", result.publisher);
             Assert.AreEqual("Physical", result.type);
@@ -110,7 +110,7 @@ namespace ComicShelf.Parsers
             Assert.AreEqual("Прощавай, трояндовий саде", result.series);
             Assert.AreEqual("", result.authors);
             Assert.AreEqual(3, result.volumeNumber);
-            Assert.AreEqual("https://nashaidea.com/wp-content/uploads/2024/08/mrg03-x1080.jpg", result.cover);
+            Assert.AreEqual("https://nashaidea.com/wp-content/uploads/2024/08/mrg03-x1080.webp", result.cover);
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("NashaIdea", result.publisher);
             Assert.AreEqual("Physical", result.type);
