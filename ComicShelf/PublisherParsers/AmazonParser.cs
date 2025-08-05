@@ -3,7 +3,7 @@ using Backend.Models.Enums;
 
 namespace ComicShelf.PublisherParsers
 {
-    public class AmazonParser : BaseParser
+    public class AmazonParser : AdvancedParser
     {
         public override string SiteUrl => "https://www.amazon.com/";
 

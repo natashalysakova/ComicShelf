@@ -7,7 +7,7 @@ using Services.Services;
 
 namespace ComicShelf.PublisherParsers
 {
-    public class NashaIdeaParser : BaseParser
+    public class NashaIdeaParser : AdvancedParser
     {
 
         public override string SiteUrl => "https://nashaidea.com/";
