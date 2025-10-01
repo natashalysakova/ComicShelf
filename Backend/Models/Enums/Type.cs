@@ -1,8 +1,7 @@
-﻿namespace Backend.Models.Enums
+﻿namespace Backend.Models.Enums;
+
+public enum Type
 {
-    public enum Type
-    {
-        Comics,
-        Manga
-    }
+    Comics,
+    Manga
 }

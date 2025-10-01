@@ -2,27 +2,26 @@
 
 #nullable disable
 
-namespace Backend.Migrations
+namespace Backend.Migrations;
+
+/// <inheritdoc />
+public partial class addPreorderDate2 : Migration
 {
     /// <inheritdoc />
-    public partial class addPreorderDate2 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<DateTime>(
-                name: "PreorderDate",
-                table: "Volume",
-                type: "datetime(6)",
-                nullable: true);
-        }
+        migrationBuilder.AddColumn<DateTime>(
+            name: "PreorderDate",
+            table: "Volume",
+            type: "datetime(6)",
+            nullable: true);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "PreorderDate",
-                table: "Volume");
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(
+            name: "PreorderDate",
+            table: "Volume");
     }
 }

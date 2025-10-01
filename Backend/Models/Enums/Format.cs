@@ -1,8 +1,7 @@
-﻿namespace Backend.Models.Enums
+﻿namespace Backend.Models.Enums;
+
+public enum Format
 {
-    public enum Format
-    {
-        Paperbook,
-        Digital
-    }
+    Paperbook,
+    Digital
 }

@@ -2,28 +2,27 @@
 
 #nullable disable
 
-namespace Backend.Migrations
+namespace Backend.Migrations;
+
+/// <inheritdoc />
+public partial class addFiltersDisplayOrder : Migration
 {
     /// <inheritdoc />
-    public partial class addFiltersDisplayOrder : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<int>(
-                name: "DisplayOrder",
-                table: "Filter",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-        }
+        migrationBuilder.AddColumn<int>(
+            name: "DisplayOrder",
+            table: "Filter",
+            type: "int",
+            nullable: false,
+            defaultValue: 0);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "DisplayOrder",
-                table: "Filter");
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(
+            name: "DisplayOrder",
+            table: "Filter");
     }
 }

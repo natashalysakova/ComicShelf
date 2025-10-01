@@ -2,21 +2,20 @@
 
 #nullable disable
 
-namespace Backend.Migrations
+namespace Backend.Migrations;
+
+/// <inheritdoc />
+public partial class addPreorderDate : Migration
 {
     /// <inheritdoc />
-    public partial class addPreorderDate : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
 
-        }
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
 
-        }
     }
 }

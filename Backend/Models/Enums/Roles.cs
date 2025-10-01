@@ -1,11 +1,10 @@
-﻿namespace Backend.Models.Enums
+﻿namespace Backend.Models.Enums;
+
+[Flags]
+public enum Roles
 {
-    [Flags]
-    public enum Roles
-    {
-        None,
-        Writer,
-        Artist,
-        Mangaka
-    }
+    None,
+    Writer,
+    Artist,
+    Mangaka
 }

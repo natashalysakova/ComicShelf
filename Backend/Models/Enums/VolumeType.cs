@@ -1,8 +1,7 @@
-﻿namespace Backend.Models.Enums
+﻿namespace Backend.Models.Enums;
+
+public enum VolumeType
 {
-    public enum VolumeType
-    {
-        Physical = 0,
-        Digital = 1
-    }
+    Physical = 0,
+    Digital = 1
 }

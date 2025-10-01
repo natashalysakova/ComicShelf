@@ -1,7 +1,6 @@
-﻿namespace Backend.Models
+﻿namespace Backend.Models;
+
+public interface IIdEntity
 {
-    public interface IIdEntity
-    {
-        int Id { get; set; }
-    }
+    int Id { get; set; }
 }

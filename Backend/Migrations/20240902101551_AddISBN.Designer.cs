@@ -9,538 +9,537 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Backend.Migrations
+namespace Backend.Migrations;
+
+[DbContext(typeof(ComicShelfContext))]
+[Migration("20240902101551_AddISBN")]
+partial class AddISBN
 {
-    [DbContext(typeof(ComicShelfContext))]
-    [Migration("20240902101551_AddISBN")]
-    partial class AddISBN
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+        modelBuilder
+            .HasAnnotation("ProductVersion", "8.0.4")
+            .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+        MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("AuthorVolume", b =>
-                {
-                    b.Property<int>("AuthorsId")
-                        .HasColumnType("int");
+        modelBuilder.Entity("AuthorVolume", b =>
+            {
+                b.Property<int>("AuthorsId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("VolumesId")
-                        .HasColumnType("int");
+                b.Property<int>("VolumesId")
+                    .HasColumnType("int");
 
-                    b.HasKey("AuthorsId", "VolumesId");
+                b.HasKey("AuthorsId", "VolumesId");
 
-                    b.HasIndex("VolumesId");
+                b.HasIndex("VolumesId");
 
-                    b.ToTable("AuthorVolume");
-                });
+                b.ToTable("AuthorVolume");
+            });
 
-            modelBuilder.Entity("Backend.Models.Anime", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Backend.Models.Anime", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("IsOngoing")
-                        .HasColumnType("tinyint(1)");
+                b.Property<bool>("IsOngoing")
+                    .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("OriginalTitle")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("OriginalTitle")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                b.Property<int>("Status")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Animes", (string)null);
-                });
+                b.ToTable("Animes", (string)null);
+            });
 
-            modelBuilder.Entity("Backend.Models.Author", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Backend.Models.Author", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<int>("Roles")
-                        .HasColumnType("int");
+                b.Property<int>("Roles")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Author", (string)null);
-                });
+                b.ToTable("Author", (string)null);
+            });
 
-            modelBuilder.Entity("Backend.Models.Country", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Backend.Models.Country", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CountryCode")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("CountryCode")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<string>("FlagPNG")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("FlagPNG")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<string>("FlagSVG")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("FlagSVG")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Country", (string)null);
-                });
+                b.ToTable("Country", (string)null);
+            });
 
-            modelBuilder.Entity("Backend.Models.Filter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Backend.Models.Filter", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
+                b.Property<int>("DisplayOrder")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Group")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Group")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<string>("Json")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Json")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Filter", (string)null);
-                });
+                b.ToTable("Filter", (string)null);
+            });
 
-            modelBuilder.Entity("Backend.Models.History", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Backend.Models.History", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("AnnouncedDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime?>("AnnouncedDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("GivedAwayDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime?>("GivedAwayDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("PreorderedDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime?>("PreorderedDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("PurchaseDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime?>("PurchaseDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("ReadDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime?>("ReadDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("ReleaseDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime?>("ReleaseDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<int>("VolumeId")
-                        .HasColumnType("int");
+                b.Property<int>("VolumeId")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime?>("WishlistedDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime?>("WishlistedDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("VolumeId")
-                        .IsUnique();
+                b.HasIndex("VolumeId")
+                    .IsUnique();
 
-                    b.ToTable("History");
-                });
+                b.ToTable("History");
+            });
 
-            modelBuilder.Entity("Backend.Models.Issue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Backend.Models.Issue", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
+                b.Property<int>("Number")
+                    .HasColumnType("int");
 
-                    b.Property<int>("VolumeId")
-                        .HasColumnType("int");
+                b.Property<int>("VolumeId")
+                    .HasColumnType("int");
 
-                    b.Property<string>("issue_type")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("varchar(8)");
+                b.Property<string>("issue_type")
+                    .IsRequired()
+                    .HasMaxLength(8)
+                    .HasColumnType("varchar(8)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("VolumeId");
+                b.HasIndex("VolumeId");
 
-                    b.ToTable("Issue", (string)null);
+                b.ToTable("Issue", (string)null);
 
-                    b.HasDiscriminator<string>("issue_type").HasValue("chapter");
+                b.HasDiscriminator<string>("issue_type").HasValue("chapter");
 
-                    b.UseTphMappingStrategy();
-                });
+                b.UseTphMappingStrategy();
+            });
 
-            modelBuilder.Entity("Backend.Models.Item", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Backend.Models.Item", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AnimeId")
-                        .HasColumnType("int");
+                b.Property<int>("AnimeId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("HierarchyOrder")
-                        .HasColumnType("int");
+                b.Property<int>("HierarchyOrder")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime>("ReleaseDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                b.Property<int>("Status")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<string>("item_type")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("varchar(8)");
+                b.Property<string>("item_type")
+                    .IsRequired()
+                    .HasMaxLength(8)
+                    .HasColumnType("varchar(8)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("AnimeId");
+                b.HasIndex("AnimeId");
 
-                    b.ToTable("Items");
+                b.ToTable("Items");
 
-                    b.HasDiscriminator<string>("item_type").HasValue("Item");
+                b.HasDiscriminator<string>("item_type").HasValue("Item");
 
-                    b.UseTphMappingStrategy();
-                });
+                b.UseTphMappingStrategy();
+            });
 
-            modelBuilder.Entity("Backend.Models.Publisher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Backend.Models.Publisher", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
+                b.Property<int>("CountryId")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Url")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("CountryId");
+                b.HasIndex("CountryId");
 
-                    b.ToTable("Publisher", (string)null);
-                });
+                b.ToTable("Publisher", (string)null);
+            });
 
-            modelBuilder.Entity("Backend.Models.Series", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Backend.Models.Series", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Color")
-                        .HasColumnType("longtext");
+                b.Property<string>("Color")
+                    .HasColumnType("longtext");
 
-                    b.Property<bool>("Completed")
-                        .HasColumnType("tinyint(1)");
+                b.Property<bool>("Completed")
+                    .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("ComplimentColor")
-                        .HasColumnType("longtext");
+                b.Property<string>("ComplimentColor")
+                    .HasColumnType("longtext");
 
-                    b.Property<int>("MalId")
-                        .HasColumnType("int");
+                b.Property<int>("MalId")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<bool>("Ongoing")
-                        .HasColumnType("tinyint(1)");
+                b.Property<bool>("Ongoing")
+                    .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("OriginalName")
-                        .HasColumnType("longtext");
+                b.Property<string>("OriginalName")
+                    .HasColumnType("longtext");
 
-                    b.Property<int>("PublisherId")
-                        .HasColumnType("int");
+                b.Property<int>("PublisherId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("TotalIssues")
-                        .HasColumnType("int");
+                b.Property<int>("TotalIssues")
+                    .HasColumnType("int");
 
-                    b.Property<int>("TotalVolumes")
-                        .HasColumnType("int");
+                b.Property<int>("TotalVolumes")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                b.Property<int>("Type")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("PublisherId");
+                b.HasIndex("PublisherId");
 
-                    b.ToTable("Series", (string)null);
-                });
+                b.ToTable("Series", (string)null);
+            });
 
-            modelBuilder.Entity("Backend.Models.Volume", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Backend.Models.Volume", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CoverUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("CoverUrl")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime>("CreationDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Digitality")
-                        .HasColumnType("int");
+                b.Property<int>("Digitality")
+                    .HasColumnType("int");
 
-                    b.Property<string>("ISBN")
-                        .HasColumnType("longtext");
+                b.Property<string>("ISBN")
+                    .HasColumnType("longtext");
 
-                    b.Property<DateTime>("ModificationDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime>("ModificationDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
+                b.Property<int>("Number")
+                    .HasColumnType("int");
 
-                    b.Property<bool>("OneShot")
-                        .HasColumnType("tinyint(1)");
+                b.Property<bool>("OneShot")
+                    .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime?>("PreorderDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime?>("PreorderDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("PurchaseDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime?>("PurchaseDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<int>("PurchaseStatus")
-                        .HasColumnType("int");
+                b.Property<int>("PurchaseStatus")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                b.Property<int>("Rating")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime?>("ReleaseDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime?>("ReleaseDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<int>("SeriesId")
-                        .HasColumnType("int");
+                b.Property<int>("SeriesId")
+                    .HasColumnType("int");
 
-                    b.Property<bool>("SingleIssue")
-                        .HasColumnType("tinyint(1)");
+                b.Property<bool>("SingleIssue")
+                    .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                b.Property<int>("Status")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("SeriesId");
+                b.HasIndex("SeriesId");
 
-                    b.ToTable("Volume", (string)null);
-                });
+                b.ToTable("Volume", (string)null);
+            });
 
-            modelBuilder.Entity("Backend.Models.Bonus", b =>
-                {
-                    b.HasBaseType("Backend.Models.Issue");
+        modelBuilder.Entity("Backend.Models.Bonus", b =>
+            {
+                b.HasBaseType("Backend.Models.Issue");
 
-                    b.ToTable("Issue", (string)null);
+                b.ToTable("Issue", (string)null);
 
-                    b.HasDiscriminator().HasValue("bonus");
-                });
+                b.HasDiscriminator().HasValue("bonus");
+            });
 
-            modelBuilder.Entity("Backend.Models.Movie", b =>
-                {
-                    b.HasBaseType("Backend.Models.Item");
+        modelBuilder.Entity("Backend.Models.Movie", b =>
+            {
+                b.HasBaseType("Backend.Models.Item");
 
-                    b.ToTable("Items", (string)null);
+                b.ToTable("Items", (string)null);
 
-                    b.HasDiscriminator().HasValue("movie");
-                });
+                b.HasDiscriminator().HasValue("movie");
+            });
 
-            modelBuilder.Entity("Backend.Models.Season", b =>
-                {
-                    b.HasBaseType("Backend.Models.Item");
+        modelBuilder.Entity("Backend.Models.Season", b =>
+            {
+                b.HasBaseType("Backend.Models.Item");
 
-                    b.ToTable("Items", (string)null);
+                b.ToTable("Items", (string)null);
 
-                    b.HasDiscriminator().HasValue("season");
-                });
+                b.HasDiscriminator().HasValue("season");
+            });
 
-            modelBuilder.Entity("Backend.Models.Special", b =>
-                {
-                    b.HasBaseType("Backend.Models.Item");
+        modelBuilder.Entity("Backend.Models.Special", b =>
+            {
+                b.HasBaseType("Backend.Models.Item");
 
-                    b.ToTable("Items", (string)null);
+                b.ToTable("Items", (string)null);
 
-                    b.HasDiscriminator().HasValue("special");
-                });
+                b.HasDiscriminator().HasValue("special");
+            });
 
-            modelBuilder.Entity("AuthorVolume", b =>
-                {
-                    b.HasOne("Backend.Models.Author", null)
-                        .WithMany()
-                        .HasForeignKey("AuthorsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("AuthorVolume", b =>
+            {
+                b.HasOne("Backend.Models.Author", null)
+                    .WithMany()
+                    .HasForeignKey("AuthorsId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("Backend.Models.Volume", null)
-                        .WithMany()
-                        .HasForeignKey("VolumesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                b.HasOne("Backend.Models.Volume", null)
+                    .WithMany()
+                    .HasForeignKey("VolumesId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
-            modelBuilder.Entity("Backend.Models.History", b =>
-                {
-                    b.HasOne("Backend.Models.Volume", null)
-                        .WithOne("History")
-                        .HasForeignKey("Backend.Models.History", "VolumeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+        modelBuilder.Entity("Backend.Models.History", b =>
+            {
+                b.HasOne("Backend.Models.Volume", null)
+                    .WithOne("History")
+                    .HasForeignKey("Backend.Models.History", "VolumeId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
-            modelBuilder.Entity("Backend.Models.Issue", b =>
-                {
-                    b.HasOne("Backend.Models.Volume", "Volume")
-                        .WithMany("Issues")
-                        .HasForeignKey("VolumeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("Backend.Models.Issue", b =>
+            {
+                b.HasOne("Backend.Models.Volume", "Volume")
+                    .WithMany("Issues")
+                    .HasForeignKey("VolumeId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Volume");
-                });
+                b.Navigation("Volume");
+            });
 
-            modelBuilder.Entity("Backend.Models.Item", b =>
-                {
-                    b.HasOne("Backend.Models.Anime", "Anime")
-                        .WithMany("Items")
-                        .HasForeignKey("AnimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("Backend.Models.Item", b =>
+            {
+                b.HasOne("Backend.Models.Anime", "Anime")
+                    .WithMany("Items")
+                    .HasForeignKey("AnimeId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Anime");
-                });
+                b.Navigation("Anime");
+            });
 
-            modelBuilder.Entity("Backend.Models.Publisher", b =>
-                {
-                    b.HasOne("Backend.Models.Country", "Country")
-                        .WithMany("Publishers")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("Backend.Models.Publisher", b =>
+            {
+                b.HasOne("Backend.Models.Country", "Country")
+                    .WithMany("Publishers")
+                    .HasForeignKey("CountryId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Country");
-                });
+                b.Navigation("Country");
+            });
 
-            modelBuilder.Entity("Backend.Models.Series", b =>
-                {
-                    b.HasOne("Backend.Models.Publisher", "Publisher")
-                        .WithMany("Series")
-                        .HasForeignKey("PublisherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("Backend.Models.Series", b =>
+            {
+                b.HasOne("Backend.Models.Publisher", "Publisher")
+                    .WithMany("Series")
+                    .HasForeignKey("PublisherId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Publisher");
-                });
+                b.Navigation("Publisher");
+            });
 
-            modelBuilder.Entity("Backend.Models.Volume", b =>
-                {
-                    b.HasOne("Backend.Models.Series", "Series")
-                        .WithMany("Volumes")
-                        .HasForeignKey("SeriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("Backend.Models.Volume", b =>
+            {
+                b.HasOne("Backend.Models.Series", "Series")
+                    .WithMany("Volumes")
+                    .HasForeignKey("SeriesId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Series");
-                });
+                b.Navigation("Series");
+            });
 
-            modelBuilder.Entity("Backend.Models.Anime", b =>
-                {
-                    b.Navigation("Items");
-                });
+        modelBuilder.Entity("Backend.Models.Anime", b =>
+            {
+                b.Navigation("Items");
+            });
 
-            modelBuilder.Entity("Backend.Models.Country", b =>
-                {
-                    b.Navigation("Publishers");
-                });
+        modelBuilder.Entity("Backend.Models.Country", b =>
+            {
+                b.Navigation("Publishers");
+            });
 
-            modelBuilder.Entity("Backend.Models.Publisher", b =>
-                {
-                    b.Navigation("Series");
-                });
+        modelBuilder.Entity("Backend.Models.Publisher", b =>
+            {
+                b.Navigation("Series");
+            });
 
-            modelBuilder.Entity("Backend.Models.Series", b =>
-                {
-                    b.Navigation("Volumes");
-                });
+        modelBuilder.Entity("Backend.Models.Series", b =>
+            {
+                b.Navigation("Volumes");
+            });
 
-            modelBuilder.Entity("Backend.Models.Volume", b =>
-                {
-                    b.Navigation("History")
-                        .IsRequired();
+        modelBuilder.Entity("Backend.Models.Volume", b =>
+            {
+                b.Navigation("History")
+                    .IsRequired();
 
-                    b.Navigation("Issues");
-                });
+                b.Navigation("Issues");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }
