@@ -57,12 +57,12 @@ namespace ComicShelf.PublisherParsers
         {
             var node = document.QuerySelector(".product-sequence-field > a");
             if(node == null)
-                return GetTitle(document);
+                return GetVolumeTitle(document);
 
             return node.TextContent;
         }
 
-        protected override string GetTitle(IDocument document)
+        protected override string GetVolumeTitle(IDocument document)
         {
             
 
@@ -111,7 +111,7 @@ namespace ComicShelf.PublisherParsers
             return nodes.First().TextContent.Trim([' ', '\n']);
         }
 
-        protected override VolumeType GetBookType()
+        protected override VolumeType GetVolumeType()
         {
             return VolumeType.Digital;
         }

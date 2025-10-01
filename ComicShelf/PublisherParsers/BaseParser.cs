@@ -24,14 +24,14 @@ namespace ComicShelf.PublisherParsers
 
             try
             {
-                var title = GetTitle(document);
+                var title = GetVolumeTitle(document);
                 var volumeNumber = GetVolumeNumber(document);
                 var series = GetSeries(document);
                 var cover = GetCover(document);
                 var release = GetReleaseDate(document);
                 var publisher = GetPublisher(document);
                 var status = release > DateTime.Today ? PurchaseStatus.Announced : PurchaseStatus.Wishlist;
-                var type = GetBookType();
+                var type = GetVolumeType();
                 var isbn = GetISBN(document);
                 var totalVol = GetTotalVolumes(document);
                 var seriesStatus = GetSeriesStatus(document);
@@ -51,7 +51,7 @@ namespace ComicShelf.PublisherParsers
 
         }
 
-        protected abstract string GetTitle(IDocument document);
+        protected abstract string GetVolumeTitle(IDocument document);
         protected abstract string GetSeries(IDocument document);
         protected abstract int GetVolumeNumber(IDocument document);
         protected abstract string GetAuthors(IDocument document);
@@ -63,7 +63,7 @@ namespace ComicShelf.PublisherParsers
         protected abstract string? GetOriginalSeriesName(IDocument document);
         protected abstract string GetPublisher(IDocument document);
 
-        protected abstract VolumeType GetBookType();
+        protected abstract VolumeType GetVolumeType();
 
         public abstract string SiteUrl { get; }
 

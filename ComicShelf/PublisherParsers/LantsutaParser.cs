@@ -30,7 +30,7 @@ namespace ComicShelf.PublisherParsers
             return GetFromTable(document, "Автор");
         }
 
-        protected override VolumeType GetBookType()
+        protected override VolumeType GetVolumeType()
         {
             return VolumeType.Physical;
         }
@@ -72,7 +72,7 @@ namespace ComicShelf.PublisherParsers
             return null;
         }
 
-        protected override string GetTitle(IDocument document)
+        protected override string GetVolumeTitle(IDocument document)
         {
             var node = document.QuerySelector(".name-product-title").InnerHtml;
             node = node.Replace(GetSeries(document), "");
@@ -90,7 +90,7 @@ namespace ComicShelf.PublisherParsers
 
         protected override int GetVolumeNumber(IDocument document)
         {
-            var title = GetTitle(document);
+            var title = GetVolumeTitle(document);
             if(title.Contains("Том"))
             {
                 var volIndex = title.IndexOf("Том");

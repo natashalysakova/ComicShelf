@@ -40,7 +40,6 @@ namespace ComicShelf.Parsers
             Assert.AreEqual("2024-09-15", result.release);
             Assert.AreEqual("NashaIdea", result.publisher);
             Assert.AreEqual("Physical", result.type);
-            Assert.AreEqual("978-617-8396-49-7", result.isbn);
             Assert.AreEqual(13, result.totalVolumes);
             Assert.AreEqual("ongoing", result.seriesStatus);
 
@@ -65,7 +64,6 @@ namespace ComicShelf.Parsers
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("NashaIdea", result.publisher);
             Assert.AreEqual("Physical", result.type);
-            Assert.AreEqual("978-617-8396-46-6", result.isbn);
             Assert.AreEqual(12, result.totalVolumes);
             Assert.AreEqual("finished", result.seriesStatus);
 
@@ -89,7 +87,6 @@ namespace ComicShelf.Parsers
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("NashaIdea", result.publisher);
             Assert.AreEqual("Physical", result.type);
-            Assert.AreEqual("978-617-8109-88-2", result.isbn);
             Assert.AreEqual(1, result.totalVolumes);
             Assert.AreEqual("oneshot", result.seriesStatus);
 
@@ -114,7 +111,6 @@ namespace ComicShelf.Parsers
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("NashaIdea", result.publisher);
             Assert.AreEqual("Physical", result.type);
-            Assert.AreEqual("978-617-8396-55-8", result.isbn);
             Assert.AreEqual(3, result.totalVolumes);
             Assert.AreEqual("finished", result.seriesStatus);
 

@@ -10,54 +10,34 @@ namespace ComicShelf.PublisherParsers
     {
         public override string SiteUrl => "https://malopus.com.ua/";
 
-        protected override string GetAuthors(IDocument document)
+        private string? GetFromTable(IDocument document, string headerText)
         {
-            var nodes = document.QuerySelectorAll(".rm-product-attr-list-item");
+            var nodes = document.QuerySelectorAll(".product-features__row");
 
             foreach (var item in nodes)
             {
-                var divs = item.ChildNodes.Where(x => x.NodeName == "DIV");
-                var node = divs.FirstOrDefault(x => x.TextContent == "Автор");
+                var header = item.QuerySelector("th > span");
 
-                if (node is null)
+                if (header is not null && header.TextContent.Contains(headerText))
                 {
-                    continue;
+                    var value = item.QuerySelector("td");
+                    return value?.TextContent.Trim();
                 }
-
-                return divs.Last().TextContent;
             }
 
             return string.Empty;
         }
 
+        protected override string? GetAuthors(IDocument document)
+        {
+            return GetFromTable(document, "Автор");
+        }
+
         protected override string GetCover(IDocument document)
         {
-            //var node = document.QuerySelector(".rm-product-title > h1");
-            //var title = node.InnerHtml;
-
-            //HttpClient client = new HttpClient();
-
-            //var api = _configuration.GetValue<string>("googleApiKey");
-
-            //var query = $"https://www.googleapis.com/customsearch/v1?cx=76a6d7a5dfbdf4163&key={api}&q={title}&searchType=image";
-
-
-            //var task = client.GetAsync(query);
-            //task.Wait();
-
-            //if (task.IsCompleted && task.Result.IsSuccessStatusCode)
-            //{
-            //    var result = task.Result.Content.ReadAsStringAsync();
-            //    result.Wait();
-            //    var json = result.Result;
-            //}
-            //return string.Empty;
-
-
-
-            var node = document.QuerySelector(".oct-gallery > img.img-fluid");
+            var node = document.QuerySelector(".gallery__photo-img");
             var attribute = node.Attributes["src"];
-            return attribute.Value;
+            return this.SiteUrl + attribute.Value;
         }
 
         protected override DateTime? GetReleaseDate(IDocument document)
@@ -74,24 +54,52 @@ namespace ComicShelf.PublisherParsers
             if (date == "0000-00-00")
                 return null;
 
-            return DateTime.Parse(date);
+
+            if (DateTime.TryParseExact(date, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.AssumeLocal, out DateTime parsedExactDate))
+            {
+                return parsedExactDate;
+            }
+
+            if (DateTime.TryParse(date, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out DateTime parsedDate))
+            {
+                return parsedDate;
+            }
+
+            return null;
         }
 
         protected override string GetSeries(IDocument document)
         {
-            var nodes = document.QuerySelectorAll(".rm-product-center-info-item-title");
-            var node = nodes.FirstOrDefault(x => x.InnerHtml == "Серія:");
-            if (node is null)
-                return GetTitle(document);
+            var nodes = document.QuerySelectorAll(".breadcrumbs-i");
+            var seriesBreadcrumb = nodes.ElementAtOrDefault(3);
+            if (seriesBreadcrumb is null)
+                return GetVolumeTitle(document);
 
 
-            return node.NextElementSibling.TextContent.Trim([' ', '\n']);
+            return seriesBreadcrumb.TextContent.Replace("Манґа", "").Trim([' ', '\n']);
         }
 
-        protected override string GetTitle(IDocument document)
+        protected override string GetVolumeTitle(IDocument document)
         {
-            var node = document.QuerySelector(".rm-product-title > h1");
-            var title = node.InnerHtml.Substring(node.InnerHtml.LastIndexOf('.') + 1).Trim();
+            var node = document.QuerySelector(".product-title");
+            var title = node.InnerHtml.ToString();
+
+            var lookupChar = new char[] { '.', '!', '?' };
+            int index = -1;
+            foreach (var ch in lookupChar)
+            {
+                index = node.InnerHtml.IndexOf(ch);
+                if (index != -1)
+                {
+                    break;
+                }
+            }
+
+            if (index != -1)
+            {
+                title = title.Substring(index + 1).Trim();
+            }
 
             if (title.StartsWith("Ранобе") || title.StartsWith("Манґа") || title.StartsWith("Комікс"))
             {
@@ -101,12 +109,11 @@ namespace ComicShelf.PublisherParsers
             return title;
         }
 
-        string[] lookupArray = [". Том ", ". Омнібус "];
-
+        string[] lookupArray = [". Том ", "! Том ", "? Том ", ". Омнібус ", "! Омнібус ", "? Омнібус "];
 
         protected override int GetVolumeNumber(IDocument document)
         {
-            var node = document.QuerySelector(".rm-product-title > h1");
+            var node = document.QuerySelector(".product-title");
             var title = node.InnerHtml;
 
             if (!lookupArray.Any(x => title.Contains(x)))
@@ -153,97 +160,63 @@ namespace ComicShelf.PublisherParsers
             return int.Parse(volume);
         }
 
-        protected override VolumeType GetBookType()
+        protected override VolumeType GetVolumeType()
         {
             return VolumeType.Physical;
         }
 
         protected override string GetISBN(IDocument document)
         {
-            var nodes = document.QuerySelectorAll(".rm-product-tabs-attributtes-list-item");
-
-            foreach (var node in nodes)
-            {
-                if (node.Children[0].TextContent.Contains("ISBN"))
-                {
-                    return node.Children[1].TextContent.Trim();
-                }
-            }
-
-            return string.Empty;
+            return GetFromTable(document, "ISBN") ?? string.Empty;
         }
 
         protected override int GetTotalVolumes(IDocument document)
         {
-            var nodes = document.QuerySelectorAll(".rm-product-tabs-attributtes-list-item");
+            var text = GetFromTable(document, "Кількість томів");
+            if (text is null)
+                return -1;
 
-            foreach (var node in nodes)
+            if (text.Contains('/'))
             {
-                if (node.Children[0].TextContent.Contains("Кількість томів"))
-                {
-                    var text = node.Children[1].TextContent;
-
-                    if (text.Contains('/'))
-                    {
-                        return int.Parse(text.Split('/', StringSplitOptions.RemoveEmptyEntries).First());
-                    }
-                    else if (text.Contains('(') && text.Contains(')'))
-                    {
-                        var indexopen = text.IndexOf('(') + 1;
-                        var indexclose = text.IndexOf(')');
-                        return int.Parse(text.Substring(indexopen, indexclose - indexopen));
-                    }
-                    else
-                    {
-                        return int.Parse(text);
-                    }
-                }
+                return int.Parse(text.Split('/', StringSplitOptions.RemoveEmptyEntries).First());
             }
-
-            return -1;
+            else if (text.Contains('(') && text.Contains(')'))
+            {
+                var indexopen = text.IndexOf('(') + 1;
+                var indexclose = text.IndexOf(')');
+                return int.Parse(text.Substring(indexopen, indexclose - indexopen));
+            }
+            else if (int.TryParse(text, out int totalVolumes))
+            {
+                return totalVolumes;
+            }
+            else
+            {
+                return GetVolumeNumber(document);
+            }
         }
 
-        protected override string? GetSeriesStatus(IDocument document)
+        protected override string GetSeriesStatus(IDocument document)
         {
-            var nodes = document.QuerySelectorAll(".rm-product-tabs-attributtes-list-item");
+            var text = GetFromTable(document, "Кількість томів");
 
-            foreach (var node in nodes)
+            if (text.Contains("онґоїнґ"))
             {
-                if (node.Children[0].TextContent.Contains("Кількість томів"))
-                {
-                    var text = node.Children[1].TextContent;
-
-                    if (text.Contains("онґоїнґ"))
-                    {
-                        return "ongoing";
-                    }
-                    else if (text == "1")
-                    {
-                        return "oneshot";
-                    }
-                    else
-                    {
-                        return "finished";
-                    }
-                }
+                return "ongoing";
             }
-
-            return null;
+            else if (text == "1")
+            {
+                return "oneshot";
+            }
+            else
+            {
+                return "finished";
+            }
         }
 
         protected override string? GetOriginalSeriesName(IDocument document)
         {
-            var nodes = document.QuerySelectorAll(".rm-product-tabs-attributtes-list-item");
-
-            foreach (var node in nodes)
-            {
-                if (node.Children[0].TextContent.Contains("Оригінальна назва"))
-                {
-                    return node.Children[1].TextContent.Trim();
-                }
-            }
-
-            return string.Empty;
+            return GetFromTable(document, "Оригінальна назва");
         }
 
         protected override string GetPublisher(IDocument document)

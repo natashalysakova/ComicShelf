@@ -20,13 +20,13 @@ namespace ComicShelf.Parsers
             Assert.AreEqual("Ця порцелянова лялечка закохалася", result.series);
             Assert.AreEqual("Шін'ічі Фукуда", result.authors);
             Assert.AreEqual(5, result.volumeNumber);
-            Assert.AreEqual("https://malopus.com.ua/image/cache/catalog/import_files/my%20dress%20up%20darling/005/Moc_Cover_ЦПЛЗ%205-700x700.png", result.cover);
+            Assert.AreEqual("https://malopus.com.ua//content/images/30/600x600l80mc0/manga-cya-porcelyanova-lyalechka-zakohalasya-tom-5-63577913695375.png", result.cover);
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("Mal'opus", result.publisher);
             Assert.AreEqual("Physical", result.type);
             Assert.AreEqual("978-617-8168-12-4", result.isbn);
-            Assert.AreEqual(13, result.totalVolumes);
-            Assert.AreEqual("ongoing", result.seriesStatus);
+            Assert.AreEqual(15, result.totalVolumes);
+            Assert.AreEqual("finished", result.seriesStatus);
             Assert.AreEqual("Sono Bisque Doll wa Koi wo Suru", result.originalSeriesName);
         }
 
@@ -44,7 +44,7 @@ namespace ComicShelf.Parsers
             Assert.AreEqual("Підземелля смакоти", result.series);
             Assert.AreEqual("Рьоко Куі", result.authors);
             Assert.AreEqual(1, result.volumeNumber);
-            Assert.AreEqual("https://malopus.com.ua/image/cache/catalog/import_files/dungeon%20meshi/Moc_Cover_Підземелля%20смакоти_Том%201-700x700.png", result.cover);
+            Assert.AreEqual("https://malopus.com.ua//content/images/41/600x600l80mc0/dungeon-meshi-omnibus1-85734836570482.png", result.cover);
             Assert.AreEqual("2025-01-31", result.release);
             Assert.AreEqual("Mal'opus", result.publisher);
             Assert.AreEqual("Physical", result.type);
@@ -69,7 +69,7 @@ namespace ComicShelf.Parsers
             Assert.AreEqual("Голограф Веселкового поля", result.series);
             Assert.AreEqual("Ініо Асано", result.authors);
             Assert.AreEqual(-1, result.volumeNumber);
-            Assert.AreEqual("https://malopus.com.ua/image/cache/catalog/import_files/nijigahara/Moc_Cover_Голограф%20веселкового%20поля-700x700.png", result.cover);
+            Assert.AreEqual("https://malopus.com.ua//content/images/24/600x600l80mc0/nijigahara-holograph-55453872054888.png", result.cover);
             Assert.AreEqual(null, result.release);
             Assert.AreEqual("Mal'opus", result.publisher);
             Assert.AreEqual("Physical", result.type);

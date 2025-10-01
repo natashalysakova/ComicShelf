@@ -38,7 +38,7 @@ namespace ComicShelf.PublisherParsers
             return string.Join(',', selected.Select(x => x.Trim()));
         }
 
-        protected override VolumeType GetBookType()
+        protected override VolumeType GetVolumeType()
         {
             return VolumeType.Digital;
         }
@@ -96,7 +96,7 @@ namespace ComicShelf.PublisherParsers
             return null;
         }
 
-        protected override string GetTitle(IDocument document)
+        protected override string GetVolumeTitle(IDocument document)
         {
             var node = document.QuerySelector("#productTitle") ?? throw new DocumentParseException("#productTitle", document);
 
