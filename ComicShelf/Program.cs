@@ -159,6 +159,7 @@ public class Program
                 dbInitializer.FillFlags();
                 dbInitializer.FillColors();
                 dbInitializer.MigrateHistory();
+                dbInitializer.ResetRating();
             }
             catch (Exception ex)
             {

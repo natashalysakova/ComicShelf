@@ -1,4 +1,5 @@
 ﻿using Backend.Models;
+using Backend.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Services.Services;
@@ -271,6 +272,20 @@ internal class DbInitializer
                 PurchaseDate = item.PurchaseDate,
                 ReleaseDate = item.ReleaseDate
             };
+        }
+
+        _context.SaveChanges();
+    }
+
+    internal void ResetRating()
+    {
+        var brokenRating = _context.Volumes
+            .Where(x => 
+            x.Rating != 0 
+            && (x.Status == Status.NotStarted || x.Status == Status.InQueue || x.Status == Status.Reading)).ToList();
+        foreach (var item in brokenRating)
+        {
+            item.Rating = 0;
         }
 
         _context.SaveChanges();
