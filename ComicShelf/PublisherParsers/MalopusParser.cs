@@ -37,7 +37,7 @@ namespace ComicShelf.PublisherParsers
         {
             var node = document.QuerySelector(".gallery__photo-img");
             var attribute = node.Attributes["src"];
-            return this.SiteUrl + attribute.Value;
+            return this.SiteUrl + attribute.Value.TrimStart('/');
         }
 
         protected override DateTime? GetReleaseDate(IDocument document)
@@ -71,19 +71,35 @@ namespace ComicShelf.PublisherParsers
 
         protected override string GetSeries(IDocument document)
         {
-            var nodes = document.QuerySelectorAll(".breadcrumbs-i");
-            var seriesBreadcrumb = nodes.ElementAtOrDefault(3);
-            if (seriesBreadcrumb is null)
-                return GetVolumeTitle(document);
+            var node = document.QuerySelector(".product-title");
 
+            var title = node.TextContent;
+            title = ReplaceVolumeType(title);
 
-            return seriesBreadcrumb.TextContent.Replace("Манґа", "").Trim([' ', '\n']);
+            var lookupChar = new char[] { '.', '!', '?' };
+            int index = -1;
+            foreach (var ch in lookupChar)
+            {
+                index = title.IndexOf(ch);
+                if (index != -1)
+                {
+                    break;
+                }
+            }
+
+            if (index != -1)
+            {
+                title = title.Substring(0, index).Trim();
+            }
+
+            return title;
         }
 
         protected override string GetVolumeTitle(IDocument document)
         {
             var node = document.QuerySelector(".product-title");
-            var title = node.InnerHtml.ToString();
+
+            var title = node.TextContent;
 
             var lookupChar = new char[] { '.', '!', '?' };
             int index = -1;
@@ -101,7 +117,14 @@ namespace ComicShelf.PublisherParsers
                 title = title.Substring(index + 1).Trim();
             }
 
-            if (title.StartsWith("Ранобе") || title.StartsWith("Манґа") || title.StartsWith("Комікс"))
+            title = ReplaceVolumeType(title);
+
+            return title;
+        }
+
+        private static string ReplaceVolumeType(string title)
+        {
+            if (title.StartsWith("Ранобе") || title.StartsWith("Манґа") || title.StartsWith("Комікс") || title.StartsWith("Передзамовлення"))
             {
                 title = title.Substring(title.IndexOf(' ') + 1).Trim();
             }
@@ -135,28 +158,6 @@ namespace ComicShelf.PublisherParsers
             {
                 volume = title.Substring(indexOfVolume, nextWhitespace - indexOfVolume);
             }
-
-
-            //var volInd = title.IndexOf("Том ");
-
-            //if (volInd == -1)
-            //{
-            //    volInd = title.IndexOf("Омнібус");
-
-            //    if(volInd == -1)
-            //        return volInd;
-            //}
-
-            //var nextWhiteSpace = title.IndexOf(' ', volInd);
-            //string volume;
-            //if (nextWhiteSpace == -1)
-            //{
-            //    volume = title.Substring(volInd + 1).Trim();
-            //}
-            //else
-            //{
-            //    volume = title.Substring(nextWhiteSpace).Trim();
-            //}
             return int.Parse(volume);
         }
 

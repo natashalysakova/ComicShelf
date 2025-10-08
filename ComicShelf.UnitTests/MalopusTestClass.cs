@@ -80,5 +80,42 @@ namespace ComicShelf.Parsers
 
 
         }
+
+        [TestMethod]
+        public async Task Malopus_VolumeNumber_ShouldBe()
+        {
+            var parser = new PublisherParsersFactory().CreateParser("https://malopus.com.ua/manga/dark-souls-redemption-vol1");
+            var result = await parser.Parse();
+
+
+            Assert.AreEqual(1, result.volumeNumber);
+            Assert.AreEqual(1, result.totalVolumes);
+            Assert.AreEqual("ongoing", result.seriesStatus);
+        }
+
+        [TestMethod]
+        public async Task Malopus_ReleaseDate_ShouldBe_Parsed()
+        {
+            var parser = new PublisherParsersFactory().CreateParser("https://malopus.com.ua/manga/reborn-as-a-vending-machine-vol-2/");
+            var result = await parser.Parse();
+
+            Assert.AreEqual("2026-02-28", result.release);
+        }
+
+        [TestMethod]
+        [DataRow("https://malopus.com.ua/manga/bocchi-the-rock-vol2", "Самітниця-рокерка", "Том 2", 2)]
+        [DataRow("https://malopus.com.ua/manga/reborn-as-a-vending-machine-vol-2/", "Я переродився торговим автоматом і тепер блукаю підземеллям", "Том 2", 2)]
+        [DataRow("https://malopus.com.ua/manga/manga-shlyah-domogospodarya-tom-8/", "Шлях домогосподаря", "Том 8", 8)]
+        [DataRow("https://malopus.com.ua/manga/dungeon-meshi-omnibus-4/", "Підземелля смакоти", "Омнібус 4 (Томи 7–8)", 4)]
+        public async Task Malopus_TitleAndSeries_ShouldBe_Parsed(string url, string expectedSeries, string expectedTitle, int expectedVolumeNumber)
+        {
+            var parser = new PublisherParsersFactory().CreateParser(url);
+            var result = await parser.Parse();
+
+            Assert.AreEqual(expectedSeries, result.series);
+            Assert.AreEqual(expectedTitle, result.title);
+            Assert.AreEqual(expectedVolumeNumber, result.volumeNumber);
+            //Assert.AreEqual(DateTime.Parse("2024-06-17"), result.PreorderStartDate);
+        }
     }
 }
