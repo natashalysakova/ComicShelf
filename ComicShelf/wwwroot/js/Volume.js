@@ -439,7 +439,6 @@ function purchaseStatusChanged(purchseStatus, prefix) {
             fieldVisibility("preorder-date", false, prefix);
             fieldVisibility("purchase-date", false, prefix);
             fieldVisibility("reading-status", false, prefix);
-            fieldVisibility('rating-select', false, prefix);
 
             SetTodayDate("#ReleaseDate");
             break;
@@ -448,7 +447,6 @@ function purchaseStatusChanged(purchseStatus, prefix) {
             fieldVisibility("preorder-date", true, prefix);
             fieldVisibility("purchase-date", false, prefix);
             fieldVisibility("reading-status", false, prefix);
-            fieldVisibility('rating-select', false, prefix);
 
             SetTodayDate("#PreorderDate");
             SetTodayDate("#ReleaseDate");
@@ -458,7 +456,6 @@ function purchaseStatusChanged(purchseStatus, prefix) {
             fieldVisibility("preorder-date", false, prefix);
             fieldVisibility("purchase-date", false, prefix);
             fieldVisibility("reading-status", false, prefix);
-            fieldVisibility('rating-select', false, prefix);
 
             SetTodayDate("#ReleaseDate");
             break;
@@ -467,13 +464,24 @@ function purchaseStatusChanged(purchseStatus, prefix) {
             fieldVisibility("preorder-date", true, prefix);
             fieldVisibility("purchase-date", true, prefix);
             fieldVisibility("reading-status", true, prefix);
-            fieldVisibility('rating-select', true, prefix);
 
             SetTodayDate("#PurchaseDate");
             SetTodayDate("#PreorderDate");
             SetTodayDate("#ReleaseDate");
             break;
     }
+
+    var readingVisibility = $("#reading-status").find(":selected").val();
+    switch (readingVisibility) {
+        case "Completed":
+        case "Dropped":
+            fieldVisibility("rating-select", true, prefix);
+            break;
+        default:
+            fieldVisibility("rating-select", false, prefix);
+    }
+
+
 }
 
 function GetTodayDate() {
