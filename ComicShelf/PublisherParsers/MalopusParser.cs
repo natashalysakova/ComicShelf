@@ -12,6 +12,11 @@ namespace ComicShelf.PublisherParsers
     {
         public override string SiteUrl => "https://malopus.com.ua/";
 
+        public override Task<string> GetUrlHtml(string url)
+        {
+            return this.GetUrlHtml(url, true);
+        }
+
         protected override async Task<Dictionary<string, string>?> PreRequest(string url, CancellationToken token = default)
         {
             var html = await this.GetUrlHtml(url, false);

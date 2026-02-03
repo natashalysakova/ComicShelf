@@ -87,7 +87,12 @@ namespace ComicShelf.PublisherParsers
             }
         }
 
-        protected virtual async Task<string> GetUrlHtml(string url, bool doPreRequest = true)
+        public virtual Task<string> GetUrlHtml(string url)
+        {
+            return GetUrlHtml(url, false);
+        }
+
+        protected async Task<string> GetUrlHtml(string url, bool doPreRequest)
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
