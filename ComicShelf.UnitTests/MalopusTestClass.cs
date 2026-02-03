@@ -18,7 +18,7 @@ namespace ComicShelf.Parsers
             Assert.IsNotNull(result);
             Assert.AreEqual("Том 5", result.title);
             Assert.AreEqual("Ця порцелянова лялечка закохалася", result.series);
-            Assert.AreEqual("Шін'ічі Фукуда", result.authors);
+            Assert.AreEqual("Шін’ічі Фукуда", result.authors);
             Assert.AreEqual(5, result.volumeNumber);
             Assert.AreEqual("https://malopus.com.ua//content/images/30/600x600l80mc0/manga-cya-porcelyanova-lyalechka-zakohalasya-tom-5-63577913695375.png", result.cover);
             Assert.AreEqual(null, result.release);

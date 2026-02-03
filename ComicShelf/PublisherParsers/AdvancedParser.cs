@@ -4,7 +4,7 @@ namespace ComicShelf.PublisherParsers
 {
     public abstract class AdvancedParser : BaseParser
     {
-        override protected async Task<string> GetUrlHtml(string url)
+        override protected async Task<string> GetUrlHtml(string url, bool doPreRequest = true)
         {
             int retry = 0;
             do

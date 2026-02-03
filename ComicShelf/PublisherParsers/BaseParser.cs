@@ -1,6 +1,7 @@
 ﻿using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using Backend.Models.Enums;
+using System.Net.Http;
 
 namespace ComicShelf.PublisherParsers
 {
@@ -66,8 +67,27 @@ namespace ComicShelf.PublisherParsers
         protected abstract VolumeType GetVolumeType();
 
         public abstract string SiteUrl { get; }
+        protected virtual Task<Dictionary<string, string>?> PreRequest(string url, CancellationToken token = default)
+        {
+            return Task.FromResult<Dictionary<string, string>?>(null);
+        }
 
-        protected virtual async Task<string> GetUrlHtml(string url)
+        protected void AddHeaders(HttpClient client, Dictionary<string, string>? headers = null)
+        {
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    if (client.DefaultRequestHeaders.Contains(header.Key))
+                    {
+                        client.DefaultRequestHeaders.Remove(header.Key);
+                    }
+                    client.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
+            }
+        }
+
+        protected virtual async Task<string> GetUrlHtml(string url, bool doPreRequest = true)
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
@@ -83,6 +103,12 @@ namespace ComicShelf.PublisherParsers
             {
                 try
                 {
+                    if (doPreRequest)
+                    {
+                        var headers = await PreRequest(url);
+                        AddHeaders(client, headers);
+                    }
+                    
                     var page = await client.GetStringAsync(url);
                     return page;
                 }

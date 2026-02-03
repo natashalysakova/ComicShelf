@@ -2,6 +2,8 @@
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Backend.Models.Enums;
+using NuGet.Common;
+using System.Security.Policy;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace ComicShelf.PublisherParsers
@@ -9,6 +11,24 @@ namespace ComicShelf.PublisherParsers
     public class MalopusParser : BaseParser
     {
         public override string SiteUrl => "https://malopus.com.ua/";
+
+        protected override async Task<Dictionary<string, string>?> PreRequest(string url, CancellationToken token = default)
+        {
+            var html = await this.GetUrlHtml(url, false);
+            if (html.Contains("defaultHash"))
+            {
+                var hashIndex = html.IndexOf("defaultHash");
+                var hashStart = html.IndexOf("\"", hashIndex) + 1;
+                var hashEnd = html.IndexOf("\"", hashStart);
+                var hash = html.Substring(hashStart, hashEnd - hashStart);
+
+                return new Dictionary<string, string>
+                {
+                    { "Cookie", $"challenge_passed={hash}; max-age=1800; path=/; samesite=Lax" }
+                };
+            }
+            return null;
+        }
 
         private string? GetFromTable(IDocument document, string headerText)
         {
